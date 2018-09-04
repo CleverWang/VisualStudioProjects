@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="MediaAdapter">
+    <Position X="0.5" Y="6.25" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQgQAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MediaAdapter.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AudioPlayer">
+    <Position X="5.5" Y="6.25" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AQBAAAAAAAAABAAAAAAAAAAAAACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AudioPlayer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="MediaPlayer">
+    <Position X="3" Y="4.5" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MediaPlayer.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="AdvancedMediaPlayer">
+    <Position X="2.25" Y="0.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AdvancedMediaPlayer.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="VlcPlayer">
+    <Position X="4.25" Y="2.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>VlcPlayer.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Mp4Player">
+    <Position X="0.5" Y="2.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mp4Player.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Microsoft YaHei UI" Size="9" />
+</ClassDiagram>

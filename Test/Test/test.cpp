@@ -1,22 +1,22 @@
-// #include "global.h"
-#include "node.h"
-// #include "Sales_data_struct.h"
-#include "Sales_data.h"
-#include "construct_paras_must_init.h"
-#include "Screen.h"
-#include "Window_mgr.h"
-#include "StrBlob.h"
-#include "TextQuery.h"
-#include "HasPtr.h"
-#include "NoCopy.h"
-#include "StrVec.h"
-#include "CallableClass.h"
-#include "conversion_operator.h"
-#include "Quote.h"
-#include "template_functions.h"
-#include "Blob.h"
+#include "global.h"
+//#include "node.h"
+//#include "Sales_data_struct.h"
+//#include "Sales_data.h"
+//#include "construct_paras_must_init.h"
+//#include "Screen.h"
+//#include "Window_mgr.h"
+//#include "StrBlob.h"
+//#include "TextQuery.h"
+//#include "HasPtr.h"
+//#include "NoCopy.h"
+//#include "StrVec.h"
+//#include "CallableClass.h"
+//#include "conversion_operator.h"
+//#include "Quote.h"
+//#include "template_functions.h"
+//#include "Blob.h"
 
-int my_special_add(int a, int b) { return a + b; }
+//int my_special_add(int a, int b) { return a + b; }
 
 int main(int argc, char *argv[])
 {
@@ -1361,27 +1361,25 @@ int main(int argc, char *argv[])
 	//ready = true;
 	//for (auto & th : threads)
 	//	th.join();
-	std::atomic_flag lock = ATOMIC_FLAG_INIT;
-	auto f = [&](int n)
-	{
-		// 实现自旋锁
-		for (int cnt = 0; cnt < 10; ++cnt) {
-			while (lock.test_and_set(std::memory_order_acquire))  // acquire lock
-			{
-			}; // spin（自旋）
-			std::cout << "Output from thread " << n << '\n';
-			lock.clear(std::memory_order_release);               // release lock
-		}
-	};
-	std::vector<std::thread> v;
-	for (int n = 0; n < 10; ++n) {
-		v.emplace_back(f, n);
-	}
-	for (auto& t : v) {
-		t.join();
-	}
-
-
+	//std::atomic_flag lock = ATOMIC_FLAG_INIT;
+	//auto f = [&](int n)
+	//{
+	//	// 实现自旋锁
+	//	for (int cnt = 0; cnt < 10; ++cnt) {
+	//		while (lock.test_and_set(std::memory_order_acquire))  // acquire lock
+	//		{
+	//		}; // spin（自旋）
+	//		std::cout << "Output from thread " << n << '\n';
+	//		lock.clear(std::memory_order_release);               // release lock
+	//	}
+	//};
+	//std::vector<std::thread> v;
+	//for (int n = 0; n < 10; ++n) {
+	//	v.emplace_back(f, n);
+	//}
+	//for (auto& t : v) {
+	//	t.join();
+	//}
 
 
 	return 0;

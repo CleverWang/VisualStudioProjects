@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="CriteriaFemale">
+    <Position X="10.5" Y="2.25" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAgAAAAAAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>CriteriaFemale.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CriteriaMale">
+    <Position X="15.5" Y="2.25" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAABAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
+      <FileName>CriteriaMale.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CriteriaSingle">
+    <Position X="0.5" Y="2.25" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAABAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>CriteriaSingle.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Person">
+    <Position X="25.75" Y="0.5" Width="5.5" />
+    <TypeIdentifier>
+      <HashCode>AIAEAAIAAAAAAAAAAEAAgAAAAAAEAAAAIAAEAAAAAAA=</HashCode>
+      <FileName>Person.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AndCriteria">
+    <Position X="20.5" Y="2.25" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAARAAAAgAAACAAAIAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AndCriteria.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OrCriteria">
+    <Position X="5.5" Y="2.25" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAACAAABAABAAAAgAAACAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>OrCriteria.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Criteria">
+    <Position X="10.5" Y="0.5" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Criteria.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Microsoft YaHei UI" Size="9" />
+</ClassDiagram>

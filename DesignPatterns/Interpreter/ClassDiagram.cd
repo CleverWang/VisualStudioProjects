@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="TerminalExpression">
+    <Position X="5" Y="2.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAABAAAAAAAAAAAAAAAAQAEAAAAA=</HashCode>
+      <FileName>TerminalExpression.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OrExpression">
+    <Position X="0.5" Y="2.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>IAAAAgAAAACAAAAAAAAAAAAAAAAAQAAAAAAAIAAAAAA=</HashCode>
+      <FileName>OrExpression.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AndExpression">
+    <Position X="8.75" Y="2.5" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAACAAAAAAAAAAAAAAAAAQAACAAAAIAAAAAA=</HashCode>
+      <FileName>AndExpression.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Expression">
+    <Position X="5" Y="0.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAECAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Expression.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Microsoft YaHei UI" Size="9" />
+</ClassDiagram>

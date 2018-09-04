@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="Computer">
+    <Position X="15.5" Y="2.5" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAACEAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Computer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="ComputerPart">
+    <Position X="8.25" Y="0.5" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AQAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ComputerPart.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Keyboard">
+    <Position X="6" Y="2.5" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Keyboard.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="ComputerPartVisitor">
+    <Position X="0.5" Y="4.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ComputerPartVisitor.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Mouse">
+    <Position X="1.25" Y="2.5" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mouse.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Monitor">
+    <Position X="10.75" Y="2.5" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Monitor.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="ComputerPartDisplayVisitor">
+    <Position X="0.5" Y="7" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ComputerPartDisplayvisitor.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Microsoft YaHei UI" Size="9" />
+</ClassDiagram>
