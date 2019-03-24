@@ -214,7 +214,6 @@ int my_atoi(const string &str) {
 	int next_num = 0;
 	for (; i < str.length(); i++)
 	{
-
 		if (!is_num(str[i]))
 			break;
 		else
@@ -1457,12 +1456,12 @@ int firstMissingPositiveFaster(vector<int>& nums) {
 }
 
 int trap(vector<int>& height) {
-/*
-给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。
-示例:
-输入: [0,1,0,2,1,0,1,3,2,1,2,1]
-输出: 6
-*/
+	/*
+	给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。
+	示例:
+	输入: [0,1,0,2,1,0,1,3,2,1,2,1]
+	输出: 6
+	*/
 	if (height.size() <= 2)
 		return 0;
 	int len = height.size();
@@ -1495,8 +1494,293 @@ int trap(vector<int>& height) {
 	return sum;
 }
 
+int jump(vector<int>& nums) {
+	/*
+	给定一个非负整数数组，你最初位于数组的第一个位置。
+	数组中的每个元素代表你在该位置可以跳跃的最大长度。
+	你的目标是使用最少的跳跃次数到达数组的最后一个位置。
+	示例:
+	输入: [2,3,1,1,4]
+	输出: 2
+	解释: 跳到最后一个位置的最小跳跃数是 2。
+	从下标为 0 跳到下标为 1 的位置，跳 1 步，然后跳 3 步到达数组的最后一个位置。
+	说明:
+	假设你总是可以到达数组的最后一个位置。
+	*/
+
+	// 思路：贪心算法，贪心能够到达的最远的距离
+	int sz = nums.size(), res = 0, i = 0;
+	int cur_max = 0, pre_max; // 当前能够到达的最远距离，之前能够到达的最远距离
+	while (cur_max < sz - 1)
+	{
+		++res;
+		pre_max = cur_max;
+		// 在之前能够到达的最远距离下，寻找并更新当前能够到达的最远距离
+		for (; i <= pre_max; ++i)
+		{
+			// 寻找并更新当前能够到达的最远距离
+			cur_max = max(cur_max, i + nums[i]);
+		}
+	}
+	return res;
+}
+
+void solveNQueuesDFS(int n, vector<int> &pos, int row, vector<vector<string>> &res)
+{
+	if (row == n) // 深搜达到最底层，即搜索完所有行
+	{
+		vector<string> out(n, string(n, '.')); // 初始化输出棋盘
+		for (int i = 0; i < n; i++) // 根据pos数组放置皇后
+		{
+			out[i][pos[i]] = 'Q';
+		}
+		res.push_back(out);
+	}
+	else
+	{
+		// 深度搜索该行的所有列是否能够放置
+		for (int col = 0; col < n; col++)
+		{
+			bool is_ok = true; // 该列是否能够放置标志
+			for (int r = 0; r < row; r++)
+			{
+				// 判断是否行冲突或对角冲突
+				if (pos[r] == col || std::abs(r - row) == abs(col - pos[r]))
+				{
+					is_ok = false;
+					break;
+				}
+			}
+			if (is_ok) // 该列能够放置
+			{
+				pos[row] = col;
+				solveNQueuesDFS(n, pos, row + 1, res); // 继续搜索下一行
+				pos[row] = -1;
+			}
+		}
+	}
+}
+
+vector<vector<string>> solveNQueens(int n) {
+	/*
+	N皇后问题
+	*/
+	vector<vector<string>> res;
+	if (n <= 0)
+		return res;
+	vector<int> pos_r_c(n, -1); // pos_r_c[i]表示第i行的皇后所放置的列号
+	solveNQueuesDFS(n, pos_r_c, 0, res);
+	return res;
+}
+
+template <typename T>
+pair<T, T> minmax(const vector<T> &input_sequence, size_t start, size_t stop)
+{
+	/*
+	二分法求最小最大值。
+	input_sequence：输入序列
+	start：起始下标
+	stop：终止下标
+	return：（最小值，最大值）
+	*/
+	if (input_sequence.empty())
+		throw runtime_error("input sequence\'s length should greater than 0.");
+	if (start > stop || start > input_sequence.size() - 1)
+		throw out_of_range("index is out of range.");
+	if (input_sequence.size() == 1)
+		return pair<T, T>(input_sequence[0], input_sequence[0]);
+
+	if (start == stop)
+		return pair<T, T>(input_sequence[start], input_sequence[start]);
+	if (stop - start == 1)
+	{
+		if (input_sequence[start] > input_sequence[stop])
+			return pair<T, T>(input_sequence[stop], input_sequence[start]);
+		else
+			return pair<T, T>(input_sequence[start], input_sequence[stop]);
+	}
+
+	size_t middle = (start + stop) / 2;
+	pair<T, T> left_result = minmax(input_sequence, start, middle);
+	pair<T, T> right_result = minmax(input_sequence, middle + 1, stop);
+	T minmin = left_result.first > right_result.first ? right_result.first : left_result.first;
+	T maxmax = left_result.second < right_result.second ? right_result.second : left_result.second;
+	return pair<T, T>(minmin, maxmax);
+}
+
+template <typename T>
+void heapPermute(vector<T> &seqs, size_t n, vector<vector<T>> &res)
+{
+	if (n == 0)
+	{
+		res.push_back(seqs);
+		return;
+	}
+
+	for (size_t i = 0; i <= n; i++)
+	{
+		heapPermute(seqs, n - 1, res);
+		using std::swap;
+		if (n % 2 == 0)
+			swap(seqs[0], seqs[n]);
+		else
+			swap(seqs[i], seqs[n]);
+	}
+}
+
+template <typename T>
+vector<vector<T>> heapPermutation(vector<T> &seqs)
+{
+	if (seqs.empty())
+		throw runtime_error("input sequence is empty.");
+	if (seqs.size() == 1)
+		return vector<vector<T>>({ seqs });
+	vector<vector<T>> res;
+	heapPermute(seqs, seqs.size() - 1, res);
+	return res;
+}
+
+void selectSort(vector<int> &a)
+{
+	size_t length = a.size();
+	int t;
+	size_t minIndex;
+	for (size_t i = 0; i < length - 1; i++)
+	{
+		minIndex = i;
+		for (size_t j = i + 1; j < length; j++)
+		{
+			if (a[j] < a[minIndex])
+			{
+				t = a[j];
+				a[j] = a[minIndex];
+				a[minIndex] = t;
+			}
+		}
+	}
+}
+
+template<typename T>
+void merge(vector<T> &seqs, size_t start, size_t middle, size_t end)
+{
+	vector<T> temp(end - start + 1);
+	size_t i = start, j = middle + 1, k = 0;
+	while (i <= middle && j <= end)
+	{
+		if (seqs[i] > seqs[j])
+		{
+			temp[k++] = seqs[j++];
+		}
+		else
+		{
+			temp[k++] = seqs[i++];
+		}
+	}
+	while (i <= middle)
+	{
+		temp[k++] = seqs[i++];
+	}
+	while (j <= end)
+	{
+		temp[k++] = seqs[j++];
+	}
+	for (size_t i = 0, length = temp.size(); i < length; i++)
+	{
+		seqs[start++] = temp[i];
+	}
+}
+
+template<typename T>
+void mergesort(vector<T> &seqs, size_t start, size_t end)
+{
+	if (start < end)
+	{
+		size_t middle = (start + end) / 2;
+		mergesort(seqs, start, middle);
+		mergesort(seqs, middle + 1, end);
+		merge(seqs, start, middle, end);
+	}
+}
+
+template<typename T>
+size_t partition(vector<T> &seqs, size_t left, size_t right)
+{
+	size_t i = left, j = right;
+	T pivot_val = seqs[left];
+	while (i < j)
+	{
+		while (i < j && seqs[j] >= pivot_val)
+		{
+			j--;
+		}
+		seqs[i] = seqs[j];
+		while (i < j && seqs[i] <= pivot_val)
+		{
+			i++;
+		}
+		seqs[j] = seqs[i];
+	}
+	seqs[i] = pivot_val;
+	return i;
+}
+
+template<typename T>
+void quicksort(vector<T> &seqs, size_t left, size_t right)
+{
+	size_t pivot = partition(seqs, left, right);
+	if (left >= pivot || pivot >= right)
+	{
+		return;
+	}
+	quicksort(seqs, left, pivot - 1);
+	quicksort(seqs, pivot + 1, right);
+}
+
+/*
+一个机器人位于一个mxn网格的左上角。
+机器人每次只能向下或者向右移动一步。机器人试图达到网格的右下角。
+问总共有多少条不同的路径？
+*/
+int uniquePaths(int m, int n) {
+	vector<vector<int>> map(m + 1, vector<int>(n + 1, 1));
+	for (int i = 2; i <= m; i++)
+	{
+		for (int j = 2; j <= n; j++)
+		{
+			// 动态规划
+			map[i][j] = map[i - 1][j] + map[i][j - 1];
+		}
+	}
+	return map[m][n];
+}
+
+/*
+带有障碍的uniquePaths，障碍为1，非障碍为0
+*/
+int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
+	if (obstacleGrid.empty() || obstacleGrid[0].empty() || obstacleGrid[0][0] == 1)
+		return 0;
+	int m = obstacleGrid.size(), n = obstacleGrid[0].size();
+	vector<vector<long>> dp(m + 1, vector<long>(n + 1, 0));
+	dp[0][1] = 1;
+	for (int i = 1; i <= m; ++i) {
+		for (int j = 1; j <= n; ++j) {
+			if (obstacleGrid[i - 1][j - 1] != 0) continue;
+			dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+		}
+	}
+	return dp[m][n];
+}
+
+bool Find(int target, vector<vector<int>> &array) {
+}
+
 int main(int argc, char **argv)
 {
+	//cout << uniquePaths(7, 3) << endl;
+	vector<vector<int>> array{ {1,2,3,4}, {5,6,7,8},{9,10,11,12} };
+	cout << Find(4, array) << endl;
+
 	/*std::default_random_engine e;
 	std::uniform_int_distribution<int> uid(1, 10);
 	auto ge = [&](size_t size)
@@ -1617,7 +1901,6 @@ int main(int argc, char **argv)
 	do
 	{
 		cout << s << endl;
-
 	} while (next_permutation(s.begin(), s.end()));*/
 
 	/*for (auto &s : letterCombinations("23"))
@@ -1688,9 +1971,48 @@ int main(int argc, char **argv)
 	cout << firstMissingPositive(nums) << endl;
 	cout << firstMissingPositiveFaster(nums) << endl;*/
 
-	vector<int> in{ 0,1,0,2,1,0,1,3,2,1,2,1 };
-	cout << trap(in) << endl;
+	/*vector<int> in{ 0,1,0,2,1,0,1,3,2,1,2,1 };
+	cout << trap(in) << endl;*/
 
+	/*vector<int> in{ 2,3,1,1,4 };
+	cout << jump(in) << endl;*/
+	/*auto res = solveNQueens(6);
+	for (const auto &item : res)
+	{
+		for (const auto &s : item)
+			cout << s << endl;
+		cout << endl << endl;
+	}*/
+
+	/*default_random_engine e(time(NULL));
+	uniform_int_distribution<int> u(1,10);
+	vector<int> input;
+	size_t n = 30;
+	for (size_t i = 0; i < n; i++)
+	{
+		input.push_back(u(e));
+	}
+	cout << "input: ";
+	printContainer(input);
+	pair<int, int> res = minmax(input, 0, input.size() - 1);
+	cout << "min: " << res.first << endl;
+	cout << "max: " << res.second << endl;*/
+
+	/*vector<int> seqs = { 1,2,3 };
+	vector<vector<int>> res = heapPermutation(seqs);
+	for (const auto &seq : res)
+		printContainer(seq);
+	seqs = { 1,2,3,4 };
+	res = heapPermutation(seqs);
+	for (const auto &seq : res)
+		printContainer(seq);*/
+
+		//vector<int> a{ 2,4,7,9,1,2,4,5,9,7,3 };
+		//printContainer(a);
+		////selectSort(a);
+		////mergesort(a, 0, a.size() - 1);
+		//quicksort(a, 0, a.size() - 1);
+		//printContainer(a);
 
 	return 0;
 }
