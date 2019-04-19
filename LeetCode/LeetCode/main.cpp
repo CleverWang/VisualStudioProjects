@@ -2920,8 +2920,585 @@ string LeftRotateString(string str, int n)
 	return str;
 }
 
+/*
+约瑟夫问题：n个人围成一圈，从0到n - 1，然后从第0个人开始，数到m - 1，出列，如此循环。
+求最后剩余的人是最开始的哪个人？
+思路：
+1）设f(n, m)表示n个人每m个人出列后剩余的最后一人的编号，第一个出列的人为k = (m - 1) % n；
+2）接下来求f(n - 1, m)。剩余的人k + 1, k + 2, ..., n, 0, 1, 2, ..., k - 1重新编号为0 ~ n-2，存在映射关系f(x) = (x + k + 1) % n，x表示映射后的值，f(x)表示映射前的值；
+3）带入k得f(x) = (x + m) % n，实际上x是f(n - 1, m)下的编号，f(x)为f(n, m)下的编号；
+4）则f(n, m) = (f(n - 1, m) + m) % n;
+*/
+int LastRemaining_Solution(int n, int m)
+{
+	/*
+			  ┌ 0,                    n == 1
+	f(n, m) = |
+			  └ (f(n - 1, m) + m) % n, n >1
+	*/
+
+	/*if (n < 1 || m < 1)
+		return -1;
+	int pre = 0;
+	if (n == 1)
+		return 0;
+	return (LastRemaining_Solution(n - 1, m) + m) % n;*/
+
+	if (n < 1 || m < 1)
+		return -1;
+	int pre = 0;
+	for (int i = 2; i <= n; i++)
+		pre = (pre + m) % i;
+	return pre;
+}
+
+/*
+写一个函数，求两个整数之和，要求在函数体内不得使用+、-、*、/四则运算符号。
+思路：采用位运算
+1）先不考虑进位，两数逐位相加，有0+0=0、1+0=1、0+1=1、1+1=0，即异或
+2）计算进位，只有1+1才会有进位，则先与，再左移一位
+3）将上述两个结果加起来，即重复1、2步骤
+*/
+int Add(int num1, int num2)
+{
+	int sum, carry;
+	do
+	{
+		sum = num1 ^ num2;
+		carry = (num1 & num2) << 1;
+		num1 = sum;
+		num2 = carry;
+	} while (carry);
+	return sum;
+}
+
+/*
+给定一个数组A[0,1,...,n-1],请构建一个数组B[0,1,...,n-1],其中B中的元素B[i]=A[0]*A[1]*...*A[i-1]*A[i+1]*...*A[n-1]。
+不能使用除法。
+思路：
+1）分两步计算，在A[i]处分成两部分
+2）先计算左部分A[0]*A[1]*...*A[i-1]，并且A[0]*A[1]可由A[0]得到，A[0]*A[1]*A[2]可由A[0]*A[1]得到，以此类推
+3）再计算右部分A[i+1]*...*A[n-1]，计算方法同上
+*/
+vector<int> multiply(const vector<int>& A) {
+	if (A.empty())
+		return vector<int>();
+	if (A.size() == 1)
+		return { 0 };
+
+	int len = A.size();
+	vector<int> B(len, 1);
+
+	for (int i = 1; i < len; i++) // 计算左部分
+	{
+		B[i] = B[i - 1] * A[i - 1];
+	}
+
+	int temp = 1;
+	for (int i = len - 2; i >= 0; i--) // 计算右部分，并同时乘上左部分
+	{
+		temp *= A[i + 1];
+		B[i] *= temp;
+	}
+
+	return B;
+}
+
+/*
+给一个链表，若其中包含环，请找出该链表的环的入口结点，否则，输出null。
+思路：
+1）先确定环的长度
+	a.找到环中的一个节点（用快慢两指针，快指针追上慢指针时即为环内节点）
+	b.遍历一下，当回到初始节点时即得到长度
+2）双指针，一个指针先走环的长度，然后同时走，最后相遇点即是入口节点
+*/
+ListNode* EntryNodeOfLoop(ListNode* pHead)
+{
+	// 寻找环中的一个节点
+	auto FindNodeInLoop = [](ListNode *p) -> ListNode *
+	{
+		if (p == nullptr || p->next == nullptr)
+			return nullptr;
+
+		// 快慢指针法
+		ListNode *slow = p, *fast = slow->next;
+		while (slow != nullptr && fast != nullptr)
+		{
+			if (slow == fast) // 快指针追上慢指针
+				return slow;
+
+			slow = slow->next; // 慢指针走一步
+			fast = fast->next;
+			if (fast != nullptr) // 快指针走两步
+				fast = fast->next;
+		}
+		return nullptr;
+	};
+
+	ListNode *p = FindNodeInLoop(pHead);
+	if (p == nullptr)
+		return nullptr;
+
+	int loop_len = 1;
+	ListNode *t = p->next;
+	while (t != p) // 获取环的长度
+	{
+		t = t->next;
+		++loop_len;
+	}
+
+	ListNode *pre = pHead, *nxt = pre;
+	for (int i = 0; i < loop_len; i++) // 一个指针先走环的长度
+		nxt = nxt->next;
+
+	while (pre != nxt) // 指针相遇即得到结果
+	{
+		pre = pre->next;
+		nxt = nxt->next;
+	}
+
+	return pre;
+}
+
+/*
+给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针。
+思路：
+1）如果该节点有右子树，那么下一个节点就是右子树的最左节点
+2）如果该节点是其父节点的左子节点，那么下一个节点就是其父节点
+3）如果该节点是其父节点的右子节点，那么需要向父节点不断回溯，直至找到某个节点是其父节点的左子节点，下一个节点就是该节点的父节点
+*/
+TreeLinkNode* GetNext(TreeLinkNode* pNode)
+{
+	if (pNode == nullptr)
+		return nullptr;
+
+	if (pNode->right != nullptr) // 情况1）
+	{
+		TreeLinkNode *t = pNode->right;
+		while (t->left != nullptr)
+			t = t->left;
+		return t;
+	}
+	else if (pNode->next != nullptr && pNode == pNode->next->left) // 情况2）
+	{
+		return pNode->next;
+	}
+	else if (pNode->next != nullptr && pNode == pNode->next->right) // 情况3）
+	{
+		TreeLinkNode *now = pNode, *parent = pNode->next;
+		while (parent != nullptr)
+		{
+			if (parent->left == now)
+				return parent;
+			now = parent;
+			parent = now->next;
+		}
+		return nullptr;
+	}
+	else
+		return nullptr;
+}
+
+/*
+请实现一个函数，用来判断一颗二叉树是不是对称的。注意，如果一个二叉树同此二叉树的镜像是同样的，定义其为对称的。
+思路：
+1）使用前序遍历（根左右）和对称的前序遍历（根右左）
+2）并且考虑空节点，这样两种遍历出来的结果才会真的不一样，否则可能会有一样的结果
+*/
+bool isSymmetricalRecursively(TreeNode *p1, TreeNode *p2)
+{
+	if (p1 == nullptr && p2 == nullptr)
+		return true;
+
+	if (p1 == nullptr || p2 == nullptr)
+		return false;
+
+	if (p1->val != p2->val)
+		return false;
+
+	return isSymmetricalRecursively(p1->left, p2->right)
+		&& isSymmetricalRecursively(p1->right, p2->left);
+}
+bool isSymmetrical(TreeNode* pRoot)
+{
+	if (pRoot == nullptr || (pRoot->left == nullptr && pRoot->right == nullptr))
+		return true;
+
+	return isSymmetricalRecursively(pRoot, pRoot);
+}
+
+/*
+从上到下按层打印二叉树，同一层结点从左至右输出。每一层输出一行。
+思路：
+1）使用队列
+2）使用两个变量，一个变量记录本层的待打印节点数，另一个变量记录下一层的节点数
+*/
+vector<vector<int> > PrintTreePerLevel(TreeNode* pRoot)
+{
+	if (pRoot == nullptr)
+		return vector<vector<int> >();
+
+	vector<vector<int> > res;
+	vector<int> temp;
+	queue<TreeNode *> qu;
+	int now_level = 1, next_level = 0;
+
+	qu.push(pRoot);
+	while (qu.empty() == false)
+	{
+		TreeNode *t = qu.front();
+		qu.pop();
+		temp.push_back(t->val);
+		--now_level;
+
+		if (t->left != nullptr)
+		{
+			qu.push(t->left);
+			++next_level;
+		}
+		if (t->right != nullptr)
+		{
+			qu.push(t->right);
+			++next_level;
+		}
+
+		if (now_level == 0)
+		{
+			now_level = next_level;
+			next_level = 0;
+			res.push_back(temp);
+			temp.clear();
+		}
+	}
+	return res;
+}
+
+/*
+请实现一个函数按照之字形打印二叉树，即第一行按照从左到右的顺序打印，第二层按照从右至左的顺序打印，第三行按照从左到右的顺序打印，其他行以此类推。
+思路：
+1）双栈法
+2）当前层为奇数层时，子节点按从左往右进入另一个栈
+3）当前层为偶数层时，子节点按从右往左进入另一个栈
+4）每结束一层两栈切换
+*/
+vector<vector<int> > PrintTreeZigZag(TreeNode* pRoot)
+{
+	if (pRoot == nullptr)
+		return vector<vector<int> >();
+
+	vector<vector<int> > res;
+	vector<int> temp;
+	stack<TreeNode *> st[2]; // 双栈
+	int now = 0, next = 1; // 当前栈标识，下一层栈标识
+
+	st[now].push(pRoot);
+	while (!st[0].empty() || !st[1].empty())
+	{
+		TreeNode *t = st[now].top();
+		temp.push_back(t->val);
+		st[now].pop();
+
+		if (next == 1) // 当前层为奇数层时，子节点从左到右入下一层栈
+		{
+			if (t->left != nullptr)
+				st[next].push(t->left);
+			if (t->right != nullptr)
+				st[next].push(t->right);
+		}
+		else // 当前层为偶数层时，子节点从右往左入下一层栈
+		{
+			if (t->right != nullptr)
+				st[next].push(t->right);
+			if (t->left != nullptr)
+				st[next].push(t->left);
+		}
+
+		if (st[now].empty())
+		{
+			res.push_back(temp);
+			temp.clear();
+			// 切换栈标识
+			now = 1 - now;
+			next = 1 - next;
+		}
+	}
+
+	return res;
+}
+
+/*
+请实现两个函数，分别用来序列化和反序列化二叉树
+思路：
+1）使用前序遍历进行序列化，这样从根节点开始，并且需要考虑空节点
+2）反序列化时，最开始的节点就是根节点，然后递归进行构建
+*/
+string str_temp;
+void SerializeRecursively(TreeNode *p, ostream &out)
+{
+	if (p == nullptr)
+	{
+		out << "$,";
+		return;
+	}
+	out << p->val << ',';
+	SerializeRecursively(p->left, out);
+	SerializeRecursively(p->right, out);
+}
+char* Serialize(TreeNode *root)
+{
+	if (root == nullptr)
+		return nullptr;
+
+	ostringstream oss;
+	SerializeRecursively(root, oss);
+	::str_temp = oss.str();
+
+	return const_cast<char *>(::str_temp.c_str());
+}
+bool ReadNodeData(char **str, int *data)
+{
+	if (**str == NULL || **str == '\0')
+		return false;
+
+	if (**str == '$')
+	{
+		*str += 2;
+		cout << '$' << endl;
+		return false;
+	}
+
+	string t;
+	while (**str != ',')
+	{
+		t.push_back(**str);
+		++(*str);
+	}
+	++(*str);
+	*data = stoi(t);
+	cout << *data << endl;
+	return true;
+}
+void DeserializeRecursively(TreeNode **pp, char **str)
+{
+	int data;
+	if (ReadNodeData(str, &data))
+	{
+		*pp = new TreeNode(data);
+		DeserializeRecursively(&((*pp)->left), str);
+		DeserializeRecursively(&((*pp)->right), str);
+	}
+}
+TreeNode* Deserialize(char *str)
+{
+	if (str == nullptr || *str == '\0')
+		return nullptr;
+
+	TreeNode *pRoot = nullptr;
+	DeserializeRecursively(&pRoot, &str);
+	return pRoot;
+}
+
+/*
+给定一棵二叉搜索树，请找出其中的第k小的结点。例如， （5，3，7，2，4，6，8）    中，按结点数值大小顺序第三小结点的值为4。
+思路：由于是二叉搜索树，所以中序遍历得到第k个节点即可
+*/
+void KthNodeRecursively(TreeNode *p, int &k, TreeNode *&target)
+{
+	if (p->left != nullptr)
+		KthNodeRecursively(p->left, k, target);
+
+	if (target == nullptr)
+	{
+		if (k == 1)
+			target = p;
+		--k;
+	}
+
+	if (target == nullptr && p->right != nullptr)
+		KthNodeRecursively(p->right, k, target);
+}
+TreeNode* KthNode(TreeNode* pRoot, int k)
+{
+	if (pRoot == nullptr || k <= 0)
+		return nullptr;
+
+	TreeNode *target = nullptr;
+	KthNodeRecursively(pRoot, k, target);
+	return target;
+}
+
+/*
+给定一个数组和滑动窗口的大小，找出所有滑动窗口里数值的最大值。
+例如，如果输入数组{2,3,4,2,6,2,5,1}及滑动窗口的大小3，那么一共存在6个滑动窗口，他们的最大值分别为{4,4,6,6,6,5}；
+针对数组{2,3,4,2,6,2,5,1}的滑动窗口有以下6个：
+{[2,3,4],2,6,2,5,1}， {2,[3,4,2],6,2,5,1}， {2,3,[4,2,6],2,5,1}，
+{2,3,4,[2,6,2],5,1}， {2,3,4,2,[6,2,5],1}， {2,3,4,2,6,[2,5,1]}。
+思路：
+1）使用一个双端队列，保存当前窗口的一个子窗口，这个子窗口满足这样一个要求
+	a.保存的是下标
+	b.保存的下标是连续的
+	c.保存的第一个元素是当前窗口的最大元素的下标，然后继续保存直到窗口末端
+2）每次移动窗口更新上述数据结构
+3）注意最左元素可能不在新窗口中了，需要剔除，因此保存的是下标
+*/
+vector<int> maxInWindows(const vector<int>& num, unsigned int size)
+{
+	if (num.size() < size || size < 1)
+		return {};
+
+	vector<int> res;
+	deque<int> idx;
+	for (size_t i = 0; i < size; i++)
+	{
+		while (!idx.empty() && num[i] >= num[idx.back()])
+			idx.pop_back();
+
+		idx.push_back(i);
+	}
+
+	for (size_t i = size; i < num.size(); i++)
+	{
+		res.push_back(num[idx.front()]);
+		while (!idx.empty() && num[i] >= num[idx.back()])
+			idx.pop_back();
+		if (!idx.empty() && idx.front() <= static_cast<int>(i - size))
+			idx.pop_front();
+		idx.push_back(i);
+	}
+	res.push_back(num[idx.front()]);
+	return res;
+}
+
+/*
+请设计一个函数，用来判断在一个矩阵中是否存在一条包含某字符串所有字符的路径。
+路径可以从矩阵中的任意一个格子开始，每一步可以在矩阵中向左，向右，向上，向下移动一个格子。
+如果一条路径经过了矩阵中的某一个格子，则之后不能再次进入这个格子。
+例如
+a b c e
+s f c s
+a d e e
+这样的3 X 4 矩阵中包含一条字符串"bcced"的路径，
+但是矩阵中不包含"abcb"路径，因为字符串的第一个字符b占据了矩阵中的第一行第二个格子之后，路径不能再次进入该格子。
+思路：回溯法
+*/
+void hasPathRecursively(char* matrix, int rows, int cols, int row, int col, char* str, int str_idx, bool &res, bool *is_visited)
+{
+	if (res == true)
+		return;
+	if (*(str + str_idx) == '\0')
+	{
+		res = true;
+		return;
+	}
+
+	if (row >= 0 && row < rows && col >= 0 && col < cols
+		&& *(is_visited + row * cols + col) == false
+		&& *(matrix + row * cols + col) == *(str + str_idx))
+	{
+		*(is_visited + row * cols + col) = true;
+		hasPathRecursively(matrix, rows, cols, row + 1, col, str, str_idx + 1, res, is_visited);
+		hasPathRecursively(matrix, rows, cols, row - 1, col, str, str_idx + 1, res, is_visited);
+		hasPathRecursively(matrix, rows, cols, row, col + 1, str, str_idx + 1, res, is_visited);
+		hasPathRecursively(matrix, rows, cols, row, col - 1, str, str_idx + 1, res, is_visited);
+		if (res == false)
+			*(is_visited + row * cols + col) = false;
+	}
+}
+bool hasPath(char* matrix, int rows, int cols, char* str)
+{
+	if (matrix == nullptr || rows < 1 || cols < 1 || str == nullptr)
+		return false;
+
+	bool *is_visited = new bool[rows * cols];
+	for (int i = 0; i < rows * cols; i++)
+		*(is_visited + i) = false;
+
+	bool res = false;
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < cols; j++)
+		{
+			if (res == true)
+			{
+				delete is_visited;
+				return true;
+			}
+			hasPathRecursively(matrix, rows, cols, i, j, str, 0, res, is_visited);
+		}
+	}
+	delete is_visited;
+	return res;
+}
+
+/*
+地上有一个m行和n列的方格。
+一个机器人从坐标0,0的格子开始移动，每一次只能向左，右，上，下四个方向移动一格，但是不能进入行坐标和列坐标的数位之和大于k的格子。
+例如，当k为18时，机器人能够进入方格（35,37），因为3+5+3+7 = 18。
+但是，它不能进入方格（35,38），因为3+5+3+8 = 19。请问该机器人能够达到多少个格子？
+思路：回溯法
+*/
+void movingCountRecursively(int threshold, int rows, int cols, int row, int col, bool *is_visited)
+{
+	static auto getIdxDigitBitSum = [](int idx) -> int
+	{
+		int sum = 0;
+		while (idx != 0)
+		{
+			sum += idx % 10;
+			idx /= 10;
+		}
+		return sum;
+	};
+
+	if (row >= 0 && row < rows && col >= 0 && col < cols
+		&& *(is_visited + row * cols + col) == false
+		&& getIdxDigitBitSum(row) + getIdxDigitBitSum(col) <= threshold)
+	{
+		*(is_visited + row * cols + col) = true;
+		movingCountRecursively(threshold, rows, cols, row + 1, col, is_visited);
+		movingCountRecursively(threshold, rows, cols, row - 1, col, is_visited);
+		movingCountRecursively(threshold, rows, cols, row, col - 1, is_visited);
+		movingCountRecursively(threshold, rows, cols, row, col + 1, is_visited);
+	}
+}
+int movingCount(int threshold, int rows, int cols)
+{
+	if (threshold < 0 || rows < 1 || cols < 1)
+		return 0;
+
+	bool *is_visited = new bool[rows * cols];
+	for (int i = 0; i < rows * cols; i++)
+		is_visited[i] = false;
+
+	movingCountRecursively(threshold, rows, cols, 0, 0, is_visited);
+
+	int res = 0;
+	for (int i = 0; i < rows * cols; i++)
+	{
+		if (is_visited[i] == true)
+			++res;
+	}
+	delete is_visited;
+	return res;
+}
+
 int main(int argc, char **argv)
 {
+	//TreeExample treeExample;
+	////preOrder(treeExample.getTree());
+	//char *s = Serialize(treeExample.getTree());
+	//cout << str_temp << endl;
+	//TreeNode *pRoot = Deserialize(s);
+	//preOrder(pRoot);
+
+	//printContainer(multiply({ 1,2,3,4,5 }));
+
+	//cout << sizeof(int) << " " << sizeof(long) << " " << sizeof(long long) << endl;
+
+	//cout << Add(124, 345) << endl;
+
+	//cout << LastRemaining_Solution(5, 3) << endl;
+
 	//cout << ReverseSentence("I am a student.") << endl;
 
 	/*cout << GetNumberOfK({ 1,2,3,3,3,3,4,5 }, 3) << endl;*/
