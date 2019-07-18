@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <iostream>
 #include <fstream>
@@ -51,7 +51,7 @@ struct TreeNode
     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-void preOrder(TreeNode * root)
+void preOrder(TreeNode *root)
 {
     if (root == NULL)
         return;
@@ -61,7 +61,7 @@ void preOrder(TreeNode * root)
     preOrder(root->right);
 }
 
-void middleOrder(TreeNode * root)
+void middleOrder(TreeNode *root)
 {
     if (root == NULL)
         return;
@@ -71,7 +71,7 @@ void middleOrder(TreeNode * root)
     middleOrder(root->right);
 }
 
-void postOrder(TreeNode * root)
+void postOrder(TreeNode *root)
 {
     if (root == NULL)
         return;
@@ -137,8 +137,8 @@ private:
 };
 
 /*
-¶¨ÒåÕ»µÄÊı¾İ½á¹¹£¬ÇëÔÚ¸ÃÀàĞÍÖĞÊµÏÖÒ»¸öÄÜ¹»µÃµ½Õ»ÖĞËùº¬×îĞ¡ÔªËØµÄminº¯Êı£¨Ê±¼ä¸´ÔÓ¶ÈÓ¦ÎªO(1)£©¡£
-Ë¼Â·£ºË«Õ»·¨£¬Ò»¸ö±£´æÊı¾İ£¬ÁíÒ»¸ö±£´æ×îĞ¡Öµ£¬Ñ¹ÈëÊı¾İÊ±£¬±È½Ïµ±Ç°ÊıÓë×îĞ¡Õ»µÄÕ»¶¥£¬½«½ÏĞ¡µÄÑ¹Èë×îĞ¡Õ»
+å®šä¹‰æ ˆçš„æ•°æ®ç»“æ„ï¼Œè¯·åœ¨è¯¥ç±»å‹ä¸­å®ç°ä¸€ä¸ªèƒ½å¤Ÿå¾—åˆ°æ ˆä¸­æ‰€å«æœ€å°å…ƒç´ çš„minå‡½æ•°ï¼ˆæ—¶é—´å¤æ‚åº¦åº”ä¸ºO(1)ï¼‰ã€‚
+æ€è·¯ï¼šåŒæ ˆæ³•ï¼Œä¸€ä¸ªä¿å­˜æ•°æ®ï¼Œå¦ä¸€ä¸ªä¿å­˜æœ€å°å€¼ï¼Œå‹å…¥æ•°æ®æ—¶ï¼Œæ¯”è¾ƒå½“å‰æ•°ä¸æœ€å°æ ˆçš„æ ˆé¡¶ï¼Œå°†è¾ƒå°çš„å‹å…¥æœ€å°æ ˆ
 */
 template <typename T>
 class StackWithMin
@@ -198,7 +198,7 @@ struct TreeLinkNode
     int val;
     struct TreeLinkNode *left;
     struct TreeLinkNode *right;
-    struct TreeLinkNode *next; // ¸¸½ÚµãÖ¸Õë
+    struct TreeLinkNode *next; // çˆ¶èŠ‚ç‚¹æŒ‡é’ˆ
     TreeLinkNode(int x) :val(x), left(NULL), right(NULL), next(NULL) {}
 };
 
@@ -222,6 +222,12 @@ public:
 
         this->pRoot = node1;
     }
+    TreeExample(std::function<TreeNode *()> buildTreeFunc)
+    {
+        this->pRoot = buildTreeFunc();
+    }
+    TreeExample(TreeNode *p) : pRoot(p) {}
+
     ~TreeExample()
     {
         destroyTree(this->pRoot);
@@ -243,18 +249,18 @@ private:
 };
 
 /*
-ÈçºÎµÃµ½Ò»¸öÊı¾İÁ÷ÖĞµÄÖĞÎ»Êı£¿
-Èç¹û´ÓÊı¾İÁ÷ÖĞ¶Á³öÆæÊı¸öÊıÖµ£¬ÄÇÃ´ÖĞÎ»Êı¾ÍÊÇËùÓĞÊıÖµÅÅĞòÖ®ºóÎ»ÓÚÖĞ¼äµÄÊıÖµ¡£
-Èç¹û´ÓÊı¾İÁ÷ÖĞ¶Á³öÅ¼Êı¸öÊıÖµ£¬ÄÇÃ´ÖĞÎ»Êı¾ÍÊÇËùÓĞÊıÖµÅÅĞòÖ®ºóÖĞ¼äÁ½¸öÊıµÄÆ½¾ùÖµ¡£
-ÎÒÃÇÊ¹ÓÃInsert()·½·¨¶ÁÈ¡Êı¾İÁ÷£¬Ê¹ÓÃGetMedian()·½·¨»ñÈ¡µ±Ç°¶ÁÈ¡Êı¾İµÄÖĞÎ»Êı¡£
-Ë¼Â·£º
-1£©°ÑÊı¾İÁ÷·Ö³É×óÓÒÁ½²¿·Ö£¬×ó²¿·ÖËùÓĞµÄÊı¶¼²»´óÓÚÓÒ²¿·Ö£¬²¢ÇÒ×óÓÒ²¿·ÖµÄ³¤¶È²î²»³¬¹ı1£¬ÄÇÃ´ÖĞÎ»ÊıÓÉ×ó²¿·Ö×î´óÖµºÍÓÒ²¿·Ö×îĞ¡Öµ¾ö¶¨
-2£©¶¯Ì¬Î¬»¤Á½¸öÓÅÏÈ¶ÓÁĞ
-  a.×ó²¿·ÖÊÇÒ»¸ö´ó¸ù¶Ñ£¬ÓÒ²¿·ÖÊÇÒ»¸öĞ¡¸ù¶Ñ
-  b.¶ÁÈëµÚÆæÊı¸öÊıÊ±£¬²åÈë×ó²¿·Ö£¬·ñÔò²åÈëÓÒ²¿·Ö
-  c.²åÈëÊ±£¬ĞèÒªĞŞÕı´óĞ¡¸ù¶ÑµÄ¸ù½Úµã£¬±£Ö¤×ó²¿·ÖËùÓĞµÄÊı¶¼²»´óÓÚÓÒ²¿·Ö
-    1.²åÈë×ó±ßÊ±£¬Èç¹ûĞÂµÄÊı±ÈÓÒ±ß×îĞ¡µÄÊıÒª´ó£¬°ÑĞÂ½Úµã²åÈëÓÒ±ß£¬²¢°ÑÓÒ±ß×îĞ¡µÄÊı²åÈë×ó±ß
-    1.²åÈëÓÒ±ßÊ±£¬Èç¹ûĞÂµÄÊı±È×ó±ß×î´óµÄÊıÒªĞ¡£¬°ÑĞÂ½Úµã²åÈë×ó±ß£¬²¢°Ñ×ó±ß×î´óµÄÊı²åÈëÓÒ±ß
+å¦‚ä½•å¾—åˆ°ä¸€ä¸ªæ•°æ®æµä¸­çš„ä¸­ä½æ•°ï¼Ÿ
+å¦‚æœä»æ•°æ®æµä¸­è¯»å‡ºå¥‡æ•°ä¸ªæ•°å€¼ï¼Œé‚£ä¹ˆä¸­ä½æ•°å°±æ˜¯æ‰€æœ‰æ•°å€¼æ’åºä¹‹åä½äºä¸­é—´çš„æ•°å€¼ã€‚
+å¦‚æœä»æ•°æ®æµä¸­è¯»å‡ºå¶æ•°ä¸ªæ•°å€¼ï¼Œé‚£ä¹ˆä¸­ä½æ•°å°±æ˜¯æ‰€æœ‰æ•°å€¼æ’åºä¹‹åä¸­é—´ä¸¤ä¸ªæ•°çš„å¹³å‡å€¼ã€‚
+æˆ‘ä»¬ä½¿ç”¨Insert()æ–¹æ³•è¯»å–æ•°æ®æµï¼Œä½¿ç”¨GetMedian()æ–¹æ³•è·å–å½“å‰è¯»å–æ•°æ®çš„ä¸­ä½æ•°ã€‚
+æ€è·¯ï¼š
+1ï¼‰æŠŠæ•°æ®æµåˆ†æˆå·¦å³ä¸¤éƒ¨åˆ†ï¼Œå·¦éƒ¨åˆ†æ‰€æœ‰çš„æ•°éƒ½ä¸å¤§äºå³éƒ¨åˆ†ï¼Œå¹¶ä¸”å·¦å³éƒ¨åˆ†çš„é•¿åº¦å·®ä¸è¶…è¿‡1ï¼Œé‚£ä¹ˆä¸­ä½æ•°ç”±å·¦éƒ¨åˆ†æœ€å¤§å€¼å’Œå³éƒ¨åˆ†æœ€å°å€¼å†³å®š
+2ï¼‰åŠ¨æ€ç»´æŠ¤ä¸¤ä¸ªä¼˜å…ˆé˜Ÿåˆ—
+  a.å·¦éƒ¨åˆ†æ˜¯ä¸€ä¸ªå¤§æ ¹å †ï¼Œå³éƒ¨åˆ†æ˜¯ä¸€ä¸ªå°æ ¹å †
+  b.è¯»å…¥ç¬¬å¥‡æ•°ä¸ªæ•°æ—¶ï¼Œæ’å…¥å·¦éƒ¨åˆ†ï¼Œå¦åˆ™æ’å…¥å³éƒ¨åˆ†
+  c.æ’å…¥æ—¶ï¼Œéœ€è¦ä¿®æ­£å¤§å°æ ¹å †çš„æ ¹èŠ‚ç‚¹ï¼Œä¿è¯å·¦éƒ¨åˆ†æ‰€æœ‰çš„æ•°éƒ½ä¸å¤§äºå³éƒ¨åˆ†
+    1.æ’å…¥å·¦è¾¹æ—¶ï¼Œå¦‚æœæ–°çš„æ•°æ¯”å³è¾¹æœ€å°çš„æ•°è¦å¤§ï¼ŒæŠŠæ–°èŠ‚ç‚¹æ’å…¥å³è¾¹ï¼Œå¹¶æŠŠå³è¾¹æœ€å°çš„æ•°æ’å…¥å·¦è¾¹
+    1.æ’å…¥å³è¾¹æ—¶ï¼Œå¦‚æœæ–°çš„æ•°æ¯”å·¦è¾¹æœ€å¤§çš„æ•°è¦å°ï¼ŒæŠŠæ–°èŠ‚ç‚¹æ’å…¥å·¦è¾¹ï¼Œå¹¶æŠŠå·¦è¾¹æœ€å¤§çš„æ•°æ’å…¥å³è¾¹
 */
 class MedianInStream
 {
@@ -301,11 +307,11 @@ public:
     }
 
 private:
-    priority_queue<int> left_max_heap; // ×ó²¿·Ö´ó¸ù¶Ñ
-    priority_queue<int, vector<int>, greater<int>> right_min_heap; // ÓÒ²¿·ÖĞ¡¸ù¶Ñ
+    priority_queue<int> left_max_heap; // å·¦éƒ¨åˆ†å¤§æ ¹å †
+    priority_queue<int, vector<int>, greater<int>> right_min_heap; // å³éƒ¨åˆ†å°æ ¹å †
 };
 
-ListNode * buildList(const vector<int> & vec)
+ListNode *buildList(const vector<int> &vec)
 {
     if (vec.empty())
         return nullptr;
@@ -320,7 +326,7 @@ ListNode * buildList(const vector<int> & vec)
     return head;
 }
 
-void printList(ListNode * head)
+void printList(ListNode *head)
 {
     while (head != nullptr)
     {
@@ -361,5 +367,354 @@ public:
     {
         val = _val;
         neighbors = _neighbors;
+    }
+};
+
+/*
+å®ç°ä¸€ä¸ª Trie (å‰ç¼€æ ‘)ï¼ŒåŒ…å«Â insert,Â search, å’ŒÂ startsWithÂ è¿™ä¸‰ä¸ªæ“ä½œã€‚
+
+ç¤ºä¾‹:
+Trie trie = new Trie();
+trie.insert("apple");
+trie.search("apple");   // è¿”å› true
+trie.search("app");     // è¿”å› false
+trie.startsWith("app"); // è¿”å› true
+trie.insert("app");
+trie.search("app");     // è¿”å› true
+
+è¯´æ˜:
+ä½ å¯ä»¥å‡è®¾æ‰€æœ‰çš„è¾“å…¥éƒ½æ˜¯ç”±å°å†™å­—æ¯Â a-zÂ æ„æˆçš„ã€‚
+ä¿è¯æ‰€æœ‰è¾“å…¥å‡ä¸ºéç©ºå­—ç¬¦ä¸²ã€‚
+*/
+class Trie
+{
+public:
+    /** Initialize your data structure here. */
+    Trie()
+    {
+        this->root = new TrieNode();
+    }
+
+    ~Trie()
+    {
+        this->deleteTrie(this->root);
+    }
+
+    /** Inserts a word into the trie. */
+    void insert(const string &word)
+    {
+        if (word.empty())
+            return;
+
+        TrieNode *pnode = this->root;
+        for (char c : word)
+        {
+            int idx = c - 'a';
+            if (pnode->childNodes[idx] == nullptr)
+            {
+                pnode->childNodes[idx] = new TrieNode();
+            }
+            pnode = pnode->childNodes[idx];
+        }
+        pnode->isWord = true;
+    }
+
+    /** Returns if the word is in the trie. */
+    bool search(const string &word)
+    {
+        if (word.empty())
+            return true;
+
+        TrieNode *pnode = this->root;
+        for (char c : word)
+        {
+            int idx = c - 'a';
+            if (pnode->childNodes[idx] == nullptr)
+            {
+                return false;
+            }
+            pnode = pnode->childNodes[idx];
+        }
+        return pnode->isWord;
+    }
+
+    /** Returns if there is any word in the trie that starts with the given prefix. */
+    bool startsWith(const string &prefix)
+    {
+        if (prefix.empty())
+            return true;
+
+        TrieNode *pnode = this->root;
+        for (char c : prefix)
+        {
+            int idx = c - 'a';
+            if (pnode->childNodes[idx] == nullptr)
+            {
+                return false;
+            }
+            pnode = pnode->childNodes[idx];
+        }
+        return true;
+    }
+
+private:
+    static constexpr int kChildNodeNum = 26;
+    struct TrieNode
+    {
+        bool isWord;
+        TrieNode *childNodes[kChildNodeNum];
+
+        TrieNode() : isWord(false)
+        {
+            for (int i = 0; i < kChildNodeNum; i++)
+            {
+                childNodes[i] = nullptr;
+            }
+        }
+    };
+    TrieNode *root;
+
+    void deleteTrie(TrieNode *pnode)
+    {
+        for (int i = 0; i < kChildNodeNum; i++)
+        {
+            if (pnode->childNodes[i] != nullptr)
+                deleteTrie(pnode->childNodes[i]);
+        }
+        delete pnode;
+    }
+};
+
+/*
+è®¾è®¡ä¸€ä¸ªæ”¯æŒä»¥ä¸‹ä¸¤ç§æ“ä½œçš„æ•°æ®ç»“æ„ï¼š
+void addWord(word)
+bool search(word)
+search(word)Â å¯ä»¥æœç´¢æ–‡å­—æˆ–æ­£åˆ™è¡¨è¾¾å¼å­—ç¬¦ä¸²ï¼Œå­—ç¬¦ä¸²åªåŒ…å«å­—æ¯Â .Â æˆ–Â a-zÂ ã€‚Â . å¯ä»¥è¡¨ç¤ºä»»ä½•ä¸€ä¸ªå­—æ¯ã€‚
+
+ç¤ºä¾‹:
+addWord("bad")
+addWord("dad")
+addWord("mad")
+search("pad") -> false
+search("bad") -> true
+search(".ad") -> true
+search("b..") -> true
+
+è¯´æ˜:
+ä½ å¯ä»¥å‡è®¾æ‰€æœ‰å•è¯éƒ½æ˜¯ç”±å°å†™å­—æ¯ a-zÂ ç»„æˆçš„
+*/
+class WordDictionary
+{
+public:
+    /** Initialize your data structure here. */
+    WordDictionary()
+    {
+        this->root = new TrieNode();
+    }
+
+    /** Adds a word into the data structure. */
+    void addWord(const string &word)
+    {
+        if (word.empty())
+            return;
+
+        TrieNode *pnode = this->root;
+        for (char c : word)
+        {
+            int idx = c - 'a';
+            if (pnode->childNodes[idx] == nullptr)
+            {
+                pnode->childNodes[idx] = new TrieNode();
+            }
+            pnode = pnode->childNodes[idx];
+        }
+        pnode->isWord = true;
+    }
+
+    /** Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. */
+    bool search(const string &word)
+    {
+        if (word.empty())
+            return false;
+
+        bool res = false;
+        searchRecursively(word, 0, this->root, res);
+        return res;
+    }
+
+private:
+    static constexpr int kChildNodeNum = 26;
+    struct TrieNode
+    {
+        bool isWord;
+        TrieNode *childNodes[kChildNodeNum];
+
+        TrieNode() : isWord(false)
+        {
+            for (int i = 0; i < kChildNodeNum; i++)
+            {
+                childNodes[i] = nullptr;
+            }
+        }
+    };
+    TrieNode *root;
+
+    void searchRecursively(const string &w, int idx, TrieNode *p, bool &res)
+    {
+        if (idx == w.size() && p->isWord == true)
+        {
+            res = true;
+            return;
+        }
+
+        if (idx >= w.size() || res == true)
+            return;
+
+        char c = w[idx];
+        if (c != '.')
+        {
+            int i = c - 'a';
+            if (p->childNodes[i] != nullptr)
+            {
+                searchRecursively(w, idx + 1, p->childNodes[i], res);
+            }
+        }
+        else
+        {
+            for (int i = 0; res != true && i < kChildNodeNum; ++i)
+            {
+                if (p->childNodes[i] != nullptr)
+                {
+                    searchRecursively(w, idx + 1, p->childNodes[i], res);
+                }
+            }
+        }
+    }
+};
+
+/*
+ç»™å®šä¸€ä¸ªäºŒç»´çŸ©é˜µï¼Œè®¡ç®—å…¶å­çŸ©å½¢èŒƒå›´å†…å…ƒç´ çš„æ€»å’Œï¼Œè¯¥å­çŸ©é˜µçš„å·¦ä¸Šè§’ä¸º (row1,Â col1) ï¼Œå³ä¸‹è§’ä¸º (row2,Â col2)ã€‚
+
+ç¤ºä¾‹:
+ç»™å®š matrix = [
+  [3, 0, 1, 4, 2],
+  [5, 6, 3, 2, 1],
+  [1, 2, 0, 1, 5],
+  [4, 1, 0, 1, 7],
+  [1, 0, 3, 0, 5]
+]
+sumRegion(2, 1, 4, 3) -> 8
+sumRegion(1, 1, 2, 2) -> 11
+sumRegion(1, 2, 2, 4) -> 12
+
+è¯´æ˜:
+ä½ å¯ä»¥å‡è®¾çŸ©é˜µä¸å¯å˜ã€‚
+ä¼šå¤šæ¬¡è°ƒç”¨Â sumRegionÂ æ–¹æ³•ã€‚
+ä½ å¯ä»¥å‡è®¾Â row1 â‰¤ row2 ä¸”Â col1 â‰¤ col2ã€‚
+*/
+class NumMatrix
+{
+public:
+    NumMatrix(const vector<vector<int>> &matrix) : cachedMatrix_(std::move(matrix))
+    {
+        int rows = cachedMatrix_.size();
+        if (rows < 1)
+            return;
+        int cols = cachedMatrix_[0].size();
+        if (cols < 1)
+            return;
+
+        for (int row = 0; row < rows; row++)
+        {
+            for (int col = 0; col < cols; col++)
+            {
+                if (row == 0 && col == 0)
+                    continue;
+                else if (row == 0)
+                    cachedMatrix_[row][col] += cachedMatrix_[row][col - 1];
+                else if (col == 0)
+                    cachedMatrix_[row][col] += cachedMatrix_[row - 1][col];
+                else
+                    cachedMatrix_[row][col] += cachedMatrix_[row - 1][col] - cachedMatrix_[row - 1][col - 1] + cachedMatrix_[row][col - 1];
+            }
+        }
+    }
+
+    int sumRegion(int row1, int col1, int row2, int col2)
+    {
+        if (row1 > 0 && col1 == 0)
+            return cachedMatrix_[row2][col2] - cachedMatrix_[row1 - 1][col2];
+        else if (row1 == 0 && col1 > 0)
+            return cachedMatrix_[row2][col2] - cachedMatrix_[row2][col1 - 1];
+        else if (row1 == 0 && col1 == 0)
+            return cachedMatrix_[row2][col2];
+        else
+            return cachedMatrix_[row2][col2] - cachedMatrix_[row1 - 1][col2] - cachedMatrix_[row2][col1 - 1] + cachedMatrix_[row1 - 1][col1 - 1];
+    }
+
+private:
+    vector<vector<int>> cachedMatrix_;
+};
+
+/*
+ç»™å®šä¸€ä¸ªæ•´æ•°æ•°ç»„ Â numsï¼Œæ±‚å‡ºæ•°ç»„ä»ç´¢å¼•Â iÂ åˆ°Â jÂ Â (iÂ â‰¤Â j) èŒƒå›´å†…å…ƒç´ çš„æ€»å’Œï¼ŒåŒ…å«Â i,Â  jÂ ä¸¤ç‚¹ã€‚
+update(i, val) å‡½æ•°å¯ä»¥é€šè¿‡å°†ä¸‹æ ‡ä¸ºÂ iÂ çš„æ•°å€¼æ›´æ–°ä¸ºÂ valï¼Œä»è€Œå¯¹æ•°åˆ—è¿›è¡Œä¿®æ”¹ã€‚
+
+ç¤ºä¾‹:
+Given nums = [1, 3, 5]
+sumRange(0, 2) -> 9
+update(1, 2)
+sumRange(0, 2) -> 8
+
+è¯´æ˜:
+æ•°ç»„ä»…å¯ä»¥åœ¨Â updateÂ å‡½æ•°ä¸‹è¿›è¡Œä¿®æ”¹ã€‚
+ä½ å¯ä»¥å‡è®¾ update å‡½æ•°ä¸ sumRange å‡½æ•°çš„è°ƒç”¨æ¬¡æ•°æ˜¯å‡åŒ€åˆ†å¸ƒçš„ã€‚
+
+æ€è·¯ï¼šæ ‘çŠ¶æ•°ç»„
+*/
+class NumArray
+{
+public:
+    NumArray(const vector<int> &nums) : nums_(nums.size(), 0), treeArray_(nums.size() + 1, 0)
+    {
+        for (int i = 0; i < nums.size(); i++)
+        {
+            update(i, nums[i]);
+        }
+    }
+
+    void update(int i, int val)
+    {
+        int diff = val - nums_[i];
+        nums_[i] = val;
+        ++i;
+        for (; i < treeArray_.size(); i += lowBit(i))
+        {
+            treeArray_[i] += diff;
+        }
+    }
+
+    int sumRange(int i, int j)
+    {
+        return sum(j) - sum(i - 1);
+    }
+private:
+    vector<int> nums_;
+    vector<int> treeArray_;
+
+    int lowBit(int i)
+    {
+        return i & -i;
+    }
+
+    int sum(int i)
+    {
+        int res = 0;
+        ++i;
+        for (; i > 0; i -= lowBit(i))
+        {
+            res += treeArray_[i];
+        }
+        return res;
     }
 };

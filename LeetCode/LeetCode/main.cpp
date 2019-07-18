@@ -1,4 +1,5 @@
 ﻿#include "headers.h"
+#include "main.h"
 
 // 最长回文子串（动态规划）
 string longestPalindromeDP(const string &s)
@@ -48,7 +49,7 @@ string longestPalindromeDP(const string &s)
 // 最长回文子串（中心拓展法）
 string longestPalindrome(const string &s)
 {
-    static auto expandFromCenter = [](const string & s, int center1, int center2) -> int
+    static auto expandFromCenter = [](const string &s, int center1, int center2) -> int
     {
         int l = center1, r = center2;
         int sz = s.length();
@@ -87,7 +88,7 @@ string longestPalindrome(const string &s)
 //A P L S I I G
 //Y   I   R
 //之后从左往右，逐行读取字符："PAHNAPLSIIGYIR"
-string convert(const string & s, int numRows)
+string convert(const string &s, int numRows)
 {
     if (s.length() == numRows || numRows == 1)
         return s;
@@ -170,7 +171,7 @@ string convert(const string & s, int numRows)
     return res;
 }
 
-int my_atoi(const string & str)
+int my_atoi(const string &str)
 {
     auto is_num = [](char ch) -> bool
     {
@@ -241,7 +242,7 @@ int my_atoi(const string & str)
     return isNe ? -res : res;
 }
 
-bool isMatch(const string & s, const string & p)
+bool isMatch(const string &s, const string &p)
 {
     auto isNum = [](char ch) -> bool
     {
@@ -299,7 +300,7 @@ bool isMatch(const string & s, const string & p)
     return false;
 }
 
-bool isMatchRE(const string & s, const string & p)
+bool isMatchRE(const string &s, const string &p)
 {
     regex r(p);
     return regex_match(s, r);
@@ -376,7 +377,7 @@ bool isMatchDP(string s, string p)
     return sp[m][n];
 }
 
-int romanToInt(const string & s)
+int romanToInt(const string &s)
 {
     unordered_map<char, int> um;
     um['I'] = 1;
@@ -438,7 +439,7 @@ int romanToInt(const string & s)
 
 vector<vector<int>> threeSum(vector<int> nums)
 {
-    auto isDu = [](vector<int> l, vector<int> & r) -> bool
+    auto isDu = [](vector<int> l, vector<int> &r) -> bool
     {
         for (auto &num : r)
         {
@@ -590,7 +591,7 @@ string intToRoman(int num)
     return res;
 }
 
-void letterCombinationsDFS(const string & digits, string d2l[], int level, string & out, vector<string> & res)
+void letterCombinationsDFS(const string &digits, string d2l[], int level, string &out, vector<string> &res)
 {
     if (level == digits.length())
         res.push_back(out);
@@ -616,7 +617,7 @@ vector<string> letterCombinations(string digits)
     return res;
 }
 
-vector<vector<int>> fourSum(vector<int> & nums, int target)
+vector<vector<int>> fourSum(vector<int> &nums, int target)
 {
     vector<vector<int>> res;
     if (nums.size() < 4)
@@ -674,7 +675,7 @@ vector<vector<int>> fourSum(vector<int> & nums, int target)
     return res;
 }
 
-void generateParenthesisDFS(int left, int right, string s, vector<string> & res)
+void generateParenthesisDFS(int left, int right, string s, vector<string> &res)
 {
     if (left == 0 && right == 0)
         res.push_back(s);
@@ -707,7 +708,7 @@ vector<string> generateParenthesis(int n)
     return res;
 }
 
-ListNode *mergeKLists(vector<ListNode *> & lists)
+ListNode *mergeKLists(vector<ListNode *> &lists)
 {
     /*
     合并 k 个排序链表，返回合并后的排序链表。请分析和描述算法的复杂度。
@@ -720,7 +721,7 @@ ListNode *mergeKLists(vector<ListNode *> & lists)
     ]
     输出: 1->1->2->3->4->4->5->6
     */
-    auto cmp = [](ListNode * a, ListNode * b) -> bool
+    auto cmp = [](ListNode *a, ListNode *b) -> bool
     {
         return a->val > b->val;
     };
@@ -806,7 +807,7 @@ int divide(int dividend, int divisor)
     return isPos ? static_cast<int>(res) : (0 - static_cast<int>(res));
 }
 
-void findSubstringDFS(vector<string> & words, string s, vector<string> & res)
+void findSubstringDFS(vector<string> &words, string s, vector<string> &res)
 {
     if (words.empty())
         res.push_back(s);
@@ -827,7 +828,7 @@ void findSubstringDFS(vector<string> & words, string s, vector<string> & res)
     }
 }
 
-vector<string> findSubstringDFS(vector<string> & words)
+vector<string> findSubstringDFS(vector<string> &words)
 {
     set<string> res;
     vector<int> t;
@@ -846,7 +847,7 @@ vector<string> findSubstringDFS(vector<string> & words)
     return vector<string>(res.begin(), res.end());
 }
 
-vector<int> findSubstring(string s, vector<string> & words)
+vector<int> findSubstring(string s, vector<string> &words)
 {
     /*
     给定一个字符串 s 和一些长度相同的单词 words。在 s 中找出可以恰好串联 words 中所有单词的子串的起始位置。
@@ -889,7 +890,7 @@ vector<int> findSubstring(string s, vector<string> & words)
     return vector<int>(t.begin(), t.end());
 }
 
-vector<int> findSubstringBetter(const string s, const vector<string> & words)
+vector<int> findSubstringBetter(const string s, const vector<string> &words)
 {
     vector<int> res;
     if (s.empty() || words.empty())
@@ -925,7 +926,7 @@ vector<int> findSubstringBetter(const string s, const vector<string> & words)
     return res;
 }
 
-vector<int> findSubstringLinear(const string s, const vector<string> & words)
+vector<int> findSubstringLinear(const string s, const vector<string> &words)
 {
     vector<int> res;
     if (s.empty() || words.empty())
@@ -990,7 +991,7 @@ vector<int> findSubstringLinear(const string s, const vector<string> & words)
     return res;
 }
 
-int longestValidParentheses(const string & s)
+int longestValidParentheses(const string &s)
 {
     /*
     给定一个只包含 '(' 和 ')' 的字符串，找出最长的包含有效括号的子串的长度。
@@ -1026,7 +1027,7 @@ int longestValidParentheses(const string & s)
     return res;
 }
 
-int longestValidParenthesesDP(const string & s)
+int longestValidParenthesesDP(const string &s)
 {
     if (s.size() < 2)
         return 0;
@@ -1057,7 +1058,7 @@ int longestValidParenthesesDP(const string & s)
     return res;
 }
 
-int search(vector<int> & nums, int target)
+int search(vector<int> &nums, int target)
 {
     /*
     假设按照升序排序的数组在预先未知的某个点上进行了旋转。
@@ -1108,7 +1109,7 @@ int search(vector<int> & nums, int target)
     return -1;
 }
 
-vector<int> searchRange(vector<int> & nums, int target)
+vector<int> searchRange(vector<int> &nums, int target)
 {
     /*
     类似std::equal_range
@@ -1168,7 +1169,7 @@ vector<int> searchRange(vector<int> & nums, int target)
         return { -1, -1 };
 }
 
-void combinationSumDFS(vector<int> & c, int start, int target, vector<int> & temp, vector<vector<int>> & res)
+void combinationSumDFS(vector<int> &c, int start, int target, vector<int> &temp, vector<vector<int>> &res)
 {
     if (target < 0)
         return;
@@ -1188,7 +1189,7 @@ void combinationSumDFS(vector<int> & c, int start, int target, vector<int> & tem
     }
 }
 
-vector<vector<int>> combinationSum(vector<int> & candidates, int target)
+vector<vector<int>> combinationSum(vector<int> &candidates, int target)
 {
     /*
     给定一个无重复元素的数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
@@ -1221,7 +1222,7 @@ vector<vector<int>> combinationSum(vector<int> & candidates, int target)
     return res;
 }
 
-void combinationSum2DFS(vector<int> & c, int start, int target, vector<int> & temp, vector<vector<int>> & res)
+void combinationSum2DFS(vector<int> &c, int start, int target, vector<int> &temp, vector<vector<int>> &res)
 {
     if (target < 0)
         return;
@@ -1243,7 +1244,7 @@ void combinationSum2DFS(vector<int> & c, int start, int target, vector<int> & te
     }
 }
 
-vector<vector<int>> combinationSum2(vector<int> & candidates, int target)
+vector<vector<int>> combinationSum2(vector<int> &candidates, int target)
 {
     /*
     给定一个数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
@@ -1277,7 +1278,7 @@ vector<vector<int>> combinationSum2(vector<int> & candidates, int target)
     return res;
 }
 
-string multiplyOneDigit(const string & num, char digit)
+string multiplyOneDigit(const string &num, char digit)
 {
     if (digit == '0')
         return "0";
@@ -1296,7 +1297,7 @@ string multiplyOneDigit(const string & num, char digit)
     return res;
 }
 
-string add(const string & n1, const string & n2)
+string add(const string &n1, const string &n2)
 {
     if (n1 == "0")
         return n2;
@@ -1416,7 +1417,7 @@ double myPowBitwise(double x, int n)
     return res;
 }
 
-int firstMissingPositive(vector<int> & nums)
+int firstMissingPositive(vector<int> &nums)
 {
     /*
     给定一个未排序的整数数组，找出其中没有出现的最小的正整数。
@@ -1453,7 +1454,7 @@ int firstMissingPositive(vector<int> & nums)
     return nums.size() + 1;
 }
 
-int firstMissingPositiveFaster(vector<int> & nums)
+int firstMissingPositiveFaster(vector<int> &nums)
 {
     if (nums.empty())
         return 1;
@@ -1472,7 +1473,7 @@ int firstMissingPositiveFaster(vector<int> & nums)
     return nums.size() + 1;
 }
 
-int trap(vector<int> & height)
+int trap(vector<int> &height)
 {
     /*
     给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。
@@ -1512,7 +1513,7 @@ int trap(vector<int> & height)
     return sum;
 }
 
-int jump(vector<int> & nums)
+int jump(vector<int> &nums)
 {
     /*
     给定一个非负整数数组，你最初位于数组的第一个位置。
@@ -1544,7 +1545,7 @@ int jump(vector<int> & nums)
     return res;
 }
 
-void solveNQueuesDFS(int n, vector<int> & pos, int row, vector<vector<string>> & res)
+void solveNQueuesDFS(int n, vector<int> &pos, int row, vector<vector<string>> &res)
 {
     if (row == n) // 深搜达到最底层，即搜索完所有行
     {
@@ -1594,7 +1595,7 @@ vector<vector<string>> solveNQueens(int n)
 }
 
 template <typename T>
-pair<T, T> minmax(const vector<T> & input_sequence, size_t start, size_t stop)
+pair<T, T> minmax(const vector<T> &input_sequence, size_t start, size_t stop)
 {
     /*
     二分法求最小最大值。
@@ -1629,7 +1630,7 @@ pair<T, T> minmax(const vector<T> & input_sequence, size_t start, size_t stop)
 }
 
 template <typename T>
-void heapPermute(vector<T> & seqs, size_t n, vector<vector<T>> & res)
+void heapPermute(vector<T> &seqs, size_t n, vector<vector<T>> &res)
 {
     if (n == 0)
     {
@@ -1649,7 +1650,7 @@ void heapPermute(vector<T> & seqs, size_t n, vector<vector<T>> & res)
 }
 
 template <typename T>
-vector<vector<T>> heapPermutation(vector<T> & seqs)
+vector<vector<T>> heapPermutation(vector<T> &seqs)
 {
     if (seqs.empty())
         throw runtime_error("input sequence is empty.");
@@ -1660,7 +1661,7 @@ vector<vector<T>> heapPermutation(vector<T> & seqs)
     return res;
 }
 
-void selectSort(vector<int> & a)
+void selectSort(vector<int> &a)
 {
     size_t length = a.size();
     int t;
@@ -1681,7 +1682,7 @@ void selectSort(vector<int> & a)
 }
 
 template<typename T>
-void merge(vector<T> & seqs, size_t start, size_t middle, size_t end)
+void merge(vector<T> &seqs, size_t start, size_t middle, size_t end)
 {
     vector<T> temp(end - start + 1);
     size_t i = start, j = middle + 1, k = 0;
@@ -1711,7 +1712,7 @@ void merge(vector<T> & seqs, size_t start, size_t middle, size_t end)
 }
 
 template<typename T>
-void mergesort(vector<T> & seqs, size_t start, size_t end)
+void mergesort(vector<T> &seqs, size_t start, size_t end)
 {
     if (start < end)
     {
@@ -1723,7 +1724,7 @@ void mergesort(vector<T> & seqs, size_t start, size_t end)
 }
 
 template<typename T>
-size_t partition(vector<T> & seqs, size_t left, size_t right)
+size_t partition(vector<T> &seqs, size_t left, size_t right)
 {
     size_t i = left, j = right;
     T pivot_val = seqs[left];
@@ -1734,7 +1735,7 @@ size_t partition(vector<T> & seqs, size_t left, size_t right)
             j--;
         }
         seqs[i] = seqs[j];
-        while (i < j && seqs[i] <= pivot_val)
+        while (i < j && seqs[i] < pivot_val)
         {
             i++;
         }
@@ -1745,15 +1746,14 @@ size_t partition(vector<T> & seqs, size_t left, size_t right)
 }
 
 template<typename T>
-void quicksort(vector<T> & seqs, size_t left, size_t right)
+void quicksort(vector<T> &seqs, size_t left, size_t right)
 {
     size_t pivot = partition(seqs, left, right);
-    if (left >= pivot || pivot >= right)
-    {
-        return;
-    }
-    quicksort(seqs, left, pivot - 1);
-    quicksort(seqs, pivot + 1, right);
+
+    if (left < pivot)
+        quicksort(seqs, left, pivot - 1);
+    if (right > pivot)
+        quicksort(seqs, pivot + 1, right);
 }
 
 /*
@@ -1778,7 +1778,7 @@ int uniquePaths(int m, int n)
 /*
 带有障碍的uniquePaths，障碍为1，非障碍为0
 */
-int uniquePathsWithObstacles(vector<vector<int>> & obstacleGrid)
+int uniquePathsWithObstacles(vector<vector<int>> &obstacleGrid)
 {
     if (obstacleGrid.empty() || obstacleGrid[0].empty() || obstacleGrid[0][0] == 1)
         return 0;
@@ -1804,7 +1804,7 @@ int uniquePathsWithObstacles(vector<vector<int>> & obstacleGrid)
 2）如果小于目标，则该元素所在行左侧所有元素都小于目标，去掉该行
 3）如果大于目标，则该元素所在列下面所有元素都大于目标，去掉该列
  */
-bool Find(int target, vector<vector<int>> & array)
+bool Find(int target, vector<vector<int>> &array)
 {
     if (array.empty() || array[0].empty())
         return false;
@@ -1888,7 +1888,7 @@ void replaceSpace(char *str, int length)
 4）根据中序遍历得到的左子树和右子树长度，对前序遍历的元素进行划分，同样得到左子树和右子树
 5）根据前序遍历的左子树和右子树，以及中序遍历的左子树和右子树，递归构建
 */
-TreeNode *construct(const vector<int> & pre, const vector<int> & vin, int pre_start, int pre_stop, int vin_start, int vin_stop)
+TreeNode *construct(const vector<int> &pre, const vector<int> &vin, int pre_start, int pre_stop, int vin_start, int vin_stop)
 {
     // 前序遍历第一个元素为根
     int root_val = pre[pre_start];
@@ -1941,7 +1941,7 @@ NOTE：给出的所有元素都大于0，若数组大小为0，请返回0。
 4）当left和right相邻时，right元素即为最小
 5）特殊情况，三者相同时，无法区分，只能顺序查找
 */
-int minNumberInRotateArray(const vector<int> & rotateArray)
+int minNumberInRotateArray(const vector<int> &rotateArray)
 {
     if (rotateArray.empty())
         return 0;
@@ -2045,7 +2045,7 @@ int  NumberOf1(int n)
 2）以此根为开始，比较是否有B的子树
 3）如果未找到，继续1），否则返回true
 */
-bool check(TreeNode * pRoot1, TreeNode * pRoot2) // 判断以pRoot1为根的子树是否含有目标子树pRoot2
+bool check(TreeNode *pRoot1, TreeNode *pRoot2) // 判断以pRoot1为根的子树是否含有目标子树pRoot2
 {
     if (pRoot2 == nullptr)
         return true;
@@ -2058,7 +2058,7 @@ bool check(TreeNode * pRoot1, TreeNode * pRoot2) // 判断以pRoot1为根的子�
 
     return check(pRoot1->left, pRoot2->left) && check(pRoot1->right, pRoot2->right);
 }
-bool HasSubtree(TreeNode * pRoot1, TreeNode * pRoot2)
+bool HasSubtree(TreeNode *pRoot1, TreeNode *pRoot2)
 {
     if (pRoot1 == nullptr || pRoot2 == nullptr)
         return false;
@@ -2095,12 +2095,12 @@ bool HasSubtree(TreeNode * pRoot1, TreeNode * pRoot2)
     11 9 7  5
 思路：递归交换左右子节点
 */
-void Mirror(TreeNode * pRoot)
+void Mirror(TreeNode *pRoot)
 {
     if (pRoot == nullptr)
         return;
 
-    TreeNode * t = pRoot->left;
+    TreeNode *t = pRoot->left;
     pRoot->left = pRoot->right;
     pRoot->right = t;
 
@@ -2128,7 +2128,7 @@ void Mirror(TreeNode * pRoot)
 3）打印圈时，圈的行或列从头一直打到尾，意味着下一个起点不包括上一个的终点
 4）最后一圈可能会退化成一行或两行或只有一个元素，所以要分情况讨论
 */
-vector<int> printMatrix(const vector<vector<int> > & matrix)
+vector<int> printMatrix(const vector<vector<int> > &matrix)
 {
     if (matrix.size() == 0 || matrix[0].size() == 0)
         return vector<int>();
@@ -2138,7 +2138,7 @@ vector<int> printMatrix(const vector<vector<int> > & matrix)
     vector<int> res;
     res.reserve(rows * cols);
 
-    auto & m = matrix;
+    auto &m = matrix;
     int start = 0;
     while (rows > start * 2 && cols > start * 2) // 循环打印一个一个圈
     {
@@ -2188,7 +2188,7 @@ vector<int> printMatrix(const vector<vector<int> > & matrix)
 3）找到根，然后找不大于根的元素作为左子树，另一部分为右子树，并验证
 4）递归验证
 */
-bool check(const vector<int> & seq, int start, int stop)
+bool check(const vector<int> &seq, int start, int stop)
 {
     if (start == stop)
     {
@@ -2243,12 +2243,12 @@ bool VerifySquenceOfBST(vector<int> seq)
 3）分离出复制好的链表
 */
 
-RandomListNode *Clone(RandomListNode * pHead)
+RandomListNode *Clone(RandomListNode *pHead)
 {
     if (pHead == nullptr)
         return nullptr;
 
-    RandomListNode * p = pHead;
+    RandomListNode *p = pHead;
 
     while (p != nullptr) // 复制节点
     {
@@ -2288,7 +2288,7 @@ RandomListNode *Clone(RandomListNode * pHead)
 1）中序遍历
 2）遍历过程中修改指针
 */
-void ConvertRecursively(TreeNode * p, TreeNode * *last)
+void ConvertRecursively(TreeNode *p, TreeNode **last)
 {
     if (p == nullptr)
     {
@@ -2313,7 +2313,7 @@ void ConvertRecursively(TreeNode * p, TreeNode * *last)
         ConvertRecursively(p->right, last);
     }
 }
-TreeNode *Convert(TreeNode * pRootOfTree)
+TreeNode *Convert(TreeNode *pRootOfTree)
 {
     if (pRootOfTree == nullptr || (pRootOfTree->left == nullptr && pRootOfTree->right == nullptr))
     {
@@ -2342,7 +2342,7 @@ TreeNode *Convert(TreeNode * pRootOfTree)
 2）固定第一个字符，求后面字符的排列
 3）递归调用
 */
-void PermutationRecursively(set<string> & res, string & t, int startIdx)
+void PermutationRecursively(set<string> &res, string &t, int startIdx)
 {
     if (startIdx == t.size())
         res.insert(t);
@@ -2508,10 +2508,10 @@ string PrintMinNumber(vector<int> numbers)
     for (int i : numbers)
         vec.push_back(to_string(i));
     sort(vec.begin(), vec.end(),
-         [](const string & lhs, const string & rhs)
-    {
-        return (lhs + rhs) < (rhs + lhs);
-    });
+         [](const string &lhs, const string &rhs)
+         {
+             return (lhs + rhs) < (rhs + lhs);
+         });
     ostringstream oss;
     for (const string &s : vec)
         oss << s;
@@ -2568,7 +2568,7 @@ int GetUglyNumber_Solution(int index)
 在数组中的两个数字，如果前面一个数字大于后面的数字，则这两个数字组成一个逆序对。
 输入一个数组,求出这个数组中的逆序对的总数P。并将P对1000000007取模的结果输出。 即输出P%1000000007
 */
-void InversePairsMergeSort(vector<int> & data, vector<int> & temp, int &res, int start, int stop)
+void InversePairsMergeSort(vector<int> &data, vector<int> &temp, int &res, int start, int stop)
 {
     if (start == stop)
         return;
@@ -2624,12 +2624,12 @@ int InversePairs(vector<int> data)
 2）链表长度不一致，可以将长的链表先next一下直到和短链一样长
 3）接下来两个链表同时遍历直至相同即可
 */
-ListNode * FindFirstCommonNode(ListNode * pHead1, ListNode * pHead2)
+ListNode *FindFirstCommonNode(ListNode *pHead1, ListNode *pHead2)
 {
     if (pHead1 == nullptr || pHead2 == nullptr)
         return nullptr;
 
-    auto getListLength = [](ListNode * head) -> int
+    auto getListLength = [](ListNode *head) -> int
     {
         int len = 0;
         ListNode *pnode = head;
@@ -2673,7 +2673,7 @@ ListNode * FindFirstCommonNode(ListNode * pHead1, ListNode * pHead2)
 1）二分搜索
 2）分别找出左边界和右边界
 */
-int GetNumberOfKLeftIdx(const vector<int> & data, int k, int start, int stop)
+int GetNumberOfKLeftIdx(const vector<int> &data, int k, int start, int stop)
 {
     if (start > stop)
         return -1;
@@ -2691,7 +2691,7 @@ int GetNumberOfKLeftIdx(const vector<int> & data, int k, int start, int stop)
     else
         return GetNumberOfKLeftIdx(data, k, start, middle - 1);
 }
-int GetNumberOfKRightIdx(const vector<int> & data, int k, int start, int stop)
+int GetNumberOfKRightIdx(const vector<int> &data, int k, int start, int stop)
 {
     if (start > stop)
         return -1;
@@ -2731,7 +2731,7 @@ int GetNumberOfK(vector<int> data, int k)
 思路：后序遍历
 */
 
-int TreeDepth(TreeNode * pRoot)
+int TreeDepth(TreeNode *pRoot)
 {
     if (pRoot == nullptr)
         return 0;
@@ -2749,7 +2749,7 @@ int TreeDepth(TreeNode * pRoot)
 1）后序遍历得到左右子树的深度
 2）在根处判断是否失衡
 */
-int IsBalanced_Solution_Recursively(TreeNode * p, bool &res)
+int IsBalanced_Solution_Recursively(TreeNode *p, bool &res)
 {
     // 提前结束递归
     if (res == false)
@@ -2779,7 +2779,7 @@ int IsBalanced_Solution_Recursively(TreeNode * p, bool &res)
     else
         return left_depth > right_depth ? left_depth + 1 : right_depth + 1;
 }
-bool IsBalanced_Solution(TreeNode * pRoot)
+bool IsBalanced_Solution(TreeNode *pRoot)
 {
     if (pRoot == nullptr)
         return true;
@@ -2894,7 +2894,7 @@ string ReverseSentence(string str)
     if (str.empty() || str.size() == 1)
         return str;
 
-    auto reverse = [](string & s, int start, int stop) -> void
+    auto reverse = [](string &s, int start, int stop) -> void
     {
         while (start < stop)
         {
@@ -2940,7 +2940,7 @@ string LeftRotateString(string str, int n)
     if (str.empty() || str.size() == 1 || n <= 0 || n % str.size() == 0)
         return str;
 
-    auto reverse = [](string & s, int start, int stop) -> void
+    auto reverse = [](string &s, int start, int stop) -> void
     {
         while (start < stop)
         {
@@ -3018,7 +3018,7 @@ int Add(int num1, int num2)
 2）先计算左部分A[0]*A[1]*...*A[i-1]，并且A[0]*A[1]可由A[0]得到，A[0]*A[1]*A[2]可由A[0]*A[1]得到，以此类推
 3）再计算右部分A[i+1]*...*A[n-1]，计算方法同上
 */
-vector<int> multiply(const vector<int> & A)
+vector<int> multiply(const vector<int> &A)
 {
     if (A.empty())
         return vector<int>();
@@ -3051,16 +3051,16 @@ vector<int> multiply(const vector<int> & A)
   b.遍历一下，当回到初始节点时即得到长度
 2）双指针，一个指针先走环的长度，然后同时走，最后相遇点即是入口节点
 */
-ListNode *EntryNodeOfLoop(ListNode * pHead)
+ListNode *EntryNodeOfLoop(ListNode *pHead)
 {
     // 寻找环中的一个节点
-    auto FindNodeInLoop = [](ListNode * p) -> ListNode *
+    auto FindNodeInLoop = [](ListNode *p) -> ListNode *
     {
         if (p == nullptr || p->next == nullptr)
             return nullptr;
 
         // 快慢指针法
-        ListNode * slow = p, *fast = slow->next;
+        ListNode *slow = p, *fast = slow->next;
         while (slow != nullptr && fast != nullptr)
         {
             if (slow == fast) // 快指针追上慢指针
@@ -3079,7 +3079,7 @@ ListNode *EntryNodeOfLoop(ListNode * pHead)
         return nullptr;
 
     int loop_len = 1;
-    ListNode * t = p->next;
+    ListNode *t = p->next;
     while (t != p) // 获取环的长度
     {
         t = t->next;
@@ -3106,7 +3106,7 @@ ListNode *EntryNodeOfLoop(ListNode * pHead)
 2）如果该节点是其父节点的左子节点，那么下一个节点就是其父节点
 3）如果该节点是其父节点的右子节点，那么需要向父节点不断回溯，直至找到某个节点是其父节点的左子节点，下一个节点就是该节点的父节点
 */
-TreeLinkNode *GetNext(TreeLinkNode * pNode)
+TreeLinkNode *GetNext(TreeLinkNode *pNode)
 {
     if (pNode == nullptr)
         return nullptr;
@@ -3144,7 +3144,7 @@ TreeLinkNode *GetNext(TreeLinkNode * pNode)
 1）使用前序遍历（根左右）和对称的前序遍历（根右左）
 2）并且考虑空节点，这样两种遍历出来的结果才会真的不一样，否则可能会有一样的结果
 */
-bool isSymmetricalRecursively(TreeNode * p1, TreeNode * p2)
+bool isSymmetricalRecursively(TreeNode *p1, TreeNode *p2)
 {
     if (p1 == nullptr && p2 == nullptr)
         return true;
@@ -3158,7 +3158,7 @@ bool isSymmetricalRecursively(TreeNode * p1, TreeNode * p2)
     return isSymmetricalRecursively(p1->left, p2->right)
         && isSymmetricalRecursively(p1->right, p2->left);
 }
-bool isSymmetrical(TreeNode * pRoot)
+bool isSymmetrical(TreeNode *pRoot)
 {
     if (pRoot == nullptr || (pRoot->left == nullptr && pRoot->right == nullptr))
         return true;
@@ -3172,7 +3172,7 @@ bool isSymmetrical(TreeNode * pRoot)
 1）使用队列
 2）使用两个变量，一个变量记录本层的待打印节点数，另一个变量记录下一层的节点数
 */
-vector<vector<int> > PrintTreePerLevel(TreeNode * pRoot)
+vector<vector<int> > PrintTreePerLevel(TreeNode *pRoot)
 {
     if (pRoot == nullptr)
         return vector<vector<int> >();
@@ -3220,7 +3220,7 @@ vector<vector<int> > PrintTreePerLevel(TreeNode * pRoot)
 3）当前层为偶数层时，子节点按从右往左进入另一个栈
 4）每结束一层两栈切换
 */
-vector<vector<int> > PrintTreeZigZag(TreeNode * pRoot)
+vector<vector<int> > PrintTreeZigZag(TreeNode *pRoot)
 {
     if (pRoot == nullptr)
         return vector<vector<int> >();
@@ -3272,7 +3272,7 @@ vector<vector<int> > PrintTreeZigZag(TreeNode * pRoot)
 2）反序列化时，最开始的节点就是根节点，然后递归进行构建
 */
 string str_temp;
-void SerializeRecursively(TreeNode * p, ostream & out)
+void SerializeRecursively(TreeNode *p, ostream &out)
 {
     if (p == nullptr)
     {
@@ -3283,7 +3283,7 @@ void SerializeRecursively(TreeNode * p, ostream & out)
     SerializeRecursively(p->left, out);
     SerializeRecursively(p->right, out);
 }
-char *Serialize(TreeNode * root)
+char *Serialize(TreeNode *root)
 {
     if (root == nullptr)
         return nullptr;
@@ -3317,7 +3317,7 @@ bool ReadNodeData(char **str, int *data)
     cout << *data << endl;
     return true;
 }
-void DeserializeRecursively(TreeNode * *pp, char **str)
+void DeserializeRecursively(TreeNode **pp, char **str)
 {
     int data;
     if (ReadNodeData(str, &data))
@@ -3332,7 +3332,7 @@ TreeNode *Deserialize(char *str)
     if (str == nullptr || *str == '\0')
         return nullptr;
 
-    TreeNode * pRoot = nullptr;
+    TreeNode *pRoot = nullptr;
     DeserializeRecursively(&pRoot, &str);
     return pRoot;
 }
@@ -3341,7 +3341,7 @@ TreeNode *Deserialize(char *str)
 给定一棵二叉搜索树，请找出其中的第k小的结点。例如， （5，3，7，2，4，6，8）    中，按结点数值大小顺序第三小结点的值为4。
 思路：由于是二叉搜索树，所以中序遍历得到第k个节点即可
 */
-void KthNodeRecursively(TreeNode * p, int &k, TreeNode * &target)
+void KthNodeRecursively(TreeNode *p, int &k, TreeNode *&target)
 {
     if (p->left != nullptr)
         KthNodeRecursively(p->left, k, target);
@@ -3356,12 +3356,12 @@ void KthNodeRecursively(TreeNode * p, int &k, TreeNode * &target)
     if (target == nullptr && p->right != nullptr)
         KthNodeRecursively(p->right, k, target);
 }
-TreeNode *KthNode(TreeNode * pRoot, int k)
+TreeNode *KthNode(TreeNode *pRoot, int k)
 {
     if (pRoot == nullptr || k <= 0)
         return nullptr;
 
-    TreeNode * target = nullptr;
+    TreeNode *target = nullptr;
     KthNodeRecursively(pRoot, k, target);
     return target;
 }
@@ -3380,7 +3380,7 @@ TreeNode *KthNode(TreeNode * pRoot, int k)
 2）每次移动窗口更新上述数据结构
 3）注意最左元素可能不在新窗口中了，需要剔除，因此保存的是下标
 */
-vector<int> maxInWindows(const vector<int> & num, unsigned int size)
+vector<int> maxInWindows(const vector<int> &num, unsigned int size)
 {
     if (num.size() < size || size < 1)
         return {};
@@ -3440,7 +3440,7 @@ void hasPathRecursively(char *matrix, int rows, int cols, int row, int col, char
         hasPathRecursively(matrix, rows, cols, row, col + 1, str, str_idx + 1, res, is_visited);
         hasPathRecursively(matrix, rows, cols, row, col - 1, str, str_idx + 1, res, is_visited);
         if (res == false)
-            * (is_visited + row * cols + col) = false;
+            *(is_visited + row * cols + col) = false;
     }
 }
 bool hasPath(char *matrix, int rows, int cols, char *str)
@@ -3450,7 +3450,7 @@ bool hasPath(char *matrix, int rows, int cols, char *str)
 
     bool *is_visited = new bool[rows * cols];
     for (int i = 0; i < rows * cols; i++)
-        * (is_visited + i) = false;
+        *(is_visited + i) = false;
 
     bool res = false;
     for (int i = 0; i < rows; i++)
@@ -3537,7 +3537,7 @@ int movingCount(int threshold, int rows, int cols)
 */
 string simplifyPath(string path)
 {
-    auto getOneDir = [](const string & path, size_t & idx) -> string
+    auto getOneDir = [](const string &path, size_t &idx) -> string
     {
         while (idx < path.size() && path[idx] == '/')
             ++idx;
@@ -3594,7 +3594,7 @@ string simplifyPath(string path)
 1）使用第一行和第一列来记录除第一行和第一列以外的该行或该列是否有0，有的话置为0
 2）如果第一列或第一行本身有0，使用另外两个变量来保存
 */
-void setZeroes(vector<vector<int>> & matrix)
+void setZeroes(vector<vector<int>> &matrix)
 {
     if (matrix.empty() || matrix[0].empty())
         return;
@@ -3654,7 +3654,7 @@ void setZeroes(vector<vector<int>> & matrix)
 1）也就是说按一维展开是升序序列
 2）二分搜索，将一维坐标k转换成二维坐标(x, y)。（x = k / cols, y = k % cols）
 */
-bool searchMatrix(vector<vector<int>> & matrix, int target)
+bool searchMatrix(vector<vector<int>> &matrix, int target)
 {
     if (matrix.empty() || matrix[0].empty())
         return false;
@@ -3692,7 +3692,7 @@ bool searchMatrix(vector<vector<int>> & matrix, int target)
 2）如果当前元素是0，和*p0交换，++p0；如果当前元素是2，和*p2交换，--p2；否则++p
 3）当p>p2结束
 */
-void sortColors(vector<int> & nums)
+void sortColors(vector<int> &nums)
 {
     if (nums.size() <= 1)
         return;
@@ -3733,7 +3733,7 @@ void sortColors(vector<int> & nums)
   [1,4],
 ]
 */
-void combineRecursively(vector<vector<int>> & res, vector<int> & temp, int n, int start, int k)
+void combineRecursively(vector<vector<int>> &res, vector<int> &temp, int n, int start, int k)
 {
     if (k == 0)
     {
@@ -3784,7 +3784,7 @@ vector<vector<int>> combine(int n, int k)
 1）初始为{ {} }
 2）然后每次对集合中的每个集合插入一个元素
 */
-vector<vector<int>> subsets(vector<int> & nums)
+vector<vector<int>> subsets(vector<int> &nums)
 {
     if (nums.empty())
         return { {} };
@@ -3818,7 +3818,7 @@ vector<vector<int>> subsets(vector<int> & nums)
 函数应返回新长度 length = 7, 并且原数组的前五个元素被修改为 0, 0, 1, 1, 2, 3, 3 。
 你不需要考虑数组中超出新长度后面的元素。
 */
-int removeDuplicates(vector<int> & nums)
+int removeDuplicates(vector<int> &nums)
 {
     if (nums.size() < 2)
         return nums.size();
@@ -3841,13 +3841,13 @@ int removeDuplicates(vector<int> & nums)
 1）设置两个链表，一个为小于x的节点组成的，另一个不小于x的节点组成
 2）连接两个链表即可
 */
-ListNode *partition(ListNode * head, int x)
+ListNode *partition(ListNode *head, int x)
 {
     if (head == nullptr || head->next == nullptr)
         return head;
 
     ListNode less_list(-1), great_list(-1);
-    ListNode * less_p = &less_list, *great_p = &great_list;
+    ListNode *less_p = &less_list, *great_p = &great_list;
     while (head != nullptr)
     {
         if (head->val < x)
@@ -3939,7 +3939,7 @@ vector<int> grayCode(int n)
   a.解码一位，由于'5'不为'0'，所以12120 5这种解码通过（注意并不会在12120的解码方法上再增加一种，只是和它解码方法一样多）
   b.解码两位，由于'05'并不是‘10’~'26'中的，所以1212 05这种解码方法不行
 */
-int numDecodings(const string & s)
+int numDecodings(const string &s)
 {
     int length = s.size();
     if (s.empty() || (length == 1 && s[0] == '0'))
@@ -3990,7 +3990,7 @@ int numDecodings(const string & s)
 2）从第m个节点开始翻转，直到第n个节点
 3）根据记录的信息连接翻转后的链表
 */
-ListNode * reverseBetween(ListNode * head, int m, int n)
+ListNode *reverseBetween(ListNode *head, int m, int n)
 {
     if (head == nullptr || m < 1 || n < 1 || m == n || m > n)
         return head;
@@ -4001,8 +4001,8 @@ ListNode * reverseBetween(ListNode * head, int m, int n)
     unique_ptr<ListNode> dummy(new ListNode(-1)); // 增加一个节点，用于处理m=1的情况
     dummy->next = head;
     int cnt = 1; // 当前节点数
-    ListNode * pre = dummy.get(), *now = pre->next; // 前一个节点，现在的节点
-    ListNode * pre_m_node = nullptr, *m_node = nullptr; // 第m个节点的前一个节点，第m个节点
+    ListNode *pre = dummy.get(), *now = pre->next; // 前一个节点，现在的节点
+    ListNode *pre_m_node = nullptr, *m_node = nullptr; // 第m个节点的前一个节点，第m个节点
     while (cnt <= n && now != nullptr)
     {
         if (cnt == m) // 到达第m个节点，记录信息
@@ -4040,7 +4040,7 @@ ListNode * reverseBetween(ListNode * head, int m, int n)
 输出: ["255.255.11.135", "255.255.111.35"]
 思路：递归
 */
-void restoreIpAddressesRecursively(vector<string> & res, vector<string> & ip, const string & s, int idx)
+void restoreIpAddressesRecursively(vector<string> &res, vector<string> &ip, const string &s, int idx)
 {
     if (ip.size() < 4 && idx >= s.size())
         return;
@@ -4165,7 +4165,7 @@ int numTrees(int n)
   b.新节点作为根，旧树挂在左边
   c.新节点插入旧树右侧（原因见a），右侧可能有子树，一层一层插入
 */
-TreeNode *copyTree(TreeNode * root) // 先根遍历拷贝树
+TreeNode *copyTree(TreeNode *root) // 先根遍历拷贝树
 {
     if (root == nullptr)
         return nullptr;
@@ -4371,8 +4371,8 @@ vector<TreeNode *> generateTrees(int n)
   /  \
    15   7
 */
-TreeNode *buildTreeRecursively(unordered_map<int, int> & in_map,
-                               const vector<int> & inorder, const vector<int> & postorder,
+TreeNode *buildTreeRecursively(unordered_map<int, int> &in_map,
+                               const vector<int> &inorder, const vector<int> &postorder,
                                int in_start, int in_stop, int post_start, int post_stop)
 {
     // 根节点的值
@@ -4406,7 +4406,7 @@ TreeNode *buildTreeRecursively(unordered_map<int, int> & in_map,
     // 左右子树构建完毕，返回根节点
     return proot;
 }
-TreeNode *buildTree(vector<int> & inorder, vector<int> & postorder)
+TreeNode *buildTree(vector<int> &inorder, vector<int> &postorder)
 {
     if (inorder.empty() || postorder.empty() || inorder.size() != postorder.size())
         return nullptr;
@@ -4436,7 +4436,7 @@ TreeNode *buildTree(vector<int> & inorder, vector<int> & postorder)
 2）以中位数分割，左边的作为左子树，右边的作为右子树
 3）递归
 */
-TreeNode *sortedListToBSTRecursively(ListNode * head, ListNode * tail)
+TreeNode *sortedListToBSTRecursively(ListNode *head, ListNode *tail)
 {
     // 空树，返回空
     if (head == nullptr || head == tail)
@@ -4447,7 +4447,7 @@ TreeNode *sortedListToBSTRecursively(ListNode * head, ListNode * tail)
         return new TreeNode(head->val);
 
     // 找到中间节点
-    ListNode * slow = head, *fast = head;
+    ListNode *slow = head, *fast = head;
     while (fast != tail && fast->next != tail)
     {
         slow = slow->next;
@@ -4463,7 +4463,7 @@ TreeNode *sortedListToBSTRecursively(ListNode * head, ListNode * tail)
     // 返回根节点
     return proot;
 }
-TreeNode *sortedListToBST(ListNode * head)
+TreeNode *sortedListToBST(ListNode *head)
 {
     if (head == nullptr)
         return nullptr;
@@ -4503,7 +4503,7 @@ TreeNode *sortedListToBST(ListNode * head)
   c.从root出发，得到链表的最后一个节点
   d.将最后一个节点的后一个节点指向root的原右子节点
 */
-void flatten(TreeNode * root)
+void flatten(TreeNode *root)
 {
     if (root == nullptr)
         return;
@@ -4511,7 +4511,7 @@ void flatten(TreeNode * root)
     flatten(root->left);
     flatten(root->right);
 
-    TreeNode * temp = root->right; // 保存右子节点
+    TreeNode *temp = root->right; // 保存右子节点
     root->right = root->left; // 链接后一个节点
     root->left = nullptr; // 左子节点置空
     while (root->right != nullptr) // 找到链表的最后一个节点
@@ -4525,7 +4525,7 @@ void flatten(TreeNode * root)
 3）从左子树遍历回来以后，当前根节点的right指向原来的左子树，left置空
 4）从右子树遍历回来以后，上次左子树遍历得到的最后一个节点指向原来的右子树
 */
-TreeNode * flattenRecursively(TreeNode * root)
+TreeNode *flattenRecursively(TreeNode *root)
 {
     if (root == nullptr)
         return nullptr;
@@ -4533,10 +4533,10 @@ TreeNode * flattenRecursively(TreeNode * root)
     if (root->left == nullptr && root->right == nullptr)
         return root;
 
-    TreeNode * l = root->left;
-    TreeNode * r = root->right;
-    TreeNode * llast = nullptr;
-    TreeNode * rlast = nullptr;
+    TreeNode *l = root->left;
+    TreeNode *r = root->right;
+    TreeNode *llast = nullptr;
+    TreeNode *rlast = nullptr;
 
     if (l != nullptr)
     {
@@ -4563,7 +4563,7 @@ TreeNode * flattenRecursively(TreeNode * root)
     else
         return llast;
 }
-void flatten1(TreeNode * root)
+void flatten1(TreeNode *root)
 {
     flattenRecursively(root);
 }
@@ -4584,7 +4584,7 @@ struct Node {
   a.连接根节点左子节点和右子节点
   b.如果根节点有右侧节点，连接根节点右子节点和右侧节点的左子节点
 */
-Node *connect(Node * root)
+Node *connect(Node *root)
 {
     if (root == nullptr)
         return root;
@@ -4603,14 +4603,14 @@ Node *connect(Node * root)
 /*
 思路2：非递归，但原理同上
 */
-Node * connect1(Node * root)
+Node *connect1(Node *root)
 {
     if (root == nullptr)
         return nullptr;
 
-    Node * pre = root; // 用于遍历上一层链表节点
-    Node * now = pre->left; // 保存本层的头节点
-    Node * t = nullptr; // 保存本根节点的右子节点，用于连接本根节点下一个节点的左子节点
+    Node *pre = root; // 用于遍历上一层链表节点
+    Node *now = pre->left; // 保存本层的头节点
+    Node *t = nullptr; // 保存本根节点的右子节点，用于连接本根节点下一个节点的左子节点
 
     while (pre->left != nullptr && pre->right != nullptr)
     {
@@ -4648,7 +4648,7 @@ Node * connect1(Node * root)
 如果你可以只使用 O(n) 的额外空间（n 为三角形的总行数）来解决这个问题，那么你的算法会很加分。
 思路：动态规划，自顶向下
 */
-int minimumTotal(vector<vector<int>> & triangle)
+int minimumTotal(vector<vector<int>> &triangle)
 {
     int rows = triangle.size();
     if (rows < 1)
@@ -4685,7 +4685,7 @@ int minimumTotal(vector<vector<int>> & triangle)
 /*
 思路2：动态规划，自底向上
 */
-int minimumTotal1(vector<vector<int>> & triangle)
+int minimumTotal1(vector<vector<int>> &triangle)
 {
     int rows = triangle.size();
     if (rows < 1)
@@ -4741,7 +4741,7 @@ wordList = ["hot","dot","dog","lot","log"]
     a.中间集合较小，接下来是中间集合到结束结合的转换
     b.中间集合较大，接下来是结束集合到中间集合的转换
 */
-int ladderLength(string beginWord, string endWord, vector<string> & wordList)
+int ladderLength(string beginWord, string endWord, vector<string> &wordList)
 {
     // 建立字典
     unordered_set<string> wordDict(wordList.begin(), wordList.end());
@@ -4806,8 +4806,8 @@ int ladderLength(string beginWord, string endWord, vector<string> & wordList)
 1）图的遍历
 2）由于是无向连通图，可能有环，需要记录下所有已经拷贝过的节点，防止重复拷贝
 */
-UndirectedGraphNode *cloneGraphRecursively(unordered_map<UndirectedGraphNode *, UndirectedGraphNode *> & node_map,
-                                           UndirectedGraphNode * node)
+UndirectedGraphNode *cloneGraphRecursively(unordered_map<UndirectedGraphNode *, UndirectedGraphNode *> &node_map,
+                                           UndirectedGraphNode *node)
 {
     auto iter = node_map.find(node);
     if (iter != node_map.end()) // 已经有拷贝，直接返回拷贝
@@ -4830,7 +4830,7 @@ UndirectedGraphNode *cloneGraphRecursively(unordered_map<UndirectedGraphNode *, 
         return t;
     }
 }
-UndirectedGraphNode *cloneGraph(UndirectedGraphNode * node)
+UndirectedGraphNode *cloneGraph(UndirectedGraphNode *node)
 {
     if (node == nullptr)
         return node;
@@ -4870,7 +4870,7 @@ cost = [3,4,5,1,2]
     a.如果剩余油量<0，说明从之前的起点出发，不足以到达当前站点的下一站，那么起点只能更改为当前站点的下一站，并重新开始计算剩余油量
     b.如果剩余油量>=0，说明从之前的起点出发，可以到达当前站点的下一站，继续往下计算
 */
-int canCompleteCircuit(vector<int> & gas, vector<int> & cost)
+int canCompleteCircuit(vector<int> &gas, vector<int> &cost)
 {
     // 总的剩余油量，当前站点到下一个站点后的剩余油量，起点
     int rest = 0, run = 0, start = 0;
@@ -4894,7 +4894,7 @@ int canCompleteCircuit(vector<int> & gas, vector<int> & cost)
     b.一个指针start作为出发点，也从0开始，从后往前走
 3）当cur往后走发现剩余油量不够，那么start就得往前走，即更换起点以期望油量足够
 */
-int canCompleteCircuit1(vector<int> & gas, vector<int> & cost)
+int canCompleteCircuit1(vector<int> &gas, vector<int> &cost)
 {
     int cur = 0; // 往后走的指针
     int start = gas.size(); // 起点指针，往前走（初始为总站数，其实就是和cur一样，为0）
@@ -4934,7 +4934,7 @@ int canCompleteCircuit1(vector<int> & gas, vector<int> & cost)
 2）对输入的所有数据累加每一位的1的个数
 3）如果该位累加的结果是3的倍数，说明都是重复的3个数，把该位置为0，否则置为1
 */
-int singleNumber(vector<int> & nums)
+int singleNumber(vector<int> &nums)
 {
     int res = 0;
     for (int i = 0; i < 32; ++i) // 对于每一位
@@ -4968,7 +4968,7 @@ int singleNumber(vector<int> & nums)
 5）当计数到达3次以后，即b2b1=11时，需要将b2和b1置零
 6）以上讨论的是某一位计数的情况，那么32位的话，需要32个两位的计数器，由于每一位的计数操作独立，所以需要两个32位计数器就行了
 */
-int singleNumber1(vector<int> & nums)
+int singleNumber1(vector<int> &nums)
 {
     // b1，b2，置零掩码
     int x1 = 0, x2 = 0, mask = 0;
@@ -4983,10 +4983,2055 @@ int singleNumber1(vector<int> & nums)
     return x1;
 }
 
+/*
+给定一个非空字符串 s 和一个包含非空单词列表的字典 wordDict，判定 s 是否可以被空格拆分为一个或多个在字典中出现的单词。
+说明：
+拆分时可以重复使用字典中的单词。
+你可以假设字典中没有重复的单词。
+
+示例 1：
+输入: s = "leetcode", wordDict = ["leet", "code"]
+输出: true
+解释: 返回 true 因为 "leetcode" 可以被拆分成 "leet code"。
+
+示例 2：
+输入: s = "applepenapple", wordDict = ["apple", "pen"]
+输出: true
+解释: 返回 true 因为 "applepenapple" 可以被拆分成 "apple pen apple"。注意你可以重复使用字典中的单词。
+
+示例 3：
+输入: s = "catsandog", wordDict = ["cats", "dog", "sand", "and", "cat"]
+输出: false
+
+思路：
+1）动态规划
+2）用f(i)表示s[0:i)是否可以被拆分
+    a.f(0) = true
+    b.f(i) = true, s.t. f(j) = true && s[j:i) ∈ dict s.t. j >= 0 && j < i
+3）由于词典的最大长度固定，假设为m，那么j的搜索范围为[i-m:i)
+*/
+bool wordBreak(const string &s, const vector<string> &wordDict)
+{
+    if (s.empty() || wordDict.empty())
+        return false;
+
+    unordered_set<string> dict(wordDict.begin(), wordDict.end()); // 创建哈希表，加快单词查找速度
+    int length = s.size();
+
+    int max_word_len = wordDict[0].size(); // 词典中最长的单词长度
+    for (int i = 1, sz = wordDict.size(); i < sz; ++i)
+    {
+        int sz_t = wordDict[i].size();
+        if (sz_t > max_word_len)
+            max_word_len = sz_t;
+    }
+
+    vector<bool> dp(length + 1, false);
+    dp[0] = true;
+    for (int i = 1; i <= length; ++i) // 动态规划填表
+    {
+        for (int j = std::max(i - max_word_len, 0); j < i; ++j) // 当前可拆分=之前某处可拆分+之前某处到当前位置的子字符串存在于字典
+        {
+            if (dp[j] && dict.find(s.substr(j, i - j)) != dict.end())
+            {
+                dp[i] = true;
+                break;
+            }
+        }
+    }
+
+    return dp[length];
+}
+
+/*
+给定一个单链表 L：L0→L1→…→Ln-1→Ln ，
+将其重新排列后变为： L0→Ln→L1→Ln-1→L2→Ln-2→…
+你不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。
+示例 1:
+给定链表 1->2->3->4, 重新排列为 1->4->2->3.
+示例 2:
+给定链表 1->2->3->4->5, 重新排列为 1->5->2->4->3.
+思路：
+1）原地重排，不借助其他数据结构
+2）快慢指针找到中点，分成了两部分
+3）对后半部分原地翻转
+4）将翻转后的后半部分与前半部分交替连接起来
+*/
+void reorderList(ListNode *head)
+{
+    // 空指针、一个节点、两个节点时不用重排
+    if (head == nullptr || head->next == nullptr || head->next->next == nullptr)
+        return;
+
+    // 快慢指针寻找中点
+    ListNode *slow = head->next, *fast = slow->next;
+    while (fast != nullptr && fast->next != nullptr)
+    {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+
+    ListNode *nxt = slow->next; // 后半部分的头节点
+    slow->next = nullptr; // 前半部分尾节点的处理
+
+    // 翻转后半部分
+    ListNode *pre_t = nxt;
+    ListNode *nxt_t = pre_t->next;
+    while (nxt_t != nullptr)
+    {
+        ListNode *t = nxt_t->next;
+        nxt_t->next = pre_t;
+        pre_t = nxt_t;
+        nxt_t = t;
+    }
+    nxt->next = nullptr; // 翻转之后的尾节点的处理
+    nxt = pre_t; // 翻转后的后半部分头节点
+
+    // 交替连接起来
+    ListNode *pre = head;
+    while (nxt != nullptr)
+    {
+        ListNode *t = nxt;
+        nxt = nxt->next;
+        t->next = pre->next;
+        pre->next = t;
+        pre = pre->next->next;
+    }
+}
+
+// 给定一个二叉树，返回它的 前序 遍历。
+vector<int> preorderTraversal(TreeNode *root)
+{
+    vector<int> res;
+    if (root == nullptr)
+        return res;
+
+    stack<TreeNode *> st;
+    TreeNode *p = root;
+    while (p != nullptr)
+    {
+        res.push_back(p->val);
+        if (p->right != nullptr)
+            st.push(p->right);
+        if (p->left != nullptr)
+        {
+            p = p->left;
+        }
+        else
+        {
+            if (st.empty())
+            {
+                p = nullptr;
+            }
+            else
+            {
+                p = st.top();
+                st.pop();
+            }
+        }
+    }
+
+    return res;
+}
+
+/*
+对链表进行插入排序。
+从第一个元素开始，该链表可以被认为已经部分排序（用黑色表示）。
+每次迭代时，从输入数据中移除一个元素（用红色表示），并原地将其插入到已排好序的链表中。
+插入排序算法：
+插入排序是迭代的，每次只移动一个元素，直到所有元素可以形成一个有序的输出列表。
+每次迭代中，插入排序只从输入数据中移除一个待排序的元素，找到它在序列中适当的位置，并将其插入。
+重复直到所有输入数据插入完为止。
+示例 1：
+输入: 4->2->1->3
+输出: 1->2->3->4
+示例 2：
+输入: -1->5->3->4->0
+输出: -1->0->3->4->5
+*/
+ListNode *insertionSortList(ListNode *head)
+{
+    if (head == nullptr || head->next == nullptr)
+        return head;
+
+    ListNode **sorted_head = &head; // 已排序头节点
+    ListNode *sorted_tail = head; // 已排序尾节点
+    ListNode *to_be_sorted_head = head->next; // 待排序头节点
+    (*sorted_head)->next = nullptr;
+
+    while (to_be_sorted_head != nullptr)
+    {
+        ListNode *temp_next = to_be_sorted_head->next;
+        if ((*sorted_head)->val >= to_be_sorted_head->val) // 插入已排序头节点之前
+        {
+            to_be_sorted_head->next = *sorted_head;
+            *sorted_head = to_be_sorted_head;
+        }
+        else
+        {
+            if (sorted_tail->val < to_be_sorted_head->val) // 插入已排序尾节点之后
+            {
+                to_be_sorted_head->next = nullptr;
+                sorted_tail->next = to_be_sorted_head;
+                sorted_tail = to_be_sorted_head;
+            }
+            else // 插入已排序序列中间
+            {
+                ListNode *pre = *sorted_head;
+                ListNode *now = pre->next;
+                while (now != nullptr && now->val < to_be_sorted_head->val)
+                {
+                    pre = now;
+                    now = now->next;
+                }
+                to_be_sorted_head->next = now;
+                pre->next = to_be_sorted_head;
+            }
+        }
+        to_be_sorted_head = temp_next;
+    }
+
+    return *sorted_head;
+}
+
+/*
+单向链表排序
+思路：归并排序
+*/
+ListNode *Merge(ListNode *start1, ListNode *start2)
+{
+    ListNode *dummy = new ListNode(INT_MIN);
+    ListNode *p = dummy;
+    while (start1 != nullptr && start2 != nullptr)
+    {
+        if (start1->val < start2->val)
+        {
+            p->next = start1;
+            start1 = start1->next;
+        }
+        else
+        {
+            p->next = start2;
+            start2 = start2->next;
+        }
+        p = p->next;
+    }
+    if (start1 == nullptr)
+        p->next = start2;
+    if (start2 == nullptr)
+        p->next = start1;
+    ListNode *ret = dummy->next;
+    delete dummy;
+    return ret;
+}
+ListNode *MergeSort(ListNode *p)
+{
+    if (p == nullptr || p->next == nullptr)
+        return p;
+
+    ListNode *slow = p, *fast = slow->next->next;
+    while (fast != nullptr && fast->next != nullptr)
+    {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+
+    ListNode *left = p;
+    ListNode *right = slow->next;
+    slow->next = nullptr;
+    ListNode *start1 = MergeSort(left);
+    ListNode *start2 = MergeSort(right);
+
+    return Merge(start1, start2);
+}
+ListNode *sortList(ListNode *head)
+{
+    if (head == nullptr || head->next == nullptr)
+        return head;
+
+    return MergeSort(head);
+}
+
+/*
+峰值元素是指其值大于左右相邻值的元素。
+给定一个输入数组 nums，其中 nums[i] ≠ nums[i+1]，找到峰值元素并返回其索引。
+数组可能包含多个峰值，在这种情况下，返回任何一个峰值所在位置即可。
+你可以假设 nums[-1] = nums[n] = -∞。
+
+示例 1:
+输入: nums = [1,2,3,1]
+输出: 2
+解释: 3 是峰值元素，你的函数应该返回其索引 2。
+
+示例 2:
+输入: nums = [1,2,1,3,5,6,4]
+输出: 1 或 5
+解释: 你的函数可以返回索引 1，其峰值元素为 2；
+     或者返回索引 5， 其峰值元素为 6。
+说明:
+你的解法应该是 O(logN) 时间复杂度的。
+思路：
+1）如果第0个元素是峰值，必有nums[n] < nums[0] && nums[0] > nums[1]
+2）如果第1个元素是峰值，必有nums[0] < nums[1] && nums[1] > nums[2]
+3）如果第2个元素是峰值，必有nums[1] < nums[2] && nums[2] > nums[1]
+...
+4）并且nums[i] ≠ nums[i+1]，也就是说，如果i之前的都不是峰值，那么nums[0]~nums[i]是递增序列，只需要判断nums[i] > nums[i + 1]就可以知道nums[i]是不是峰值
+5）那么可以使用二分法
+    a.如果nums[middle] > nums[middle + 1]，那么nums[middle]前面的（包括自己）肯定存在峰值
+    b.如果nums[middle] <= nums[middle + 1]，那么nums[middle]不可能为峰值，峰值肯定在nums[middle]后面
+*/
+int findPeakElement(const vector<int> &nums)
+{
+    if (nums.size() == 1)
+        return 0;
+
+    int start = 0, stop = nums.size() - 1;
+    while (start < stop)
+    {
+        int middle = (start + stop) / 2;
+
+        if (nums[middle] <= nums[middle + 1])
+            start = middle + 1;
+        else
+            stop = middle;
+    }
+    return start;
+}
+
+/*
+所有 DNA 由一系列缩写为 A，C，G 和 T 的核苷酸组成，例如：“ACGAATTCCG”。在研究 DNA 时，识别 DNA 中的重复序列有时会对研究非常有帮助。
+编写一个函数来查找 DNA 分子中所有出现超过一次的10个字母长的序列（子串）。
+示例:
+输入: s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT"
+输出: ["AAAAACCCCC", "CCCCCAAAAA"]
+思路1：
+1）遍历所有10个字符长的子串
+2）用哈希表存储已出现的子串
+3）再次遇到时，加入结果集
+*/
+vector<string> findRepeatedDnaSequences(const string &s)
+{
+    int len = s.size();
+    if (len <= 10)
+        return vector<string>();
+
+    unordered_set<string> res;
+    unordered_set<string> m;
+    string t;
+    for (int i = 0, length = len - 9; i < length; ++i)
+    {
+        t = s.substr(i, 10);
+        if (m.find(t) == m.end())
+        {
+            m.insert(t);
+        }
+        else
+        {
+            res.insert(std::move(t));
+        }
+    }
+
+    return vector<string>(res.begin(), res.end());
+}
+/*
+思路2：
+1）只有A，C，G 和 T共四个字符，考虑将10个字符长的子串转化为数字
+    a.四个字符用两位二进制可表示，那么10个字符的子串可以用20位二进制表示
+    b.那么可以用2^20长的bool数组作为哈希表存储所有情况
+2）同思路1，遍历所有的10字符长的子串，只不过转换成20位二进制进行哈希
+*/
+vector<string> findRepeatedDnaSequences1(const string &s)
+{
+    int len = s.size();
+    if (len <= 10)
+        return vector<string>();
+
+    auto toInt = [](char c) -> int
+    {
+        if (c == 'A')
+            return 0;
+        if (c == 'C')
+            return 1;
+        if (c == 'G')
+            return 2;
+        return 3;
+    };
+
+    vector<string> res;
+    vector<bool> m(1 << 20, false);
+    vector<bool> inserted(1 << 20, false);
+    int mask = (1 << 20) - 1; // 类似于掩码，用来保留低20位
+
+    int temp = 0;
+    // 构造初始的10字符对应的20位二进制
+    for (int i = 0; i < 10; i++)
+        temp = (temp << 2 | toInt(s[i]));
+    m[temp] = true;
+
+    for (int i = 10; i < len; i++)
+    {
+        // 基于前一个，构造下一个10字符对应的20位二进制
+        // 先左移2位，然后加上新字符对应的二进制，最后与掩码相与得到新的20位
+        temp = (temp << 2 | toInt(s[i])) & mask;
+
+        if (m[temp] == true)
+        {
+            if (inserted[temp] == false)
+            {
+                res.emplace_back(s.substr(i - 9, 10));
+                inserted[temp] = true;
+            }
+        }
+        else
+        {
+            m[temp] = true;
+        }
+    }
+    return res;
+}
+
+/*
+给定一棵二叉树，想象自己站在它的右侧，按照从顶部到底部的顺序，返回从右侧所能看到的节点值。
+示例:
+输入: [1,2,3,null,5,null,4]
+输出: [1, 3, 4]
+解释:
+   1            <---
+ /   \
+2     3         <---
+ \     \
+  5     4       <---
+思路：层次遍历，将每层最右边节点值存入结果即可
+*/
+vector<int> rightSideView(TreeNode *root)
+{
+    vector<int> res;
+    if (root == nullptr)
+        return res;
+
+    queue<TreeNode *> qu;
+    qu.push(root);
+    while (!qu.empty())
+    {
+        res.push_back(qu.back()->val);
+        int size = qu.size();
+        while (size > 0)
+        {
+            TreeNode *node = qu.front();
+            qu.pop();
+            if (node->left != nullptr)
+                qu.push(node->left);
+            if (node->right != nullptr)
+                qu.push(node->right);
+            --size;
+        }
+    }
+    return res;
+}
+
+/*
+现在你总共有 n 门课需要选，记为 0 到 n-1。
+在选修某些课程之前需要一些先修课程。 例如，想要学习课程 0 ，你需要先完成课程 1 ，我们用一个匹配来表示他们: [0,1]
+给定课程总量以及它们的先决条件，判断是否可能完成所有课程的学习？
+
+示例 1:
+输入: 2, [[1,0]]
+输出: true
+解释: 总共有 2 门课程。学习课程 1 之前，你需要完成课程 0。所以这是可能的。
+
+示例 2:
+输入: 2, [[1,0],[0,1]]
+输出: false
+解释: 总共有 2 门课程。学习课程 1 之前，你需要先完成​课程 0；并且学习课程 0 之前，你还应先完成课程 1。这是不可能的。
+
+说明:
+输入的先决条件是由边缘列表表示的图形，而不是邻接矩阵。详情请参见图的表示法。
+你可以假定输入的先决条件中没有重复的边。
+
+提示:
+这个问题相当于查找一个循环是否存在于有向图中。如果存在循环，则不存在拓扑排序，因此不可能选取所有课程进行学习。
+通过 DFS 进行拓扑排序 - 一个关于Coursera的精彩视频教程（21分钟），介绍拓扑排序的基本概念。
+拓扑排序也可以通过 BFS 完成。
+思路：
+1）拓扑排序
+2）步骤：
+    a.选一个入度为零的点，输出
+    b.去除该点的所有出边
+    c.重复直至所有点输出
+*/
+bool canFinish(int numCourses, vector<vector<int>> &prerequisites)
+{
+    if (prerequisites.size() == 0)
+        return true;
+
+    vector<int> in_degrees(numCourses, 0); // 所有课程的入度表
+    vector<vector<int>> adj(numCourses); // 该课程作为前驱时，连接的所有后继课程表
+
+    for (const auto &prereq : prerequisites)
+    {
+        ++in_degrees[prereq[0]]; // 入度加一
+        adj[prereq[1]].push_back(prereq[0]); // 将 该课程 加入 该课程的先决课程 的后继课程表中
+    }
+
+    queue<int> q;
+    for (int i = 0; i < numCourses; ++i) // 找出所有入度为零的课程
+        if (in_degrees[i] == 0)
+            q.push(i);
+
+    int counter = 0;
+    while (!q.empty())
+    {
+        int curtop = q.front();
+        q.pop();
+        ++counter;
+        // 将入度为零的课程的出边去掉，也就是该课程的所有后继课程的入度减一
+        for (int successor : adj[curtop])
+        {
+            --in_degrees[successor];
+            if (in_degrees[successor] == 0)
+                q.push(successor);
+        }
+    }
+
+    return counter == numCourses;
+}
+
+/*
+给定一个含有 n 个正整数的数组和一个正整数 s ，找出该数组中满足其和 ≥ s 的长度最小的连续子数组。如果不存在符合条件的连续子数组，返回 0。
+
+示例: 
+输入: s = 7, nums = [2,3,1,2,4,3]
+输出: 2
+解释: 子数组 [4,3] 是该条件下的长度最小的连续子数组。
+
+思路：滑动窗口
+*/
+int minSubArrayLen(int s, const vector<int> &nums)
+{
+    int n = nums.size(), start = 0, sum = 0, min_len = INT_MAX;
+    for (int i = 0; i < n; i++)
+    {
+        sum += nums[i];
+        while (sum >= s)
+        {
+            min_len = min(min_len, i - start + 1);
+            sum -= nums[start++];
+        }
+    }
+    return min_len == INT_MAX ? 0 : min_len;
+}
+
+/*
+现在你总共有 n 门课需要选，记为 0 到 n-1。
+在选修某些课程之前需要一些先修课程。 例如，想要学习课程 0 ，你需要先完成课程 1 ，我们用一个匹配来表示他们: [0,1]
+给定课程总量以及它们的先决条件，返回你为了学完所有课程所安排的学习顺序。
+可能会有多个正确的顺序，你只要返回一种就可以了。如果不可能完成所有课程，返回一个空数组。
+
+示例 1:
+输入: 2, [[1,0]]
+输出: [0,1]
+解释: 总共有 2 门课程。要学习课程 1，你需要先完成课程 0。因此，正确的课程顺序为 [0,1] 。
+
+示例 2:
+输入: 4, [[1,0],[2,0],[3,1],[3,2]]
+输出: [0,1,2,3] or [0,2,1,3]
+解释: 总共有 4 门课程。要学习课程 3，你应该先完成课程 1 和课程 2。并且课程 1 和课程 2 都应该排在课程 0 之后。
+     因此，一个正确的课程顺序是 [0,1,2,3] 。另一个正确的排序是 [0,2,1,3] 。
+*/
+vector<int> findOrder(int numCourses, vector<vector<int>> &prerequisites)
+{
+    vector<int> res;
+    if (numCourses <= 0)
+        return res;
+
+    vector<int> in_degrees(numCourses, 0);
+    vector<vector<int>> adj(numCourses);
+
+    for (const auto &prereq : prerequisites)
+    {
+        ++in_degrees[prereq[0]];
+        adj[prereq[1]].push_back(prereq[0]);
+    }
+
+    queue<int> q;
+    for (int i = 0; i < numCourses; ++i)
+        if (in_degrees[i] == 0)
+            q.push(i);
+
+    while (!q.empty())
+    {
+        int curtop = q.front();
+        q.pop();
+        res.push_back(curtop);
+        for (int successor : adj[curtop])
+        {
+            --in_degrees[successor];
+            if (in_degrees[successor] == 0)
+                q.push(successor);
+        }
+    }
+
+    return res.size() == numCourses ? res : vector<int>();
+}
+
+/*
+你是一个专业的小偷，计划偷窃沿街的房屋，每间房内都藏有一定的现金。
+这个地方所有的房屋都围成一圈，这意味着第一个房屋和最后一个房屋是紧挨着的。
+同时，相邻的房屋装有相互连通的防盗系统，如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警。
+给定一个代表每个房屋存放金额的非负整数数组，计算你在不触动警报装置的情况下，能够偷窃到的最高金额。
+
+示例 1:
+输入: [2,3,2]
+输出: 3
+解释: 你不能先偷窃 1 号房屋（金额 = 2），然后偷窃 3 号房屋（金额 = 2）, 因为他们是相邻的。
+
+示例 2:
+输入: [1,2,3,1]
+输出: 4
+解释: 你可以先偷窃 1 号房屋（金额 = 1），然后偷窃 3 号房屋（金额 = 3）。
+     偷窃到的最高金额 = 1 + 3 = 4 。
+思路：
+1）动态规划
+    a.设sum[i]表示从第0家偷盗到第i家（包括i）的总金额
+    b.递推关系式：sum[i] = max(sum[i - 1], sum[i - 2] + nums[i])
+2）由于第0家和最后一家是挨着的，所以第0家和最后一家只能偷其中一家
+*/
+int rob(const vector<int> &nums)
+{
+    int len = nums.size();
+    if (len <= 0)
+        return 0;
+    if (len == 1)
+        return nums[0];
+    if (len == 2)
+        return std::max(nums[0], nums[1]);
+
+    // 偷第一家
+    vector<int> rob_first(len, 0);
+    rob_first[0] = nums[0];
+    rob_first[1] = std::max(nums[0], nums[1]);
+    for (int i = 2; i < len - 1; i++) // 最后一家不偷
+    {
+        rob_first[i] = std::max(rob_first[i - 1], rob_first[i - 2] + nums[i]);
+    }
+
+    // 不偷第一家
+    vector<int> rob_no_first(len, 0);
+    rob_no_first[0] = 0;
+    rob_no_first[1] = nums[1];
+    rob_no_first[2] = std::max(nums[1], nums[2]);
+    for (int i = 3; i < len; i++) // 最后一家偷
+    {
+        rob_no_first[i] = std::max(rob_no_first[i - 1], rob_no_first[i - 2] + nums[i]);
+    }
+
+    return std::max(rob_first[len - 2], rob_no_first[len - 1]);
+}
+
+/*
+找出所有相加之和为 n 的 k 个数的组合。组合中只允许含有 1 - 9 的正整数，并且每种组合中不存在重复的数字。
+说明：
+所有数字都是正整数。
+解集不能包含重复的组合。 
+
+示例 1:
+输入: k = 3, n = 7
+输出: [[1,2,4]]
+
+示例 2:
+输入: k = 3, n = 9
+输出: [[1,2,6], [1,3,5], [2,3,4]]
+*/
+void combinationSum3Recursively(vector<vector<int>> &res, vector<int> &temp, int k, int n, int cur)
+{
+    if (k == 0)
+    {
+        if (n == 0)
+            res.emplace_back(temp);
+        return;
+    }
+
+    for (int i = cur; i < 10; i++)
+    {
+        temp.emplace_back(i);
+        combinationSum3Recursively(res, temp, k - 1, n - i, i + 1);
+        temp.pop_back();
+    }
+}
+vector<vector<int>> combinationSum3(int k, int n)
+{
+    vector<vector<int>> res;
+    if (k <= 0 || n <= 0)
+        return res;
+
+    vector<int> temp;
+    combinationSum3Recursively(res, temp, k, n, 1);
+    return res;
+}
+
+/*
+给定一个整数数组，判断数组中是否有两个不同的索引 i 和 j，使得 nums [i] 和 nums [j] 的差的绝对值最大为 t，并且 i 和 j 之间的差的绝对值最大为 ķ。
+
+示例 1:
+输入: nums = [1,2,3,1], k = 3, t = 0
+输出: true
+
+示例 2:
+输入: nums = [1,0,1,1], k = 1, t = 2
+输出: true
+
+示例 3:
+输入: nums = [1,5,9,1,5,9], k = 2, t = 3
+输出: false
+*/
+bool containsNearbyAlmostDuplicate(const vector<int> &nums, int k, int t)
+{
+    if (k < 1 || t < 0 || nums.size() <= 1)
+        return false;
+
+    for (int ik = 1; ik <= k; ++ik)
+    {
+        for (int i = 0, j = i + ik; j < nums.size(); ++i, ++j)
+        {
+            if (std::abs(static_cast<long long>(nums[i]) - static_cast<long long>(nums[j])) <= t)
+                return true;
+        }
+    }
+    return false;
+}
+
+/*
+在一个由 0 和 1 组成的二维矩阵内，找到只包含 1 的最大正方形，并返回其面积。
+
+示例:
+输入:
+1 0 1 0 0
+1 0 1 1 1
+1 1 1 1 1
+1 0 0 1 0
+输出: 4
+
+思路：
+1）动态规划
+2）过程：
+    a.令f(i,j)表示以点(i,j)为右下角时最大正方形的边长
+    b.递推关系式：当(i,j)为1时，f(i,j) = min(f(i-1, j-1), f(i-1, j), f(i, j-1)) + 1
+*/
+int maximalSquare(vector<vector<char>> &matrix)
+{
+    int rows = matrix.size();
+    if (rows == 0)
+        return 0;
+    int cols = matrix[0].size();
+    if (cols == 0)
+        return 0;
+
+    int res = 0;
+    vector<vector<int>> dp(rows, vector<int>(cols, 0));
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            if (i == 0 || j == 0)
+                dp[i][j] = matrix[i][j] - '0';
+            else if (matrix[i][j] == '1')
+            {
+                dp[i][j] = 1 + std::min(dp[i - 1][j - 1], std::min(dp[i - 1][j], dp[i][j - 1]));
+            }
+            res = std::max(res, dp[i][j]);
+        }
+    }
+    return res * res;
+}
+
+/*
+给出一个完全二叉树，求出该树的节点个数。
+说明：
+完全二叉树的定义如下：在完全二叉树中，除了最底层节点可能没填满外，其余每层节点数都达到最大值，并且最下面一层的节点都集中在该层最左边的若干位置。
+若最底层为第 h 层，则该层包含 1~ 2^h 个节点。
+
+示例:
+输入:
+    1
+   / \
+  2   3
+ / \  /
+4  5 6
+输出: 6
+思路：
+1）根据性质，如果所有节点都有两个子节点（除叶子节点），并且叶子节点都在同一层，那么就是满二叉树，节点个数为2^h - 1
+2）先判断左右子树深度是否一样，如果一样，说明是满的
+*/
+int countNodes(TreeNode *root)
+{
+    if (root == nullptr)
+        return 0;
+
+    int l = 0, r = 0;
+    TreeNode *left = root, *right = root;
+    while (left != nullptr)
+    {
+        ++l;
+        left = left->left;
+    }
+    while (right != nullptr)
+    {
+        ++r;
+        right = right->right;
+    }
+    if (l == r) // 左右深度一致，利用公式求解
+        return (0x01 << l) - 1;
+    return countNodes(root->left) + countNodes(root->right) + 1;
+}
+
+/*
+实现一个基本的计算器来计算一个简单的字符串表达式的值。
+字符串表达式仅包含非负整数，+， - ，*，/ 四种运算符和空格  。 整数除法仅保留整数部分。
+
+示例 1:
+输入: "3+2*2"
+输出: 7
+
+示例 2:
+输入: " 3/2 "
+输出: 1
+
+示例 3:
+输入: " 3+5 / 2 "
+输出: 5
+
+说明：
+你可以假设所给定的表达式都是有效的。
+请不要使用内置的库函数 eval。
+*/
+int calculate(const string &s)
+{
+    deque<long long> nums;
+    deque<char> ops;
+
+    int idx = 0;
+    while (idx < s.size())
+    {
+        while (idx < s.size() && s[idx] == ' ')
+            ++idx;
+        if (idx >= s.size())
+            break;
+
+        if (s[idx] == '+' || s[idx] == '-' || s[idx] == '*' || s[idx] == '/')
+        {
+            ops.push_back(s[idx]);
+            ++idx;
+            continue;
+        }
+
+        long long num = 0;
+        while (idx < s.size() && s[idx] <= '9' && s[idx] >= '0')
+        {
+            num = num * 10 + (s[idx] - '0');
+            ++idx;
+        }
+        nums.push_back(num);
+
+        if (!ops.empty() && (ops.back() == '/' || ops.back() == '*'))
+        {
+            long long t2 = nums.back();
+            nums.pop_back();
+            long long t1 = nums.back();
+            nums.pop_back();
+            if (ops.back() == '/')
+                nums.push_back(t1 / t2);
+            else if (ops.back() == '*')
+                nums.push_back(t1 * t2);
+            ops.pop_back();
+        }
+    }
+
+    while (!ops.empty())
+    {
+        long long t = nums.front();
+        nums.pop_front();
+        if (ops.front() == '+')
+            t += nums.front();
+        else
+            t -= nums.front();
+        nums.pop_front();
+        nums.push_front(t);
+        ops.pop_front();
+    }
+
+    return static_cast<int>(nums.front());
+}
+
+/*
+给定一个无重复元素的有序整数数组，返回数组区间范围的汇总。
+
+示例 1:
+输入: [0,1,2,4,5,7]
+输出: ["0->2","4->5","7"]
+解释: 0,1,2 可组成一个连续的区间; 4,5 可组成一个连续的区间。
+
+示例 2:
+输入: [0,2,3,4,6,8,9]
+输出: ["0","2->4","6","8->9"]
+解释: 2,3,4 可组成一个连续的区间; 8,9 可组成一个连续的区间。
+*/
+vector<string> summaryRanges(const vector<int> &nums)
+{
+    int length = nums.size();
+    if (length <= 0)
+        return vector<string>();
+    if (length == 1)
+        return { std::to_string(nums[0]) };
+
+    vector<string> res;
+    long long start = nums[0];
+    long long pre = start;
+    for (int i = 1; i < length; ++i)
+    {
+        if (nums[i] - pre == 1)
+        {
+            pre = nums[i];
+        }
+        else
+        {
+            if (pre == start)
+                res.push_back(std::to_string(start));
+            else
+                res.push_back(std::to_string(start) + "->" + std::to_string(pre));
+
+            start = nums[i];
+            pre = start;
+        }
+    }
+    if (pre == start)
+        res.push_back(std::to_string(start));
+    else
+        res.push_back(std::to_string(start) + "->" + std::to_string(pre));
+    return res;
+}
+
+/*
+给定一个大小为 n 的数组，找出其中所有出现超过 ⌊ n/3 ⌋ 次的元素。
+说明: 要求算法的时间复杂度为 O(n)，空间复杂度为 O(1)。
+
+示例 1:
+输入: [3,2,3]
+输出: [3]
+
+示例 2:
+输入: [1,1,1,3,3,2,2,2]
+输出: [1,2]
+
+思路：
+1）摩尔投票法。该算法用于1/2情况，它说：“在任何数组中，出现次数大于该数组长度一半的值只能有一个。”
+2）那么，改进一下用于1/3。可以这么说：“在任何数组中，出现次数大于该数组长度1/3的值最多只有两个。”
+*/
+vector<int> majorityElement(vector<int> &nums)
+{
+    if (nums.size() < 2)
+        return nums;
+
+    int maj_1 = INT_MIN, maj_2 = INT_MIN;
+    int maj_1_cnt = 0, maj_2_cnt = 0;
+    for (int num : nums)
+    {
+        if ((maj_1_cnt == 0 || maj_1 == num) && num != maj_2)
+        {
+            ++maj_1_cnt;
+            maj_1 = num;
+        }
+        else if (maj_2_cnt == 0 || maj_2 == num)
+        {
+            ++maj_2_cnt;
+            maj_2 = num;
+        }
+        else
+        {
+            --maj_1_cnt;
+            --maj_2_cnt;
+        }
+    }
+
+    vector<int> res;
+    int cnt = 0;
+    for (int num : nums)
+    {
+        if (num == maj_1)
+            ++cnt;
+    }
+    if (cnt > nums.size() / 3)
+        res.push_back(maj_1);
+
+    cnt = 0;
+    for (int num : nums)
+    {
+        if (num == maj_2)
+            ++cnt;
+    }
+    if (cnt > nums.size() / 3 && maj_2 != maj_1)
+        res.push_back(maj_2);
+    return res;
+}
+
+/*
+给定一个二叉搜索树，编写一个函数 kthSmallest 来查找其中第 k 个最小的元素。
+说明：
+你可以假设 k 总是有效的，1 ≤ k ≤ 二叉搜索树元素个数。
+
+示例 1:
+输入: root = [3,1,4,null,2], k = 1
+   3
+  / \
+ 1   4
+  \
+   2
+输出: 1
+
+示例 2:
+输入: root = [5,3,6,2,4,null,null,1], k = 3
+       5
+      / \
+     3   6
+    / \
+   2   4
+  /
+ 1
+输出: 3
+
+进阶：
+如果二叉搜索树经常被修改（插入/删除操作）并且你需要频繁地查找第 k 小的值，你将如何优化 kthSmallest 函数？
+*/
+void kthSmallestRecursively(TreeNode *p, int &k, int &res)
+{
+    if (k == 0 || p == nullptr)
+        return;
+
+    kthSmallestRecursively(p->left, k, res);
+    --k;
+    if (k == 0)
+    {
+        res = p->val;
+        return;
+    }
+    kthSmallestRecursively(p->right, k, res);
+}
+int kthSmallest(TreeNode *root, int k)
+{
+    int res = -1;
+    kthSmallestRecursively(root, k, res);
+    return res;
+}
+
+/*
+给定一个二叉树, 找到该树中两个指定节点的最近公共祖先。
+百度百科中最近公共祖先的定义为：
+“对于有根树 T 的两个结点 p、q，最近公共祖先表示为一个结点 x，满足 x 是 p、q 的祖先且 x 的深度尽可能大（一个节点也可以是它自己的祖先）。”
+
+说明:
+所有节点的值都是唯一的。
+p、q 为不同节点且均存在于给定的二叉树中。
+*/
+void lowestCommonAncestorGetPath(TreeNode *p, TreeNode *target, bool &found, vector<TreeNode *> &path)
+{
+    if (p == nullptr || found)
+        return;
+    if (p == target)
+    {
+        path.push_back(p);
+        found = true;
+        return;
+    }
+
+    path.push_back(p);
+    lowestCommonAncestorGetPath(p->left, target, found, path);
+    if (found)
+        return;
+    lowestCommonAncestorGetPath(p->right, target, found, path);
+    if (found)
+        return;
+    path.pop_back();
+}
+TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q)
+{
+    if (root == nullptr || p == nullptr || q == nullptr)
+        return nullptr;
+    if (p == q)
+        return p;
+
+    vector<TreeNode *> path_p, path_q;
+    bool found_p = false, found_q = false;
+    lowestCommonAncestorGetPath(root, p, found_p, path_p);
+    lowestCommonAncestorGetPath(root, q, found_q, path_q);
+
+    int len = std::min(path_p.size(), path_q.size());
+    TreeNode *res = nullptr;
+    for (int i = 0; i < len; i++)
+    {
+        if (path_p[i] != path_q[i])
+            return res;
+        else
+            res = path_p[i];
+    }
+    return res;
+}
+TreeNode *lowestCommonAncestor2(TreeNode *root, TreeNode *p, TreeNode *q)
+{
+    /*
+    注意p,q必然存在树内, 且所有节点的值唯一!!!
+    递归思想, 对以root为根的(子)树进行查找p和q, 如果root == null || p || q 直接返回root
+    表示对于当前树的查找已经完毕, 否则对左右子树进行查找, 根据左右子树的返回值判断:
+    1. 左右子树的返回值都不为null, 由于值唯一左右子树的返回值就是p和q, 此时root为LCA
+    2. 如果左右子树返回值只有一个不为null, 说明只有p和q存在与左或右子树中, 最先找到的那个节点为LCA
+    3. 左右子树返回值均为null, p和q均不在树中, 返回null
+    */
+    if (root == nullptr || root == p || root == q)
+        return root;
+
+    TreeNode *left = lowestCommonAncestor2(root->left, p, q);
+    TreeNode *right = lowestCommonAncestor2(root->right, p, q);
+    if (left == nullptr && right == nullptr)
+        return nullptr;
+    else if (left != nullptr && right != nullptr)
+        return root;
+    else
+        return left == nullptr ? right : left;
+}
+
+/*
+给定长度为 n 的整数数组 nums，其中 n > 1，返回输出数组 output ，其中 output[i] 等于 nums 中除 nums[i] 之外其余各元素的乘积。
+
+示例:
+输入: [1,2,3,4]
+输出: [24,12,8,6]
+说明: 请不要使用除法，且在 O(n) 时间复杂度内完成此题。
+
+进阶：
+你可以在常数空间复杂度内完成这个题目吗？（ 出于对空间复杂度分析的目的，输出数组不被视为额外空间。）
+
+思路：
+1）先从左到右计算除当前位置外左边的乘积
+2）然后从右往左计算除当前位置之外右边的乘积，同时和上一步计算的左边乘积相乘即可
+*/
+vector<int> productExceptSelf(const vector<int> &nums)
+{
+    vector<int> res(nums.size(), 1);
+    int left = 1, right = 1;
+    // 先从左到右计算除当前位置外左边的乘积
+    for (int i = 0; i < nums.size(); i++)
+    {
+        res[i] = left;
+        left *= nums[i];
+    }
+    // 从右往左计算除当前位置之外右边的乘积，同时和上一步计算的左边乘积相乘
+    for (int i = nums.size() - 1; i >= 0; i--)
+    {
+        res[i] *= right;
+        right *= nums[i];
+    }
+    return res;
+}
+
+/*
+给定一个含有数字和运算符的字符串，为表达式添加括号，改变其运算优先级以求出不同的结果。你需要给出所有可能的组合的结果。有效的运算符号包含 +, - 以及 * 。
+
+示例 1:
+输入: "2-1-1"
+输出: [0, 2]
+解释:
+((2-1)-1) = 0
+(2-(1-1)) = 2
+
+示例 2:
+输入: "2*3-4*5"
+输出: [-34, -14, -10, -10, 10]
+解释:
+(2*(3-(4*5))) = -34
+((2*3)-(4*5)) = -14
+((2*(3-4))*5) = -10
+(2*((3-4)*5)) = -10
+(((2*3)-4)*5) = 10
+
+思路：分治法
+*/
+vector<int> diffWaysToCompute(const string &input)
+{
+    vector<int> res;
+    // 遍历所有可能的分法（按运算符分割）
+    for (int i = 0; i < input.size(); ++i)
+    {
+        char c = input[i];
+        // 在运算符处分成左右两个子问题求解
+        if (c == '+' || c == '-' || c == '*')
+        {
+            // 左子问题的所有可能加括号后的结果
+            vector<int> res1 = diffWaysToCompute(input.substr(0, i));
+            // 右子问题的所有可能加括号后的结果
+            vector<int> res2 = diffWaysToCompute(input.substr(i + 1));
+            // 组合左右子问题的结果得到未分割前的结果
+            for (int r1 : res1)
+            {
+                for (int r2 : res2)
+                {
+                    if (c == '+')
+                        res.push_back(r1 + r2);
+                    else if (c == '-')
+                        res.push_back(r1 - r2);
+                    else if (c == '*')
+                        res.push_back(r1 * r2);
+                }
+            }
+        }
+    }
+    // 无运算符，意味着这是一个数
+    if (res.empty())
+        res.push_back(std::stoi(input));
+    return res;
+}
+
+/*
+给定正整数 n，找到若干个完全平方数（比如 1, 4, 9, 16, ...）使得它们的和等于 n。你需要让组成和的完全平方数的个数最少。
+
+示例 1:
+输入: n = 12
+输出: 3
+解释: 12 = 4 + 4 + 4.
+
+示例 2:
+输入: n = 13
+输出: 2
+解释: 13 = 4 + 9.
+
+思路：动态规划
+*/
+int numSquares(int n)
+{
+    vector<int> dp(n + 1, INT_MAX);
+    dp[0] = 0;
+    for (int num = 1; num <= n; ++num) // 从1开始至n打表
+    {
+        for (int root = 1; root * root <= num; ++root) // 尝试num-1, num-4, num-9, ...
+        {
+            // 将num分解成 root*root 和 num-root*root，由于dp[num-root*root]已经计算出来了，那么dp[num]=dp[num-root*root]+1
+            dp[num] = min(dp[num], dp[num - root * root] + 1);
+        }
+    }
+    return dp[n];
+}
+// 思路2：四平方定理，一个正整数可以表示成不超过4个平方数的和
+int numSquares2(int n)
+{
+    if (n <= 0)
+        return 0;
+
+    auto check1 = [](int n) -> bool // 能否表示成一个平方数
+    {
+        int tem = sqrt(n);
+        return tem * tem == n;
+    };
+    auto check2 = [&check1](int n) -> bool // 能否表示成两个平方数的和
+    {
+        for (int i = 1; i * i < n; i++)
+            if (check1(n - i * i))
+                return true;
+        return false;
+    };
+    auto check3 = [&check2](int n) -> bool // 能否表示成三个平方数的和
+    {
+        for (int i = 1; i * i < n; i++)
+            if (check2(n - i * i))
+                return true;
+        return false;
+    };
+
+    if (check1(n))
+        return 1;
+    else if (check2(n))
+        return 2;
+    else if (check3(n))
+        return 3;
+    else
+        return 4;
+}
+
+/*
+给定一个包含 n + 1 个整数的数组 nums，其数字都在 1 到 n 之间（包括 1 和 n），可知至少存在一个重复的整数。假设只有一个重复的整数，找出这个重复的数。
+
+示例 1:
+输入: [1,3,4,2,2]
+输出: 2
+
+示例 2:
+输入: [3,1,3,4,2]
+输出: 3
+
+说明：
+不能更改原数组（假设数组是只读的）。
+只能使用额外的 O(1) 的空间。
+时间复杂度小于 O(n^2) 。
+数组中只有一个重复的数字，但它可能不止重复出现一次。
+
+思路：类似寻找有环链表的环入口
+例如：
+    下标   0,1,2,3,4
+    数组  [1,3,4,2,2]
+    从下标0开始遍历下标和数组得：
+              __
+             ↓  |
+    0->1->3->2->4
+*/
+int findDuplicate(const vector<int> &nums)
+{
+    if (nums.size() < 2)
+        return -1;
+    if (nums.size() == 2)
+        return nums[1];
+
+    // 快慢指针使两个指针进入环中
+    int slow = 0, fast = 0;
+    do
+    {
+        slow = nums[slow];
+        fast = nums[nums[fast]];
+    } while (slow != fast);
+
+    // 然后从头开始，直到相遇
+    int res = 0;
+    while (res != slow)
+    {
+        res = nums[res];
+        slow = nums[slow];
+    }
+    return res;
+}
+
+/*
+根据百度百科，生命游戏，简称为生命，是英国数学家约翰·何顿·康威在1970年发明的细胞自动机。
+给定一个包含 m × n 个格子的面板，每一个格子都可以看成是一个细胞。
+每个细胞具有一个初始状态 live（1）即为活细胞， 或 dead（0）即为死细胞。
+每个细胞与其八个相邻位置（水平，垂直，对角线）的细胞都遵循以下四条生存定律：
+如果活细胞周围八个位置的活细胞数少于两个，则该位置活细胞死亡；
+如果活细胞周围八个位置有两个或三个活细胞，则该位置活细胞仍然存活；
+如果活细胞周围八个位置有超过三个活细胞，则该位置活细胞死亡；
+如果死细胞周围正好有三个活细胞，则该位置死细胞复活；
+根据当前状态，写一个函数来计算面板上细胞的下一个（一次更新后的）状态。下一个状态是通过将上述规则同时应用于当前状态下的每个细胞所形成的，其中细胞的出生和死亡是同时发生的。
+
+示例:
+输入:
+[
+  [0,1,0],
+  [0,0,1],
+  [1,1,1],
+  [0,0,0]
+]
+输出:
+[
+  [0,0,0],
+  [1,0,1],
+  [0,1,1],
+  [0,1,0]
+]
+
+进阶:
+你可以使用原地算法解决本题吗？请注意，面板上所有格子需要同时被更新：你不能先更新某些格子，然后使用它们的更新后的值再更新其他格子。
+本题中，我们使用二维数组来表示面板。原则上，面板是无限的，但当活细胞侵占了面板边界时会造成问题。你将如何解决这些问题？
+
+思路：
+状态0： 死细胞转为死细胞
+状态1： 活细胞转为活细胞
+状态2： 活细胞转为死细胞
+状态3： 死细胞转为活细胞
+我们先对原数组进行逐个扫描，对于每一个位置，扫描其周围八个位置，如果遇到状态1或2，就计数器累加1，
+扫完8个邻居，如果少于两个活细胞或者大于三个活细胞，而且当前位置是活细胞的话，标记状态2，
+如果正好有三个活细胞且当前是死细胞的话，标记状态3。
+最后我们对所有状态对2取余，那么状态0和2就变成死细胞，状态1和3就是活细胞，达成目的。
+*/
+void gameOfLife(vector<vector<int>> &board)
+{
+    int rows = board.size();
+    if (rows == 0)
+        return;
+    int cols = board[0].size();
+    if (cols == 0)
+        return;
+
+    int dx[] = { -1, -1, -1, 0, 1, 1, 1, 0 };
+    int dy[] = { -1, 0, 1, 1, 1, 0, -1, -1 };
+    for (int row = 0; row < rows; ++row)
+    {
+        for (int col = 0; col < cols; ++col)
+        {
+            int cnt = 0;
+            for (int i = 0; i < 8; ++i)
+            {
+                int x = row + dx[i], y = col + dy[i];
+                if (x >= 0 && x < rows && y >= 0 && y < cols && (board[x][y] == 1 || board[x][y] == 2))
+                    ++cnt;
+            }
+            if (board[row][col] == 1 && (cnt < 2 || cnt > 3))
+                board[row][col] = 2;
+            else if (board[row][col] == 0 && cnt == 3)
+                board[row][col] = 3;
+        }
+    }
+    for (int row = 0; row < rows; ++row)
+    {
+        for (int col = 0; col < cols; ++col)
+        {
+            board[row][col] %= 2;
+        }
+    }
+}
+
+/*
+你正在和你的朋友玩 猜数字（Bulls and Cows）游戏：你写下一个数字让你的朋友猜。
+每次他猜测后，你给他一个提示，告诉他有多少位数字和确切位置都猜对了（称为“Bulls”, 公牛），有多少位数字猜对了但是位置不对（称为“Cows”, 奶牛）。
+你的朋友将会根据提示继续猜，直到猜出秘密数字。
+请写出一个根据秘密数字和朋友的猜测数返回提示的函数，用 A 表示公牛，用 B 表示奶牛。
+请注意秘密数字和朋友的猜测数都可能含有重复数字。
+
+示例 1:
+输入: secret = "1807", guess = "7810"
+输出: "1A3B"
+解释: 1 公牛和 3 奶牛。公牛是 8，奶牛是 0, 1 和 7。
+
+示例 2:
+输入: secret = "1123", guess = "0111"
+输出: "1A1B"
+解释: 朋友猜测数中的第一个 1 是公牛，第二个或第三个 1 可被视为奶牛。
+说明: 你可以假设秘密数字和朋友的猜测数都只包含数字，并且它们的长度永远相等。
+
+思路：由于都是数字，可以用数组进行哈希
+*/
+string getHint(const string &secret, const string &guess)
+{
+    int secret_map[10], guess_map[10];
+    memset(secret_map, 0, sizeof(secret_map));
+    memset(guess_map, 0, sizeof(guess_map));
+
+    int bulls = 0;
+    for (int i = 0; i < guess.size(); i++)
+    {
+        char secret_char = secret[i], guess_char = guess[i];
+        if (secret_char == guess_char)
+        {
+            ++bulls;
+        }
+        else
+        {
+            ++secret_map[secret_char - '0'];
+            ++guess_map[guess_char - '0'];
+        }
+    }
+
+    int cows = 0;
+    for (int i = 0; i < 10; i++)
+    {
+        cows += std::min(secret_map[i], guess_map[i]);
+    }
+
+    return std::to_string(bulls) + "A" + std::to_string(cows) + "B";
+}
+
+/*
+给定一个无序的整数数组，找到其中最长上升子序列的长度。
+
+示例:
+输入: [10,9,2,5,3,7,101,18]
+输出: 4
+解释: 最长的上升子序列是 [2,3,7,101]，它的长度是 4。
+
+说明:
+可能会有多种最长上升子序列的组合，你只需要输出对应的长度即可。
+你算法的时间复杂度应该为 O(n^2) 。
+进阶: 你能将算法的时间复杂度降低到 O(n log n) 吗?
+
+思路：O(n^2)
+1）动态规划
+2）dp[i]表示[0, i]的最长上升子序列的长度
+3）那么dp[i] = max(dp[i], dp[j] + 1)，j∈[0, i-1] && nums[i] > nums[j]
+4）也就是说，前面的第j个数可以上升到第i个数（现在的数），那么dp[i] = dp[j] + 1
+*/
+int lengthOfLIS(const vector<int> &nums)
+{
+    int length = nums.size();
+    if (length < 2)
+        return length;
+
+    vector<int> dp(length, 1);
+    int res = 1;
+    for (int i = 1; i < length; i++)
+    {
+        for (int j = 0; j < i; j++)
+        {
+            if (nums[j] < nums[i])
+                dp[i] = std::max(dp[i], dp[j] + 1);
+        }
+        if (dp[i] > res)
+            res = dp[i];
+    }
+    return res;
+}
+/*
+思路2：O(nlogn)
+1）辅助数组近似代表最长上升子序列
+2）从左到右扫描数组，对于当前数字：
+    a.当前数字大于辅助数组最大元素（即最后一个元素），那么可以将该数加入辅助数组中，辅助数组长度增加
+    b.否则在辅助数组中二分查找，找到可以插入该数的位置并进行覆盖插入，辅助数组长度不变
+*/
+int lengthOfLIS2(const vector<int> &nums)
+{
+    vector<int> arr;
+    for (int num : nums)
+    {
+        if (arr.empty() || num > arr.back()) // 加入辅助数组
+            arr.push_back(num);
+        else // 二分查找，进行覆盖插入
+        {
+            //int low = 0;
+            //int high = arr.size();
+            //while (low < high)
+            //{
+            //    int mid = (low + high) / 2;
+            //    if (arr[mid] < num)
+            //        low = mid + 1;
+            //    else
+            //        high = mid;
+            //}
+            //arr[low] = num;
+
+            // 找到第一个大于或等于该元素的位置进行覆盖插入
+            *(std::lower_bound(arr.begin(), arr.end(), num)) = num;
+        }
+    }
+
+    return arr.size();
+}
+
+/*
+累加数是一个字符串，组成它的数字可以形成累加序列。
+一个有效的累加序列必须至少包含 3 个数。除了最开始的两个数以外，字符串中的其他数都等于它之前两个数相加的和。
+给定一个只包含数字 '0'-'9' 的字符串，编写一个算法来判断给定输入是否是累加数。
+说明: 累加序列里的数不会以 0 开头，所以不会出现 1, 2, 03 或者 1, 02, 3 的情况。
+
+示例 1:
+输入: "112358"
+输出: true
+解释: 累加序列为: 1, 1, 2, 3, 5, 8 。1 + 1 = 2, 1 + 2 = 3, 2 + 3 = 5, 3 + 5 = 8
+
+示例 2:
+输入: "199100199"
+输出: true
+解释: 累加序列为: 1, 99, 100, 199。1 + 99 = 100, 99 + 100 = 199
+进阶:
+你如何处理一个溢出的过大的整数输入?
+
+思路：
+1）DFS+剪枝
+2）第一个数的长度为len1，第二个数的长度为len2，那么第三个数为前两个数相加，长度为max(len1,len2)或max(len1,len2)+1
+3）如果某数以0打头，并且长度大于1，则剪枝
+4）注意最开始的第一个数和第二个数，最长为整个字符串长度一半
+*/
+bool isAdditiveNumberRecursively(unsigned long long first, int first_start, unsigned long long second, int second_start, const string &num, int third_start)
+{
+    if (third_start >= num.size())
+        return true;
+
+    int len = std::max(second_start - first_start, third_start - second_start);
+    for (int len3 = len; len3 <= len + 1; len3++)
+    {
+        if (num[third_start] == '0' && len3 > 1) // 剪枝
+            return false;
+        unsigned long long third = std::stoull(num.substr(third_start, len3));
+        if (first + second == third && isAdditiveNumberRecursively(second, second_start, third, third_start, num, third_start + len3))
+            return true;
+    }
+    return false;
+}
+bool isAdditiveNumber(const string &num)
+{
+    if (num.size() < 3)
+        return false;
+
+    for (int len1 = 1; len1 <= num.size() / 2; len1++) // 第一个数长度最长为一半
+    {
+        unsigned long long first = std::stoull(num.substr(0, len1));
+        for (int len2 = 1; len1 + len2 < num.size(); len2++) // 第二个数长度
+        {
+            if (num[len1] == '0' && len2 > 1) // 剪枝
+                break;
+            unsigned long long second = std::stoull(num.substr(len1, len2));
+            if (isAdditiveNumberRecursively(first, 0, second, len1, num, len1 + len2))
+                return true;
+        }
+    }
+    return false;
+}
+
+/*
+给定一个整数数组，其中第 i 个元素代表了第 i 天的股票价格 。​
+设计一个算法计算出最大利润。在满足以下约束条件下，你可以尽可能地完成更多的交易（多次买卖一支股票）:
+你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
+卖出股票后，你无法在第二天买入股票 (即冷冻期为 1 天)。
+
+示例:
+输入: [1,2,3,0,2]
+输出: 3
+解释: 对应的交易状态为: [买入, 卖出, 冷冻期, 买入, 卖出]
+
+思路：
+1）动态规划
+2）状态：买入、卖出、冷冻期（卖出后）、休息（啥都不干）
+3）用dp[n][k]表示第n天持有（k=1）或不持有（k=0）股票时的利润
+4）状态转移方程：
+    a.dp[n][1]=max(dp[n-1][1], dp[n-2][0]-prices[n])
+      第n天持有    前一天就持有  大前天不持有（卖出），隔一天（冷冻期）后买入
+    b.dp[n][0]=max(dp[n-1][0], dp[n-1][1]+prices[n])
+     第n天不持有   前一天就不持有  前一天持有，今天卖出
+5）dp[n][1]、dp[n][0]、dp[n-2][0]可简化成变量
+6）参考链接：https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/solution/yi-ge-fang-fa-tuan-mie-6-dao-gu-piao-wen-ti-by-lab
+*/
+int maxProfit(const vector<int> &prices)
+{
+    int length = prices.size();
+    if (length <= 1)
+        return 0;
+
+    int dp_n_0 = 0, dp_n_1 = INT_MIN;
+    int dp_pre_pre_0 = 0;
+    for (int i = 0; i < length; i++)
+    {
+        int temp = dp_n_0;
+        dp_n_0 = std::max(dp_n_0, dp_n_1 + prices[i]);
+        dp_n_1 = std::max(dp_n_1, dp_pre_pre_0 - prices[i]);
+        dp_pre_pre_0 = temp;
+    }
+    return dp_n_0;
+}
+
+/*
+对于一个具有树特征的无向图，我们可选择任何一个节点作为根。
+图因此可以成为树，在所有可能的树中，具有最小高度的树被称为最小高度树。
+给出这样的一个图，写出一个函数找到所有的最小高度树并返回他们的根节点。
+格式
+该图包含 n 个节点，标记为 0 到 n - 1。给定数字 n 和一个无向边 edges 列表（每一个边都是一对标签）。
+你可以假设没有重复的边会出现在 edges 中。由于所有的边都是无向边， [0, 1]和 [1, 0] 是相同的，因此不会同时出现在 edges 里。
+
+示例 1:
+输入: n = 4, edges = [[1, 0], [1, 2], [1, 3]]
+        0
+        |
+        1
+       / \
+      2   3
+输出: [1]
+
+示例 2:
+输入: n = 6, edges = [[0, 3], [1, 3], [2, 3], [4, 3], [5, 4]]
+
+     0  1  2
+      \ | /
+        3
+        |
+        4
+        |
+        5
+
+输出: [3, 4]
+
+说明:
+根据树的定义，树是一个无向图，其中任何两个顶点只通过一条路径连接。 换句话说，一个任何没有简单环路的连通图都是一棵树。
+树的高度是指根节点和叶子节点之间最长向下路径上边的数量。
+
+思路：
+1）拓扑排序的思想
+2）越靠近树的叶子的节点越不可能为根节点，意味着如果逐步把那些叶子去除的话，最后的节点便是根节点
+*/
+vector<int> findMinHeightTrees(int n, vector<vector<int>> &edges)
+{
+    vector<int> res;
+    if (n < 3) // 边界情况
+    {
+        for (int i = 0; i < n; i++)
+        {
+            res.push_back(i);
+        }
+        return res;
+    }
+
+    vector<int> degrees(n, 0); // 度数表，只要有顶点和它相连，度数加一
+    vector<vector<int>> adjs(n, vector<int>()); // 邻接矩阵，只要有顶点和它相连，将相连顶点加入
+
+    for (const auto &edge : edges) // 初始化度数表和邻接矩阵
+    {
+        ++degrees[edge[0]];
+        ++degrees[edge[1]];
+        adjs[edge[0]].push_back(edge[1]);
+        adjs[edge[1]].push_back(edge[0]);
+    }
+
+    queue<int> del_vertices; // 保存需要移除的度数为1的顶点（即叶子）
+    for (int i = 0; i < n; i++)
+    {
+        if (degrees[i] == 1)
+            del_vertices.push(i);
+    }
+
+    while (n > 2) // 根最多为两个
+    {
+        int cnt = del_vertices.size();
+        n -= cnt; // 得到剩余顶点
+        for (int i = 0; i < cnt; i++) // 移除目前待移除队列中的所有顶点
+        {
+            int vertex = del_vertices.front();
+            del_vertices.pop();
+            --degrees[vertex]; // 需要移除的顶点度数减一
+            for (int v : adjs[vertex])
+            {
+                --degrees[v]; // 与之相连的顶点的度数也减一（重复减去已移除顶点的度数不影响）
+                if (degrees[v] == 0) // 度数为0，说明只有一个根，并且这个根就是它
+                {
+                    res.push_back(v);
+                    return res;
+                }
+                if (degrees[v] == 1) // 度数为1，加入待移除队列
+                    del_vertices.push(v);
+            }
+        }
+    }
+
+    while (del_vertices.empty() == false) // 两个根
+    {
+        res.push_back(del_vertices.front());
+        del_vertices.pop();
+    }
+    return res;
+}
+
+/*
+编写一段程序来查找第 n 个超级丑数。
+超级丑数是指其所有质因数都是长度为 k 的质数列表 primes 中的正整数。
+
+示例:
+输入: n = 12, primes = [2,7,13,19]
+输出: 32
+解释: 给定长度为 4 的质数列表 primes = [2,7,13,19]，前 12 个超级丑数序列为：[1,2,4,7,8,13,14,16,19,26,28,32] 。
+
+说明:
+1 是任何给定 primes 的超级丑数。
+ 给定 primes 中的数字以升序排列。
+0 < k ≤ 100, 0 < n ≤ 106, 0 < primes[i] < 1000 。
+第 n 个超级丑数确保在 32 位有符整数范围内。
+
+思路：和丑数的思路一致，只不过2，3，5换成了指定的序列
+*/
+int nthSuperUglyNumber(int n, const vector<int> &primes)
+{
+    if (n == 1)
+        return 1;
+
+    vector<int> nums(n, 1);
+    // 原来的3个指针换成了指定序列长度的指针
+    vector<int> indices(primes.size(), 0);
+
+    int idx = 1;
+    while (idx < n)
+    {
+        // 取最小的那个
+        int cur = primes[0] * nums[indices[0]];
+        for (int i = 1; i < indices.size(); i++)
+        {
+            int t = primes[i] * nums[indices[i]];
+            if (t < cur)
+                cur = t;
+        }
+        nums[idx] = cur;
+        // 更新每个数对应的指针
+        for (int i = 0; i < indices.size(); i++)
+        {
+            while (primes[i] * nums[indices[i]] <= cur)
+                ++indices[i];
+        }
+        ++idx;
+    }
+    return nums[n - 1];
+}
+// 思路2：保存中间结果，减少循环
+int nthSuperUglyNumber2(int n, const vector<int> &primes)
+{
+    if (n == 1)
+        return 1;
+
+    int m = primes.size();
+    vector<int> nums(n, INT_MAX); //输出的丑数
+    vector<int> indices(m, 0); //每一个prime对应的要找到的丑数的位置
+    vector<int> vals(m, 1); //每一个prime的下一个数的最优位置
+
+    nums[0] = 1; //第一个丑数是1
+    for (int idx = 1; idx < n; idx++)
+    {
+        for (int i = 0; i < m; i++)
+        {
+            if (vals[i] == nums[idx - 1])
+                vals[i] = nums[indices[i]++] * primes[i];
+            nums[idx] = std::min(nums[idx], vals[i]);
+        }
+    }
+    return nums[n - 1];
+}
+
+/*
+给定一个字符串数组 words，找到 length(word[i]) * length(word[j]) 的最大值，并且这两个单词不含有公共字母。
+你可以认为每个单词只包含小写字母。如果不存在这样的两个单词，返回 0。
+
+示例 1:
+输入: ["abcw","baz","foo","bar","xtfn","abcdef"]
+输出: 16
+解释: 这两个单词为 "abcw", "xtfn"。
+
+示例 2:
+输入: ["a","ab","abc","d","cd","bcd","abcd"]
+输出: 4
+解释: 这两个单词为 "ab", "cd"。
+
+示例 3:
+输入: ["a","aa","aaa","aaaa"]
+输出: 0
+解释: 不存在这样的两个单词。
+*/
+int maxProduct(vector<string> &words)
+{
+    int length = words.size();
+    if (length < 2)
+        return 0;
+
+    // 都是小写字母，那么可以用一个26位的数字代表
+    auto str2bit = [](const string &word) -> int
+    {
+        int res = 0;
+        for (char c : word)
+        {
+            res |= (0x01 << (c - 'a'));
+        }
+        return res;
+    };
+
+    vector<int> bit_words(length, 0);
+    for (int i = 0; i < length; i++)
+    {
+        bit_words[i] = str2bit(words[i]);
+    }
+
+    int res = 0;
+    for (int i = 0; i < length; i++)
+    {
+        for (int j = i + 1; j < length; j++)
+        {
+            int t = words[i].size() * words[j].size();
+            if (t > res && !(bit_words[i] & bit_words[j]))
+                res = t;
+        }
+    }
+    return res;
+}
+
+/*
+给定不同面额的硬币 coins 和一个总金额 amount。编写一个函数来计算可以凑成总金额所需的最少的硬币个数。如果没有任何一种硬币组合能组成总金额，返回 -1。
+
+示例 1:
+输入: coins = [1, 2, 5], amount = 11
+输出: 3
+解释: 11 = 5 + 5 + 1
+
+示例 2:
+输入: coins = [2], amount = 3
+输出: -1
+
+说明:
+你可以认为每种硬币的数量是无限的。
+
+思路：
+1）动态规划
+2）类似背包问题
+3）令dp[i]表示总金额为i时最少硬币的个数，dp[0]=0
+4）从dp[1]开始，计算到dp[amount]
+5）转移方程：
+    for coin in coins:
+        dp[i] = min(dp[i], dp[i - coin] + 1)
+6）也就是，i可以分成coin和i-coin
+*/
+int coinChange(vector<int> &coins, int amount)
+{
+    if (amount == 0)
+        return 0;
+    if (coins.empty() || amount < 0)
+        return -1;
+
+    vector<int> dp(amount + 1, INT_MAX);
+    dp[0] = 0;
+    for (int i = 1; i <= amount; i++)
+    {
+        for (int coin : coins)
+        {
+            if (coin > i) // 当前硬币面值超过了当前计算的总金额，那么跳过
+                continue;
+            if (dp[i - coin] != INT_MAX) // dp[i - coin]已经计算了，否则无法将当前金额i分成coin和i-coin
+                dp[i] = std::min(dp[i], dp[i - coin] + 1);
+        }
+    }
+    if (dp[amount] == INT_MAX)
+        return -1;
+    return dp[amount];
+}
+/*
+思路2：
+1）递归求解
+2）先按面值从大到小排序，我们期望面值越大的硬币个数能够尽量多一些
+3）递归时，从面值最大的递归到最小的，递归过程中：
+    a.如果余额刚好能够整除当前面值，更新结果，回溯
+    b.如果不能整除，那么令i=余额/面值，然后i递减至0，进行递归。目的是在尽可能满足2）的目标下，又能够覆盖所有可能情况（当前面值从i~0，都覆盖了）
+*/
+void coinChangeRecursively(vector<int> &coins, int amount, int idx, int cnt, int &res)
+{
+    if (idx >= coins.size() || cnt > res)
+        return;
+    if (amount % coins[idx] == 0) // 余额刚好能够整除当前面值
+    {
+        res = std::min(res, cnt + amount / coins[idx]);
+        return;
+    }
+
+    for (int i = amount / coins[idx]; i >= 0; --i)
+    {
+        /* 剪枝
+        i是递减的，i越小，cnt+i就越小，乍看上去像是“提前”剪枝了
+        其实不然，当前面值大于接下来的面值。如果i继续减小，那么需要更多的小面值
+        */
+        if (cnt + i > res)
+            break;
+        coinChangeRecursively(coins, amount - i * coins[idx], idx + 1, cnt + i, res);
+    }
+}
+int coinChange2(vector<int> &coins, int amount)
+{
+    if (amount == 0)
+        return 0;
+    if (coins.empty() || amount < 0)
+        return -1;
+
+    std::sort(coins.begin(), coins.end(), greater<int>());
+
+    int res = INT_MAX;
+    coinChangeRecursively(coins, amount, 0, 0, res);
+    if (res == INT_MAX)
+        return -1;
+    return res;
+}
+
 int main(int argc, char **argv)
 {
-    vector<int> gas{ 1,2,3,4,5 }, cost{ 3,4,5,1,2 };
-    cout << canCompleteCircuit(gas, cost) << endl;
+    vector<int> vec{ 1,2,5 };
+    cout << coinChange2(vec, 11) << endl;
+    vector<int> vec1{ 2 };
+    cout << coinChange2(vec1, 3) << endl;
+
+    //vector<string> vec{ "abcw","baz","foo","bar","xtfn","abcdef" };
+    //cout << maxProduct(vec) << endl;
+    //vector<string> vec1{ "a","ab","abc","d","cd","bcd","abcd" };
+    //cout << maxProduct(vec1) << endl;
+    //vector<string> vec2{ "a","aa","aaa","aaaa" };
+    //cout << maxProduct(vec2) << endl;
+
+    //cout << nthSuperUglyNumber2(12, { 2,7,13,19 }) << endl;
+
+    //cout << maxProfit({ 1,2,3,0,2 }) << endl;
+
+    //cout << isAdditiveNumber("1203") << endl;
+    //cout << isAdditiveNumber("112358") << endl;
+    //cout << isAdditiveNumber("199100199") << endl;
+
+    //cout << lengthOfLIS2({ 1,3,6,7,9,4,10,5,6 }) << endl;
+
+    //cout << getHint("1807", "7810") << endl;
+    //cout << getHint("1123", "0111") << endl;
+
+    //cout << findDuplicate({ 1,3,4,2,2 }) << endl;
+
+    //printContainer(productExceptSelf({ 1,2,3,4 }));
+
+    //vector<TreeNode *> nodes(9, nullptr);
+    //for (int i = 0; i < 9; i++)
+    //{
+    //    nodes[i] = new TreeNode(i);
+    //}
+    //nodes[3]->left = nodes[5];
+    //nodes[3]->right = nodes[1];
+    //nodes[5]->left = nodes[6];
+    //nodes[5]->right = nodes[2];
+    //nodes[2]->left = nodes[7];
+    //nodes[2]->right = nodes[4];
+    //nodes[1]->left = nodes[0];
+    //nodes[1]->right = nodes[8];
+    //TreeExample tree(nodes[3]);
+    //cout << lowestCommonAncestor(tree.getTree(), nodes[5], nodes[1])->val << endl;
+    //cout << lowestCommonAncestor(tree.getTree(), nodes[7], nodes[4])->val << endl;
+    //cout << lowestCommonAncestor(tree.getTree(), nodes[5], nodes[4])->val << endl;
+
+    //printContainer(summaryRanges({ 0,1,2,4,5,7 }));
+    //printContainer(summaryRanges({ 0,2,3,4,6,8,9 }));
+
+    //cout << calculate("3+2*2") << endl;
+    //cout << calculate(" 3/2 ") << endl;
+    //cout << calculate(" 3+5 / 2 ") << endl;
+    //cout << calculate("42") << endl;
+
+    //for (const auto &vec : combinationSum3(3, 9))
+    //{
+    //    printContainer(vec);
+    //}
+
+    //cout << rob({ 2,3,2 }) << endl;
+
+    //WordDictionary wd;
+    //wd.addWord("at");
+    //wd.addWord("and"); 
+    //wd.addWord("an"); 
+    //wd.addWord("add");
+    //cout << wd.search("a") << endl;
+    //cout << wd.search(".at") << endl;
+    //wd.addWord("bat");
+    //cout << wd.search(".at") << endl;
+    //cout << wd.search("an.") << endl;
+    //cout << wd.search("a.d.") << endl;
+    //cout << wd.search("b.") << endl;
+    //cout << wd.search("a.d") << endl;
+    //cout << wd.search(".") << endl;
+
+    //cout << minSubArrayLen(7, { 2,3,1,2,4,3 }) << endl;
+
+    //Trie trie;
+    //trie.insert("apple");
+    //cout << trie.search("apple") << endl;   // 返回 true
+    //cout << trie.search("app") << endl;     // 返回 false
+    //cout << trie.startsWith("app") << endl; // 返回 true
+    //trie.insert("app");
+    //cout << trie.search("app") << endl;     // 返回 true
+
+    //printContainer(findRepeatedDnaSequences1("AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT"));
+
+    //cout << findPeakElement({ 0,1,3,3,3,2,0,0,0 }) << endl;
+
+    //auto head = buildList({ 4,2,1,3 });
+    //printList(sortList(head));
+
+    //auto head = buildList({ 4,2,1,3 });
+    //printList(insertionSortList(head));
+
+    //string s = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab";
+    //vector<string> wordDict{ "a","aa","aaa","aaaa","aaaaa","aaaaaa","aaaaaaa","aaaaaaaa","aaaaaaaaa","aaaaaaaaaa" };
+    //cout << wordBreak(s, wordDict) << endl;
+
+    //vector<int> gas{ 1,2,3,4,5 }, cost{ 3,4,5,1,2 };
+    //cout << canCompleteCircuit(gas, cost) << endl;
 
     //vector<int> vec{ -1,0,1,2 };
     //auto head = buildList(vec);
