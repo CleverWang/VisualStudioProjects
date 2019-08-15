@@ -1,4 +1,11 @@
-#pragma once
+﻿#ifndef HEADERS_H
+#define HEADERS_H
+
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <climits>
+#include <cctype>
 
 #include <iostream>
 #include <fstream>
@@ -18,11 +25,7 @@
 #include <regex>
 #include <numeric>
 #include <bitset>
-
-#include <cmath>
-#include <cstdio>
-#include <cstdlib>
-#include <climits>
+#include <list>
 
 using namespace std;
 
@@ -187,8 +190,7 @@ struct RandomListNode
 {
     int label;
     struct RandomListNode *next, *random;
-    RandomListNode(int x) :
-        label(x), next(NULL), random(NULL)
+    RandomListNode(int x) : label(x), next(NULL), random(NULL)
     {
     }
 };
@@ -199,7 +201,7 @@ struct TreeLinkNode
     struct TreeLinkNode *left;
     struct TreeLinkNode *right;
     struct TreeLinkNode *next; // 父节点指针
-    TreeLinkNode(int x) :val(x), left(NULL), right(NULL), next(NULL) {}
+    TreeLinkNode(int x) : val(x), left(NULL), right(NULL), next(NULL) {}
 };
 
 class TreeExample
@@ -307,7 +309,7 @@ public:
     }
 
 private:
-    priority_queue<int> left_max_heap; // 左部分大根堆
+    priority_queue<int> left_max_heap;                             // 左部分大根堆
     priority_queue<int, vector<int>, greater<int>> right_min_heap; // 右部分小根堆
 };
 
@@ -698,6 +700,7 @@ public:
     {
         return sum(j) - sum(i - 1);
     }
+
 private:
     vector<int> nums_;
     vector<int> treeArray_;
@@ -718,3 +721,170 @@ private:
         return res;
     }
 };
+
+/*
+设计一个支持在平均 时间复杂度 O(1) 下，执行以下操作的数据结构。
+insert(val)：当元素 val 不存在时，向集合中插入该项。
+remove(val)：元素 val 存在时，从集合中移除该项。
+getRandom：随机返回现有集合中的一项。每个元素应该有相同的概率被返回。
+
+思路：
+1）O(1)的复杂度，那么要用到哈希表，但是要随机等概率返回，需要用到随机迭代器，考虑再加上vector
+2）vector存储元素，哈希表存储元素到下标的映射
+3）删除时，先找到下标，并和最后一个元素交换，然后删除即可
+ */
+class RandomizedSet
+{
+public:
+    /** Initialize your data structure here. */
+    RandomizedSet()
+    {
+        std::srand(std::time(nullptr));
+    }
+
+    /** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
+    bool insert(int val)
+    {
+        if (val_idx_map_.count(val) == 1)
+            return false;
+        else
+        {
+            vals_.push_back(val);
+            val_idx_map_[val] = vals_.size() - 1;
+            return true;
+        }
+    }
+
+    /** Removes a value from the set. Returns true if the set contained the specified element. */
+    bool remove(int val)
+    {
+        if (val_idx_map_.count(val) == 0)
+            return false;
+        else
+        {
+            int idx = val_idx_map_[val];
+            using std::swap;
+            swap(vals_[idx], vals_.back());
+            val_idx_map_[vals_[idx]] = idx;
+            val_idx_map_.erase(vals_.back());
+            vals_.pop_back();
+            return true;
+        }
+    }
+
+    /** Get a random element from the set. */
+    int getRandom()
+    {
+        return vals_[std::rand() % vals_.size()];
+    }
+
+private:
+    vector<int> vals_;
+    unordered_map<int, int> val_idx_map_;
+};
+
+/*
+给定一个单链表，随机选择链表的一个节点，并返回相应的节点值。保证每个节点被选的概率一样。
+
+进阶:
+如果链表十分大且长度未知，如何解决这个问题？你能否使用常数级空间复杂度实现？
+
+思路：蓄水池算法抽样(https://www.cnblogs.com/snowInPluto/p/5996269.html)
+ */
+class ReservoirSampling
+{
+public:
+    /** @param head The linked list's head.
+        Note that the head is guaranteed to be not null, so it contains at least one node. */
+    ReservoirSampling(ListNode *head) : head_(head)
+    {
+        std::srand(std::time(nullptr));
+    }
+
+    /** Returns a random node's value. */
+    int getRandom()
+    {
+        int res = head_->val;
+        int n = 2;
+        ListNode *cur = head_->next;
+        while (cur != nullptr)
+        {
+            if (std::rand() % n == 0)
+                res = cur->val;
+            ++n;
+            cur = cur->next;
+        }
+        return res;
+    }
+
+private:
+    ListNode *head_;
+};
+
+/*
+打乱一个没有重复元素的数组。
+
+思路：洗牌算法（https://blog.csdn.net/qq_26399665/article/details/79831490）
+ */
+class Shuffle
+{
+public:
+    Shuffle(vector<int> &nums) : origin_(nums)
+    {
+        std::srand(std::time(nullptr));
+    }
+
+    /** Resets the array to its original configuration and return it. */
+    vector<int> reset()
+    {
+        return origin_;
+    }
+
+    /** Returns a random shuffling of the array. */
+    vector<int> shuffle()
+    {
+        vector<int> res = origin_;
+
+        // Knuth-Durstenfeld Shuffle
+        int length = res.size();
+        for (int i = 0; i < length; i++)
+        {
+            int idx = i + std::rand() % (length - i);
+            using std::swap;
+            swap(res[i], res[idx]);
+        }
+
+        // stl库函数
+        // std::random_shuffle(res.begin(), res.end());
+
+        return res;
+    }
+
+private:
+    vector<int> origin_;
+};
+
+// // This is the interface that allows for creating nested lists.
+// // You should not implement it, or speculate about its implementation
+// class NestedInteger
+// {
+// public:
+//     // Constructor initializes an empty nested list.
+//     NestedInteger();
+//     // Constructor initializes a single integer.
+//     NestedInteger(int value);
+//     // Return true if this NestedInteger holds a single integer, rather than a nested list.
+//     bool isInteger() const;
+//     // Return the single integer that this NestedInteger holds, if it holds a single integer
+//     // The result is undefined if this NestedInteger holds a nested list
+//     int getInteger() const;
+//     // Set this NestedInteger to hold a single integer.
+//     void setInteger(int value);
+//     // Set this NestedInteger to hold a nested list and adds a nested integer to it.
+//     void add(const NestedInteger &ni);
+//     // Return the nested list that this NestedInteger holds, if it holds a nested list
+//     // The result is undefined if this NestedInteger holds a single integer
+//     const vector<NestedInteger> &getList() const;
+// };
+
+#endif
