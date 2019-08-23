@@ -4718,7 +4718,7 @@
 //     a.查找字典，如果在字典中存在，加入中间集合（哈希表），即转换需要在字典中
 //     b.如果在结束集合中存在，得到结果并返回
 // 4）比较中间集合和最终集合的大小（期望从小集合到大集合的转换）
-//     a.中间集合较小，接下来是中间集合到结束结合的转换
+//     a.中间集合较小，接下来是中间集合到结束集合的转换
 //     b.中间集合较大，接下来是结束集合到中间集合的转换
 // */
 // int ladderLength(string beginWord, string endWord, vector<string> &wordList)
@@ -9165,8 +9165,946 @@
 //     return res;
 // }
 
+// /*
+// 给定一个只包含正整数的非空数组。是否可以将这个数组分割成两个子集，使得两个子集的元素和相等。
+// 注意:
+// 每个数组中的元素不会超过 100
+// 数组的大小不会超过 200
+
+// 示例 1:
+// 输入: [1, 5, 11, 5]
+// 输出: true
+// 解释: 数组可以分割成 [1, 5, 5] 和 [11].
+
+// 示例 2:
+// 输入: [1, 2, 3, 5]
+// 输出: false
+// 解释: 数组不能分割成两个元素和相等的子集.
+
+// 思路：转换成0-1背包问题。dp
+// 1）在数组中挑选一个子集，使得子集和为数组和的一半
+// 2）dp[i][j]表示在区间[0, i]挑选完i（选或不选）后，子集和是否等于j
+// 3）递推关系式：dp[i][j] = dp[i-1][j] || dp[i-1][j-nums[i]]
+//                             不选i            选i
+// */
+// bool canPartition(vector<int> &nums)
+// {
+//     int sum = 0;
+//     for (int num : nums)
+//         sum += num;
+//     if (sum & 1) //奇数不符合条件
+//         return false;
+
+//     int half = sum >> 1; // 目标是子集和为总和的一半
+//     vector<vector<bool>> dp(nums.size(), vector<bool>(half + 1, false));
+//     for (int i = 0; i < nums.size(); i++)
+//     {
+//         for (int j = 0; j <= half; j++)
+//         {
+//             if (i == 0) // 当i==0时单独处理
+//                 dp[i][j] = (nums[i] == j);
+//             else // 递推式
+//                 dp[i][j] = dp[i - 1][j] || (j - nums[i] >= 0 ? dp[i - 1][j - nums[i]] : false);
+//         }
+//     }
+//     return dp[nums.size() - 1][half];
+// }
+// // 思路2：dp优化。求解dp第i行dp[i][?]的时候，只需要知道第i-1行dp[i-1][?]的值即可，直接开一个一维数组空间保存前一行的值就ok了
+// bool canPartition2(vector<int> &nums)
+// {
+//     int sum = 0;
+//     for (int num : nums)
+//         sum += num;
+//     if (sum & 1) //奇数不符合条件
+//         return false;
+
+//     int half = sum >> 1; // 目标是子集和为总和的一半
+//     vector<bool> dp(half + 1, false);
+//     for (int i = 0; i < nums.size(); i++)
+//     {
+//         for (int j = half; j >= nums[i]; j--) // 从后往前，因为前面的元素我们已经求过了
+//         {
+//             if (i == 0)
+//                 dp[j] = (nums[i] == j); // i==0要单独求
+//             else
+//                 dp[j] = dp[j] || dp[j - nums[i]];
+//         }
+//     }
+//     return dp[half];
+// }
+// // 思路3：递归+剪枝
+// bool canPartitionRecursively(int i, int cur, int sum, vector<int> &nums)
+// {
+//     //i是在上一层中遍历到的位置，在这一层中无需遍历
+//     //由于数组已经经过排序，比i大的数都已经在之前的递归中尝试过
+//     //所以在当前递归中，只需要遍历比i小的数
+//     //cur是从数组中选取的几个数之和，它的值小于sum
+//     //在当前层中主要是遍历数组与cur相加，然后根据cur的状态进行不同的操作
+
+//     //这边也是倒序遍历
+//     for (int j = i - 1; j >= 0; j--)
+//     {
+//         //逐步逼近
+//         if (cur + nums[j] > sum)
+//             continue;
+//         if (cur + nums[j] == sum)
+//             return true;
+//         //递归查找
+//         if (canPartitionRecursively(j, cur + nums[j], sum, nums))
+//             return true;
+//     }
+//     return false;
+// }
+// bool canPartition3(vector<int> &nums)
+// {
+//     long sum = 0;
+//     //计算数组的总数
+//     for (int x : nums)
+//         sum += x;
+//     //总和不能是奇数
+//     if (sum % 2)
+//         return false;
+
+//     sum /= 2;
+
+//     //排序
+//     sort(nums.begin(), nums.end());
+
+//     //如果最大的数大于总和的一半，返回false
+//     if (nums.back() > sum)
+//         return false;
+//     if (nums.back() == sum)
+//         return true;
+
+//     //倒序遍历数组
+//     for (int i = nums.size() - 1; i >= 0; i--)
+//     {
+//         //判断当前的数值是否等于sum有意义吗
+//         //数组已经排序好了，如果最大的数小于sum
+//         //其他的数肯定不用再判断了
+//         if (canPartitionRecursively(i, nums[i], sum, nums))
+//             return true;
+//     }
+//     return false;
+// }
+
+// /*
+// 给定一个 m x n 的非负整数矩阵来表示一片大陆上各个单元格的高度。“太平洋”处于大陆的左边界和上边界，而“大西洋”处于大陆的右边界和下边界。
+// 规定水流只能按照上、下、左、右四个方向流动，且只能从高到低或者在同等高度上流动。
+// 请找出那些水流既可以流动到“太平洋”，又能流动到“大西洋”的陆地单元的坐标。
+// 提示：
+// 输出坐标的顺序不重要
+// m 和 n 都小于150
+
+// 示例：
+// 给定下面的 5x5 矩阵:
+//   太平洋 ~   ~   ~   ~   ~
+//        ~  1   2   2   3  (5) *
+//        ~  3   2   3  (4) (4) *
+//        ~  2   4  (5)  3   1  *
+//        ~ (6) (7)  1   4   5  *
+//        ~ (5)  1   1   2   4  *
+//           *   *   *   *   * 大西洋
+// 返回:
+// [[0, 4], [1, 3], [1, 4], [2, 2], [3, 0], [3, 1], [4, 0]] (上图中带括号的单元).
+
+// 思路：深搜
+// 1）建立两个矩阵Atlantic和Pacific, 当Atlantic[i][j]和Pacific[i][j]同时为true时表示该位置可以同时到达Atlantic和Pacific
+// 2）便历时的技巧为: 只需要从四个边界开始遍历即可(类似泛洪的思想, 只要可以从边界出发到达, 就说明该位置的水可以流向对应的海洋)
+// */
+// void pacificAtlanticRecursively(const vector<vector<int>> &m, int row, int col, vector<vector<bool>> &visited, int pre)
+// {
+//     // 逆向深搜，当前点要高于（大于等于）之前的点
+//     if (row < 0 || col < 0 || row >= m.size() || col >= m[0].size() || visited[row][col] || m[row][col] < pre)
+//         return;
+//     visited[row][col] = true;
+//     pacificAtlanticRecursively(m, row + 1, col, visited, m[row][col]);
+//     pacificAtlanticRecursively(m, row - 1, col, visited, m[row][col]);
+//     pacificAtlanticRecursively(m, row, col + 1, visited, m[row][col]);
+//     pacificAtlanticRecursively(m, row, col - 1, visited, m[row][col]);
+// }
+// vector<vector<int>> pacificAtlantic(const vector<vector<int>> &matrix)
+// {
+//     vector<vector<int>> res;
+//     int m = matrix.size();
+//     if (m < 1)
+//         return res;
+//     int n = matrix[0].size();
+
+//     vector<vector<bool>> Pacific(m, vector<bool>(n, false));
+//     vector<vector<bool>> Atlantic(m, vector<bool>(n, false));
+//     for (int i = 0; i < m; ++i)
+//     {
+//         // 左边界（太平洋）
+//         pacificAtlanticRecursively(matrix, i, 0, Pacific, matrix[i][0]);
+//         // 右边界（大西洋）
+//         pacificAtlanticRecursively(matrix, i, n - 1, Atlantic, matrix[i][n - 1]);
+//     }
+//     for (int i = 0; i < n; ++i)
+//     {
+//         // 上边界（太平洋）
+//         pacificAtlanticRecursively(matrix, 0, i, Pacific, matrix[0][i]);
+//         // 下边界（大西洋）
+//         pacificAtlanticRecursively(matrix, m - 1, i, Atlantic, matrix[m - 1][i]);
+//     }
+
+//     for (int i = 0; i < m; ++i)
+//         for (int j = 0; j < n; ++j)
+//             if (Pacific[i][j] && Atlantic[i][j]) // 两个都能到达
+//                 res.emplace_back(vector<int>{i, j});
+
+//     return res;
+// }
+
+// /*
+// 给定一个二维的甲板， 请计算其中有多少艘战舰。 战舰用 'X'表示，空位用 '.'表示。 你需要遵守以下规则：
+// 给你一个有效的甲板，仅由战舰或者空位组成。
+// 战舰只能水平或者垂直放置。换句话说,战舰只能由 1xN (1 行, N 列)组成，或者 Nx1 (N 行, 1 列)组成，其中N可以是任意大小。
+// 两艘战舰之间至少有一个水平或垂直的空位分隔 - 即没有相邻的战舰。
+
+// 示例 :
+// X..X
+// ...X
+// ...X
+// 在上面的甲板中有2艘战舰。
+
+// 无效样例 :
+// ...X
+// XXXX
+// ...X
+// 你不会收到这样的无效甲板 - 因为战舰之间至少会有一个空位将它们分开。
+
+// 进阶:
+// 你可以用一次扫描算法，只使用O(1)额外空间，并且不修改甲板的值来解决这个问题吗？
+
+// 思路：
+// X..X
+// ...X
+// ...X
+// 左上角的x是一艘战舰，右边的三个x组成另一艘战舰
+// 1）将战舰分成两部分，头部和身体
+// 2）从左至右，从上到下扫描，最先扫描到的是头部，即它的上边和左边都是空位，进行计数，否则是身体，不计数
+// */
+// int countBattleships(const vector<vector<char>> &board)
+// {
+//     if (board.empty() || board[0].empty())
+//         return 0;
+
+//     int m = board.size(), n = board[0].size(), res = 0;
+//     for (int i = 0; i < m; ++i)
+//     {
+//         for (int j = 0; j < n; ++j)
+//         {
+//             if (board[i][j] == '.') // 空位跳过
+//                 continue;
+//             // 该位置是战舰的身体，即上边和左边有相连部分
+//             if (i > 0 && board[i - 1][j] == 'X' || (j > 0 && board[i][j - 1] == 'X'))
+//                 continue;
+//             // 该位置是战舰的头部
+//             ++res;
+//         }
+//     }
+//     return res;
+// }
+
+// /*
+// 给定一个非空数组，数组中元素为 a0, a1, a2, … , an-1，其中 0 ≤ ai < 231 。
+// 找到 ai 和aj 最大的异或 (XOR) 运算结果，其中0 ≤ i,  j < n 。
+// 你能在O(n)的时间解决这个问题吗？
+
+// 示例:
+// 输入: [3, 10, 5, 25, 2, 8]
+// 输出: 28
+// 解释: 最大的结果是 5 ^ 25 = 28.
+
+// 思路：https://leetcode-cn.com/problems/maximum-xor-of-two-numbers-in-an-array/solution/li-yong-yi-huo-yun-suan-de-xing-zhi-tan-xin-suan-f
+// */
+// int findMaximumXOR(vector<int> &nums)
+// {
+//     int mask = 0;
+//     int res = 0;
+//     for (int i = 30; i >= 0; i--)
+//     {
+//         mask = mask | (1 << i); // 获取前缀的掩码
+
+//         unordered_set<int> prefixes;
+//         for (auto num : nums) // 获取所有数的前缀，存入哈希表
+//             prefixes.insert(num & mask);
+
+//         int temp = res | (1 << i); // 假设当前位为1
+//         for (auto prefix : prefixes) // 当前位能否为1？
+//         {
+//             if (prefixes.find(prefix ^ temp) != prefixes.end()) // 异或后能在哈希表中，当前位能为1
+//             {
+//                 res = temp;
+//                 break;
+//             }
+//         }
+//     }
+//     return res;
+// }
+
+// /*
+// 给定一个非空字符串，其中包含字母顺序打乱的英文单词表示的数字0-9。按升序输出原始的数字。
+// 注意:
+// 输入只包含小写英文字母。
+// 输入保证合法并可以转换为原始的数字，这意味着像 "abc" 或 "zerone" 的输入是不允许的。
+// 输入字符串的长度小于 50,000
+
+// 示例 1:
+// 输入: "owoztneoer"
+// 输出: "012" (zeroonetwo)
+
+// 示例 2:
+// 输入: "fviefuro"
+// 输出: "45" (fourfive)
+
+// 思路：递归深搜（超时）
+// */
+// bool originalDigitsRecursively(vector<int> cnts, const vector<string> &nums, int num, string &res)
+// {
+//     bool all_used = true;
+//     for (int cnt : cnts)
+//         if (cnt > 0)
+//             all_used = false;
+//     if (all_used)
+//         return true;
+
+//     for (; num <= 9; ++num)
+//     {
+//         int i = 0;
+//         for (i = 0; i < nums[num].size(); i++)
+//         {
+//             if (cnts[nums[num][i] - 'a'] > 0)
+//                 --cnts[nums[num][i] - 'a'];
+//             else
+//                 break;
+//         }
+//         if (i < nums[num].size())
+//         {
+//             for (i = i - 1; i >= 0; --i)
+//                 ++cnts[nums[num][i] - 'a'];
+//             continue;
+//         }
+//         res.push_back(num + '0');
+//         if (originalDigitsRecursively(cnts, nums, num, res))
+//             return true;
+//         res.pop_back();
+//         for (i = 0; i < nums[num].size(); i++)
+//             ++cnts[nums[num][i] - 'a'];
+//     }
+//     return false;
+// }
+// string originalDigits(const string &s)
+// {
+//     if (s.empty())
+//         return {};
+
+//     vector<int> chr_cnt_map(26, 0);
+//     for (char c : s)
+//         ++chr_cnt_map[c - 'a'];
+
+//     vector<string> num_set{"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
+//     string res;
+//     originalDigitsRecursively(chr_cnt_map, num_set, 0, res);
+//     return res;
+// }
+// // 思路2：找出每个单词的特征字符，然后按特征字符得出对应的数字
+// string originalDigits2(const string &s)
+// {
+//     // building hashmap letter -> its frequency
+//     int cnts[26] = {0};
+//     for (char letter : s)
+//         ++cnts[letter - 'a'];
+
+//     // building hashmap digit -> its frequency
+//     int out[10] = {0};
+//     // letter "z" is present only in "zero"
+//     out[0] = cnts['z' - 'a'];
+//     // letter "w" is present only in "two"
+//     out[2] = cnts['w' - 'a'];
+//     // letter "u" is present only in "four"
+//     out[4] = cnts['u' - 'a'];
+//     // letter "x" is present only in "six"
+//     out[6] = cnts['x' - 'a'];
+//     // letter "g" is present only in "eight"
+//     out[8] = cnts['g' - 'a'];
+//     // letter "h" is present only in "three" and "eight"
+//     out[3] = cnts['h' - 'a'] - out[8];
+//     // letter "f" is present only in "five" and "four"
+//     out[5] = cnts['f' - 'a'] - out[4];
+//     // letter "s" is present only in "seven" and "six"
+//     out[7] = cnts['s' - 'a'] - out[6];
+//     // letter "i" is present in "nine", "five", "six", and "eight"
+//     out[9] = cnts['i' - 'a'] - out[5] - out[6] - out[8];
+//     // letter "n" is present in "one", "nine", and "seven"
+//     out[1] = cnts['n' - 'a'] - out[7] - 2 * out[9];
+
+//     // building output string
+//     string res;
+//     for (int i = 0; i < 10; i++)
+//         for (int j = 0; j < out[i]; j++)
+//             res.push_back(i + '0');
+
+//     return res;
+// }
+
+// /*
+// 给你一个仅由大写英文字母组成的字符串，你可以将任意位置上的字符替换成另外的字符，总共可最多替换 k 次。在执行上述操作后，找到包含重复字母的最长子串的长度。
+// 注意:
+// 字符串长度 和 k 不会超过 104。
+
+// 示例 1:
+// 输入:
+// s = "ABAB", k = 2
+// 输出:
+// 4
+// 解释:
+// 用两个'A'替换为两个'B',反之亦然。
+
+// 示例 2:
+// 输入:
+// s = "AABABBA", k = 1
+// 输出:
+// 4
+// 解释:
+// 将中间的一个'A'替换为'B',字符串变为 "AABBBBA"。
+// 子串 "BBBB" 有最长重复字母, 答案为 4。
+
+// 思路：滑动窗口，双指针
+// 1）假设窗口长度为len，窗口中个数最多的字符的个数为max_count，那么len-max_count如果刚好等于k，就刚好可以全部替换
+// 2）也就是说，左指针向右滑动的条件是len-max_count>k
+// 3）这里有个优化，不需要每次都去重新更新max_count
+//     比如说"AAABCDEDFG" k=2，这个case，一开始A出现3次,max_count=3，但是当指针移到D时发现不行了，要移动left指针了。
+//     此时count['A']-=1，但是不需要把max_count更新为2。为什么呢？
+//     因为根据我们的算法，当max_count和k一定时，区间最大长度也就定了。
+//     当我们找到一个max_count之后，我们就能说我们找到了一个长度为d=max_count+k的合法区间，所以最终答案一定不小于d。
+//     所以，当发现继续向右扩展right不合法的时候，我们不需要不断地右移left，只需要保持区间长度为d向右滑动即可。
+//     如果有某个合法区间大于d，一定在某个时刻存在count[t]+1>max_count，这时再去更新max_count即可。
+// */
+// int characterReplacement(string s, int k)
+// {
+//     int max_count = 0, l = 0, r;
+//     vector<int> count(128, 0);
+//     for (r = 0; r < s.size(); r++)
+//     {
+//         max_count = std::max(max_count, ++count[s[r]]);
+//         if (r - l + 1 - max_count > k)
+//             count[s[l++]]--;
+//     }
+//     return r - l;
+// }
+
+// /*
+// 我们想要使用一棵四叉树来储存一个 N x N 的布尔值网络。
+// 网络中每一格的值只会是真或假。树的根结点代表整个网络。
+// 对于每个结点, 它将被分等成四个孩子结点直到这个区域内的值都是相同的.
+// 每个结点还有另外两个布尔变量: isLeaf 和 val。isLeaf 当这个节点是一个叶子结点时为真。val 变量储存叶子结点所代表的区域的值。
+// 你的任务是使用一个四叉树表示给定的网络。
+
+// 提示：
+// N 将小于 1000 且确保是 2 的整次幂。
+// 如果你想了解更多关于四叉树的知识，你可以参考这个 https://en.wikipedia.org/wiki/Quadtree 页面。
+// */
+// Node *constructRecursively(vector<vector<int>> &grid, int x, int y, int n)
+// {
+//     for (int i = x; i < x + n; i++)
+//         for (int j = y; j < y + n; j++)
+//             if (grid[i][j] != grid[x][y])
+//             {
+//                 //发现正方形区域内的值存在不同，说明不是叶节点，调用递归得到子节点
+//                 Node *root = new Node(true, false, nullptr, nullptr, nullptr, nullptr);
+//                 root->topLeft = constructRecursively(grid, x, y, n / 2);
+//                 root->topRight = constructRecursively(grid, x, y + n / 2, n / 2);
+//                 root->bottomLeft = constructRecursively(grid, x + n / 2, y, n / 2);
+//                 root->bottomRight = constructRecursively(grid, x + n / 2, y + n / 2, n / 2);
+//                 return root;
+//             }
+
+//     return new Node(grid[x][y] != 0, true, nullptr, nullptr, nullptr, nullptr);
+// }
+// Node *construct(vector<vector<int>> &grid)
+// {
+//     if (grid.size() == 0)
+//         return nullptr;
+//     return constructRecursively(grid, 0, 0, grid.size());
+// }
+
+// /*
+// 您将获得一个双向链表，除了下一个和前一个指针之外，它还有一个子指针，可能指向单独的双向链表。
+// 这些子列表可能有一个或多个自己的子项，依此类推，生成多级数据结构，如下面的示例所示。
+// 扁平化列表，使所有结点出现在单级双链表中。您将获得列表第一级的头部。
+
+// 示例:
+// 输入:
+//  1---2---3---4---5---6--NULL
+//          |
+//          7---8---9---10--NULL
+//              |
+//              11--12--NULL
+// 输出:
+// 1-2-3-7-8-11-12-9-10-4-5-6-NULL
+
+// 思路：递归深搜
+// */
+// Node *flattenRecursively(Node *p) // 返回p为头的链表的最后一个节点
+// {
+//     Node *pre = p, *nxt = p->next;
+//     while (p != nullptr) // 遍历链表
+//     {
+//         if (p->child != nullptr) // 找到具有子链的节点
+//         {
+//             nxt = p->next; // 记录下一个节点
+
+//             Node *last = flattenRecursively(p->child); // 递归
+
+//             // 将递归返回的子链拼接到本链
+//             p->next = p->child;
+//             p->child->prev = p;
+//             p->child = nullptr;
+//             last->next = nxt;
+//             if (nxt != nullptr) // 拼接子链在本链中间（不是最后）
+//                 nxt->prev = last;
+//             else // 本链的最后一个节点是拼接子链后的最后一个节点
+//                 return last;
+//         }
+//         else
+//             nxt = p->next;
+//         pre = p;
+//         p = nxt;
+//     }
+//     return pre;
+// }
+// Node *flatten(Node *head)
+// {
+//     if (head == nullptr)
+//         return head;
+
+//     Node *p = head, *nxt = p->next;
+//     while (p != nullptr)
+//     {
+//         if (p->child != nullptr)
+//         {
+//             nxt = p->next;
+//             Node *last = flattenRecursively(p->child);
+//             p->next = p->child;
+//             p->child->prev = p;
+//             p->child = nullptr;
+//             last->next = nxt;
+//             if (nxt != nullptr)
+//                 nxt->prev = last;
+//         }
+//         else
+//             nxt = p->next;
+//         p = nxt;
+//     }
+//     return head;
+// }
+// // 思路2：看成一棵二叉树。左子树是child，右子树是next，并且有指向父节点的指针prev。先根遍历
+// void flattenRecursively2(Node *p, Node *&pre_node)
+// {
+//     pre_node->next = p;
+//     p->prev = pre_node;
+//     pre_node = p;
+
+//     Node *child = p->child;
+//     p->child = nullptr;
+//     Node *next = p->next;
+
+//     if (child != nullptr)
+//         flattenRecursively2(child, pre_node);
+//     if (next != nullptr)
+//         flattenRecursively2(next, pre_node);
+// }
+// Node *flatten2(Node *head)
+// {
+//     if (head == nullptr)
+//         return nullptr;
+
+//     Node *dummy = new Node();
+//     Node *&pre_node = dummy;
+//     flattenRecursively2(head, pre_node);
+//     pre_node->next = nullptr;
+//     delete head->prev;
+//     head->prev = nullptr;
+//     return head;
+// }
+
+// /*
+// 一条基因序列由一个带有8个字符的字符串表示，其中每个字符都属于 "A", "C", "G", "T"中的任意一个。
+// 假设我们要调查一个基因序列的变化。一次基因变化意味着这个基因序列中的一个字符发生了变化。
+// 例如，基因序列由"AACCGGTT" 变化至 "AACCGGTA" 即发生了一次基因变化。
+// 与此同时，每一次基因变化的结果，都需要是一个合法的基因串，即该结果属于一个基因库。
+// 现在给定3个参数 — start, end, bank，分别代表起始基因序列，目标基因序列及基因库，请找出能够使起始基因序列变化为目标基因序列所需的最少变化次数。
+// 如果无法实现目标变化，请返回 -1。
+
+// 注意:
+// 起始基因序列默认是合法的，但是它并不一定会出现在基因库中。
+// 所有的目标基因序列必须是合法的。
+// 假定起始基因序列与目标基因序列是不一样的。
+
+// 示例 1:
+// start: "AACCGGTT"
+// end:   "AACCGGTA"
+// bank: ["AACCGGTA"]
+// 返回值: 1
+
+// 示例 2:
+// start: "AACCGGTT"
+// end:   "AAACGGTA"
+// bank: ["AACCGGTA", "AACCGCTA", "AAACGGTA"]
+// 返回值: 2
+
+// 示例 3:
+// start: "AAAAACCC"
+// end:   "AACCCCCC"
+// bank: ["AAAACCCC", "AAACCCCC", "AACCCCCC"]
+// 返回值: 3
+
+// 思路：
+// 1）广度优先搜索
+// 2）将开始字符串加入开始集合
+// 3）针对开始集合中每一个字符串，更改该字符串中每一个字符，并检查更改是否合法，如果合法，加入中间集合
+// 4）用中间集合替换掉开始集合，这就完成了一次转换
+// 5）不断重复直至找到结束字符串
+// */
+// int minMutation(string start, string end, vector<string> &bank)
+// {
+//     if (bank.empty())
+//         return -1;
+
+//     // 建立哈希表
+//     unordered_set<string> dict(bank.begin(), bank.end());
+//     if (dict.count(end) == 0)
+//         return -1;
+//     if (start == end)
+//         return 0;
+//     // 基因中每一位可能的值，用来进行变异
+//     vector<char> GENE({'A', 'T', 'C', 'G'});
+//     // 已经访问过的基因
+//     unordered_set<string> visited;
+//     // 队列模拟广度优先搜索
+//     queue<string> Q;
+
+//     int res = 0;
+
+//     // 开始基因加入开始集合
+//     Q.push(start);
+//     visited.insert(start);
+
+//     while (!Q.empty())
+//     {
+//         int size = Q.size();
+//         while (size--) // 对开始集合中的每一个基因
+//         {
+//             auto curword(std::move(Q.front()));
+//             Q.pop();
+//             for (int i = 0; i < 8; ++i) // 对每一个基因的每一位
+//             {
+//                 string tmp(curword);
+//                 char origin = tmp[i];
+//                 for (auto j : GENE) // 更改该位（即进行一次变异）
+//                 {
+//                     if (origin == j)
+//                         continue;
+
+//                     tmp[i] = j;
+
+//                     if (tmp == end) // 变异后得到目标基因，返回结果
+//                         return res + 1;
+
+//                     // 变异后的基因不合法（不在基因库或者已经访问过），跳过
+//                     if (dict.count(tmp) == 0 || visited.count(tmp) > 0)
+//                         continue;
+
+//                     // 加入队列，即完成一次合法变异
+//                     visited.insert(tmp);
+//                     Q.push(tmp);
+//                 }
+//             }
+//         }
+//         ++res;
+//     }
+//     return -1;
+// }
+
+// /*
+// 给定一个区间的集合，找到需要移除区间的最小数量，使剩余区间互不重叠。
+// 注意:
+// 可以认为区间的终点总是大于它的起点。
+// 区间 [1,2] 和 [2,3] 的边界相互“接触”，但没有相互重叠。
+
+// 示例 1:
+// 输入: [ [1,2], [2,3], [3,4], [1,3] ]
+// 输出: 1
+// 解释: 移除 [1,3] 后，剩下的区间没有重叠。
+
+// 示例 2:
+// 输入: [ [1,2], [1,2], [1,2] ]
+// 输出: 2
+// 解释: 你需要移除两个 [1,2] 来使剩下的区间没有重叠。
+
+// 示例 3:
+// 输入: [ [1,2], [2,3] ]
+// 输出: 0
+// 解释: 你不需要移除任何区间，因为它们已经是无重叠的了。
+
+// 思路：贪心算法（https://leetcode-cn.com/problems/non-overlapping-intervals/solution/tan-xin-suan-fa-zhi-qu-jian-diao-du-wen-ti-by-labu）
+// 1）从区间集合 intvs 中选择一个区间 x，这个 x 是在当前所有区间中结束最早的（end 最小）。
+// 2）把所有与 x 区间相交的区间从区间集合 intvs 中删除。
+// 3）重复步骤 1 和 2，直到 intvs 为空为止。之前选出的那些 x 就是最大不相交子集。
+// */
+// int eraseOverlapIntervals(vector<vector<int>> &intervals)
+// {
+//     int length = intervals.size();
+//     if (length == 0)
+//         return 0;
+
+//     // 按结束端点升序排序
+//     std::sort(intervals.begin(), intervals.end(), [](const vector<int> &a, const vector<int> &b) {
+//         return a[1] < b[1];
+//     });
+
+//     int not_overlap_cnt = 1;       // 不重叠的区间数量
+//     int pre_end = intervals[0][1]; // 不重叠区间中上一个区间的结束端点
+//     for (int i = 1; i < length; i++)
+//     {
+//         // 当前区间的起始端点不小于上一个区间的结束端点，说明当前区间可以加入不重叠区间中
+//         if (intervals[i][0] >= pre_end)
+//         {
+//             pre_end = intervals[i][1];
+//             ++not_overlap_cnt;
+//         }
+//     }
+
+//     // 返回需要移除的区间数
+//     return length - not_overlap_cnt;
+// }
+
+// /*
+// 给定一组区间，对于每一个区间 i，检查是否存在一个区间 j，它的起始点大于或等于区间 i 的终点，这可以称为 j 在 i 的“右侧”。
+// 对于任何区间，你需要存储的满足条件的区间 j 的最小索引，这意味着区间 j 有最小的起始点可以使其成为“右侧”区间。如果区间 j 不存在，则将区间 i 存储为 -1。最后，你需要输出一个值为存储的区间值的数组。
+// 注意:
+// 你可以假设区间的终点总是大于它的起始点。
+// 你可以假定这些区间都不具有相同的起始点。
+
+// 示例 1:
+// 输入: [ [1,2] ]
+// 输出: [-1]
+// 解释:集合中只有一个区间，所以输出-1。
+
+// 示例 2:
+// 输入: [ [3,4], [2,3], [1,2] ]
+// 输出: [-1, 0, 1]
+// 解释:对于[3,4]，没有满足条件的“右侧”区间。
+// 对于[2,3]，区间[3,4]具有最小的“右”起点;
+// 对于[1,2]，区间[2,3]具有最小的“右”起点。
+
+// 示例 3:
+// 输入: [ [1,4], [2,3], [3,4] ]
+// 输出: [-1, 2, -1]
+// 解释:对于区间[1,4]和[3,4]，没有满足条件的“右侧”区间。
+// 对于[2,3]，区间[3,4]有最小的“右”起点。
+
+// 思路：按区间起点升序排序，排序时保留下标，然后遍历即可（虽然未超时，但是运行时间很长）
+// */
+// vector<int> findRightInterval(vector<vector<int>> &intervals)
+// {
+//     int length = intervals.size();
+//     if (length == 0)
+//         return {};
+//     if (length == 1)
+//         return {-1};
+
+//     // 保留下标
+//     vector<pair<vector<int> *, int>> intvl_idx;
+//     intvl_idx.reserve(length);
+//     for (int i = 0; i < length; i++)
+//         intvl_idx.push_back({&intervals[i], i});
+
+//     // 按区间的起点升序排序
+//     std::sort(intvl_idx.begin(), intvl_idx.end(), [](const pair<vector<int> *, int> &a, const pair<vector<int> *, int> &b) {
+//         return (*(a.first))[0] < (*(b.first))[0];
+//     });
+
+//     // 对于当前区间，向右搜索满足条件的区间即可
+//     vector<int> res(length, -1);
+//     for (int i = 0; i < length; i++)
+//     {
+//         int end = (*(intvl_idx[i].first))[1];
+//         for (int j = i + 1; j < length; j++)
+//         {
+//             if ((*(intvl_idx[j].first))[0] >= end)
+//             {
+//                 res[intvl_idx[i].second] = intvl_idx[j].second;
+//                 break;
+//             }
+//         }
+//     }
+//     return res;
+// }
+// // 思路2：同上。对原来每个区间，在排序后的区间中二分查找
+// vector<int> findRightInterval2(vector<vector<int>> &intervals)
+// {
+//     int length = intervals.size();
+//     if (length == 0)
+//         return {};
+//     if (length == 1)
+//         return {-1};
+
+//     // 保留下标
+//     vector<pair<vector<int> *, int>> intvl_idx;
+//     intvl_idx.reserve(length);
+//     for (int i = 0; i < length; i++)
+//         intvl_idx.push_back({&intervals[i], i});
+
+//     // 按区间的起点升序排序
+//     std::sort(intvl_idx.begin(), intvl_idx.end(), [](const pair<vector<int> *, int> &a, const pair<vector<int> *, int> &b) {
+//         return (*(a.first))[0] < (*(b.first))[0];
+//     });
+
+//     vector<int> res;
+//     res.reserve(length);
+//     for (int i = 0; i < length; i++)
+//     {
+//         int end = intervals[i][1];
+//         // 二分查找起点大于当前终点的区间
+//         auto iter = std::lower_bound(intvl_idx.begin(), intvl_idx.end(), end, [](const pair<vector<int> *, int> &a, int end) {
+//             return (*(a.first))[0] < end;
+//         });
+//         if (iter == intvl_idx.end())
+//             res.push_back(-1);
+//         else
+//             res.push_back((*iter).second);
+//     }
+
+//     return res;
+// }
+// // 思路3：同上。对排序后的区间，向右二分搜索
+// vector<int> findRightInterval3(vector<vector<int>> &intervals)
+// {
+//     int length = intervals.size();
+//     if (length == 0)
+//         return {};
+//     if (length == 1)
+//         return {-1};
+
+//     // 保留下标
+//     vector<pair<vector<int> *, int>> intvl_idx;
+//     intvl_idx.reserve(length);
+//     for (int i = 0; i < length; i++)
+//         intvl_idx.push_back({&intervals[i], i});
+
+//     // 按区间的起点升序排序
+//     std::sort(intvl_idx.begin(), intvl_idx.end(), [](const pair<vector<int> *, int> &a, const pair<vector<int> *, int> &b) {
+//         return (*(a.first))[0] < (*(b.first))[0];
+//     });
+
+//     // 对于当前区间，向右二分搜索满足条件的区间即可
+//     vector<int> res(length, -1);
+//     for (int i = 0; i < length; i++)
+//     {
+//         int end = (*(intvl_idx[i].first))[1];
+//         auto iter = std::lower_bound(intvl_idx.begin() + i + 1, intvl_idx.end(), end, [](const pair<vector<int> *, int> &a, int end) {
+//             return (*(a.first))[0] < end;
+//         });
+//         if (iter != intvl_idx.end())
+//             res[intvl_idx[i].second] = (*iter).second;
+//     }
+//     return res;
+// }
+
+// /*
+// 给定一个整数数组 a，其中1 ≤ a[i] ≤ n （n为数组长度）, 其中有些元素出现两次而其他元素出现一次。
+// 找到所有出现两次的元素。
+// 你可以不用到任何额外空间并在O(n)时间复杂度内解决这个问题吗？
+
+// 示例：
+// 输入:
+// [4,3,2,7,8,2,3,1]
+// 输出:
+// [2,3]
+
+// 思路：归位法，将对应数归位到对应下标
+// */
+// vector<int> findDuplicates(vector<int> &nums)
+// {
+//     int length = nums.size();
+//     if (length < 2)
+//         return {};
+
+//     vector<int> res;
+//     for (int i = 0; i < length; i++)
+//     {
+//         // 当前数等于当前下标，不用处理
+//         if (nums[i] == i + 1 || nums[i] == -1)
+//             continue;
+//         else
+//         {
+//             // 进行归位操作
+//             while (nums[i] != i + 1 && nums[i] != -1)
+//             {
+//                 // 发现重复
+//                 if (nums[i] == nums[nums[i] - 1])
+//                 {
+//                     res.push_back(nums[i]);
+//                     nums[i] = -1; // 用特殊值取代重复的数字，重复的数字只保留一个
+//                     break;
+//                 }
+//                 using std::swap;
+//                 swap(nums[i], nums[nums[i] - 1]);
+//             }
+//         }
+//     }
+//     return res;
+// }
+// // 思路2：同样是归位，但是只是标记一下，并不实际操作
+// vector<int> findDuplicates2(vector<int> &nums)
+// {
+//     int length = nums.size();
+//     if (length < 2)
+//         return {};
+
+//     vector<int> res;
+//     for (int i = 0; i < length; i++)
+//     {
+//         // 如果当前数对应下标的数为负数，代表之前已经有数归位到该下标归位了，即发生了重复
+//         if (nums[std::abs(nums[i]) - 1] < 0)
+//             res.push_back(std::abs(nums[i]));
+
+//         // 当前数应该放到对应下标处，但是不实际交换，只是将对应下标的数标记为负数，代表已经归位了
+//         nums[std::abs(nums[i]) - 1] = -std::abs(nums[std::abs(nums[i]) - 1]);
+//     }
+//     return res;
+// }
+
 int main(int argc, char **argv)
 {
+    // vector<int> vec{4, 3, 2, 7, 8, 2, 3, 1};
+    // printContainer(findDuplicates2(vec));
+
+    // auto root = construct({{1, 1, 1, 1, 0, 0, 0, 0},
+    //                        {1, 1, 1, 1, 0, 0, 0, 0},
+    //                        {1, 1, 1, 1, 1, 1, 1, 1},
+    //                        {1, 1, 1, 1, 1, 1, 1, 1},
+    //                        {1, 1, 1, 1, 0, 0, 0, 0},
+    //                        {1, 1, 1, 1, 0, 0, 0, 0},
+    //                        {1, 1, 1, 1, 0, 0, 0, 0},
+    //                        {1, 1, 1, 1, 0, 0, 0, 0}});
+
+    // cout << originalDigits2("owoztneoer") << endl;
+    // cout << originalDigits2("fviefuro") << endl;
+
+    // FindTwoNumsMaximumXORInArray solution;
+    // cout << solution.findMaximumXOR2({3, 10, 5, 25, 2, 8}) << endl;
+
+    // for (const auto &pair : pacificAtlantic({{1, 2, 2, 3, 5}, {3, 2, 3, 4, 4}, {2, 4, 5, 3, 1}, {6, 7, 1, 4, 5}, {5, 1, 1, 2, 4}}))
+    //     printContainer(pair);
+
+    // vector<int> v1{1, 1, 1, 1}, v2{1, 2, 3, 4, 5, 6, 7};
+    // cout << std::boolalpha << canPartition3(v1) << endl;
+    // cout << std::boolalpha << canPartition3(v2) << endl;
+
     // cout << numberOfArithmeticSlices2({1, 2, 3, 4}) << endl;
 
     // cout << removeKdigits("1432219", 3) << endl;

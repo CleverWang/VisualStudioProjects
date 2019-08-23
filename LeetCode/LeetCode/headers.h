@@ -337,25 +337,25 @@ void printList(ListNode *head)
     }
 }
 
-// Definition for a Node.
-class Node
-{
-public:
-    int val;
-    Node *left;
-    Node *right;
-    Node *next;
+// // Definition for a Node.
+// class Node
+// {
+// public:
+//     int val;
+//     Node *left;
+//     Node *right;
+//     Node *next;
 
-    Node() {}
+//     Node() {}
 
-    Node(int _val, Node *_left, Node *_right, Node *_next)
-    {
-        val = _val;
-        left = _left;
-        right = _right;
-        next = _next;
-    }
-};
+//     Node(int _val, Node *_left, Node *_right, Node *_next)
+//     {
+//         val = _val;
+//         left = _left;
+//         right = _right;
+//         next = _next;
+//     }
+// };
 
 class UndirectedGraphNode
 {
@@ -886,5 +886,204 @@ private:
 //     // The result is undefined if this NestedInteger holds a single integer
 //     const vector<NestedInteger> &getList() const;
 // };
+
+/*
+给定一个非空数组，数组中元素为 a0, a1, a2, … , an-1，其中 0 ≤ ai < 231 。
+找到 ai 和aj 最大的异或 (XOR) 运算结果，其中0 ≤ i,  j < n 。
+你能在O(n)的时间解决这个问题吗？
+
+示例:
+输入: [3, 10, 5, 25, 2, 8]
+输出: 28
+解释: 最大的结果是 5 ^ 25 = 28.
+
+思路：前缀树+贪心
+1）遍历，将每个数字按二进制位从高位到低位建立前缀树
+2）要求最大异或结果，希望1出现在高位
+3）再遍历，将当前数的二进制位与前缀树进行比较
+    a.当前是1，选择前缀是0的子节点
+    b.当前是0，选择前缀是1的子节点
+    c.通过上面操作，这样最高位尽可能是1
+*/
+class FindTwoNumsMaximumXORInArray
+{
+public:
+    FindTwoNumsMaximumXORInArray() {}
+
+    int findMaximumXOR(const vector<int> &nums)
+    {
+        vector<TrieNode> nodes;
+        nodes.push_back(TrieNode({0, 0}));
+        for (auto x : nums) // 遍历建树
+        {
+            int p = 0;
+            for (int i = 30; i >= 0; --i) // 从高位到低位
+            {
+                int t = (x >> i) & 1;
+                if (nodes[p].son[t] == 0)
+                {
+                    nodes.push_back(TrieNode({0, 0}));
+                    nodes[p].son[t] = nodes.size() - 1;
+                }
+                p = nodes[p].son[t];
+            }
+        }
+
+        int res = 0;
+        for (auto x : nums)
+        {
+            int p = 0, max_xor = 0;
+            for (int i = 30; i >= 0; --i) // 从高位到低位
+            {
+                int t = (x >> i) & 1; // 当前位
+                if (nodes[p].son[!t]) // 选择与当前位相反的子节点前进
+                {
+                    p = nodes[p].son[!t];
+                    max_xor += 1 << i;
+                }
+                else // 否则只能选择相同的前进
+                {
+                    p = nodes[p].son[t];
+                }
+            }
+            res = std::max(res, max_xor);
+        }
+
+        return res;
+    }
+
+    int findMaximumXOR2(const vector<int> &nums)
+    {
+        int length = nums.size();
+        if (length <= 1)
+            return 0;
+        if (length == 2)
+            return nums[0] ^ nums[1];
+
+        TrieTreeNode *root = new TrieTreeNode{nullptr, nullptr};
+        for (int num : nums)
+        {
+            TrieTreeNode *p = root;
+            for (int i = 30; i >= 0; --i)
+            {
+                int digit = (num >> i) & 1;
+                if (digit)
+                {
+                    if (p->one == nullptr)
+                        p->one = new TrieTreeNode{nullptr, nullptr};
+                    p = p->one;
+                }
+                else
+                {
+                    if (p->zero == nullptr)
+                        p->zero = new TrieTreeNode{nullptr, nullptr};
+                    p = p->zero;
+                }
+            }
+        }
+
+        int res = INT_MIN;
+        for (int num : nums)
+        {
+            TrieTreeNode *p = root;
+            int t = 0;
+            for (int i = 30; i >= 0; --i)
+            {
+                int digit = (num >> i) & 1;
+                if (digit)
+                {
+                    if (p->zero != nullptr)
+                    {
+                        p = p->zero;
+                        t |= (1 << i);
+                    }
+                    else
+                        p = p->one;
+                }
+                else
+                {
+                    if (p->one != nullptr)
+                    {
+                        p = p->one;
+                        t |= (1 << i);
+                    }
+                    else
+                        p = p->zero;
+                }
+            }
+            res = std::max(res, t);
+        }
+
+        destoryTrieTree(root);
+
+        return res;
+    }
+
+private:
+    struct TrieNode
+    {
+        int son[2];
+    };
+    struct TrieTreeNode
+    {
+        TrieTreeNode *one;
+        TrieTreeNode *zero;
+    };
+
+    void destoryTrieTree(TrieTreeNode *root)
+    {
+        if (root == nullptr)
+            return;
+
+        destoryTrieTree(root->one);
+        destoryTrieTree(root->zero);
+
+        delete root;
+    }
+};
+
+// // Definition for a QuadTree node.
+// class Node
+// {
+// public:
+//     bool val;
+//     bool isLeaf;
+//     Node *topLeft;
+//     Node *topRight;
+//     Node *bottomLeft;
+//     Node *bottomRight;
+
+//     Node() {}
+
+//     Node(bool _val, bool _isLeaf, Node *_topLeft, Node *_topRight, Node *_bottomLeft, Node *_bottomRight)
+//     {
+//         val = _val;
+//         isLeaf = _isLeaf;
+//         topLeft = _topLeft;
+//         topRight = _topRight;
+//         bottomLeft = _bottomLeft;
+//         bottomRight = _bottomRight;
+//     }
+// };
+
+// Definition for a Node.
+class Node
+{
+public:
+    int val;
+    Node *prev;
+    Node *next;
+    Node *child;
+
+    Node() {}
+
+    Node(int _val, Node *_prev, Node *_next, Node *_child)
+    {
+        val = _val;
+        prev = _prev;
+        next = _next;
+        child = _child;
+    }
+};
 
 #endif
