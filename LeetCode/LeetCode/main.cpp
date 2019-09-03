@@ -10078,8 +10078,1223 @@
 //     return res;
 // }
 
+// /*
+// 给定一个二叉搜索树的根节点 root 和一个值 key，删除二叉搜索树中的 key 对应的节点，并保证二叉搜索树的性质不变。返回二叉搜索树（有可能被更新）的根节点的引用。
+// 一般来说，删除节点可分为两个步骤：
+// 首先找到需要删除的节点；
+// 如果找到了，删除它。
+// 说明： 要求算法时间复杂度为 O(h)，h 为树的高度。
+
+// 示例:
+// root = [5,3,6,2,4,null,7]
+// key = 3
+
+//     5
+//    / \
+//   3   6
+//  / \   \
+// 2   4   7
+// 给定需要删除的节点值是 3，所以我们首先找到 3 这个节点，然后删除它。
+// 一个正确的答案是 [5,4,6,2,null,null,7], 如下图所示。
+
+//     5
+//    / \
+//   4   6
+//  /     \
+// 2       7
+// 另一个正确答案是 [5,2,6,null,4,null,7]。
+
+//     5
+//    / \
+//   2   6
+//    \   \
+//     4   7
+// */
+// TreeNode *deleteNode(TreeNode *root, int key)
+// {
+//     if (root == nullptr)
+//         return nullptr;
+
+//     // 找节点，并保存节点在它的父节点的位置
+//     TreeNode *p = root, **pp = nullptr;
+//     while (p != nullptr)
+//     {
+//         if (p->val == key)
+//             break;
+//         else if (p->val < key)
+//         {
+//             pp = &(p->right);
+//             p = p->right;
+//         }
+//         else
+//         {
+//             pp = &(p->left);
+//             p = p->left;
+//         }
+//     }
+
+//     // 未找到
+//     if (p == nullptr)
+//         return root;
+
+//     TreeNode *left = p->left, *right = p->right;
+//     delete p; // 删除节点
+
+//     TreeNode *res;
+//     if (left == nullptr) // 节点的左子树为空
+//     {
+//         if (pp != nullptr) // 有父节点，将右子树挂到父节点上
+//         {
+//             *pp = right;
+//             res = root;
+//         }
+//         else // 无父节点，返回右子树
+//             res = right;
+//     }
+//     else // 节点的左子树不为空
+//     {
+//         // 寻找左子树的最右节点，将节点的右子树挂在最右节点的右边
+//         TreeNode *t = left;
+//         while (t->right != nullptr)
+//             t = t->right;
+//         t->right = right;
+
+//         if (pp != nullptr) // 有父节点，将左子树挂到父节点上
+//         {
+//             *pp = left;
+//             res = root;
+//         }
+//         else // 无父节点，返回左子树
+//             res = left;
+//     }
+//     return res;
+// }
+
+// /*
+// 给定一个字符串，请将字符串里的字符按照出现的频率降序排列。
+
+// 示例 1:
+// 输入:
+// "tree"
+// 输出:
+// "eert"
+// 解释:
+// 'e'出现两次，'r'和't'都只出现一次。
+// 因此'e'必须出现在'r'和't'之前。此外，"eetr"也是一个有效的答案。
+
+// 示例 2:
+// 输入:
+// "cccaaa"
+// 输出:
+// "cccaaa"
+// 解释:
+// 'c'和'a'都出现三次。此外，"aaaccc"也是有效的答案。
+// 注意"cacaca"是不正确的，因为相同的字母必须放在一起。
+
+// 示例 3:
+// 输入:
+// "Aabb"
+// 输出:
+// "bbAa"
+// 解释:
+// 此外，"bbaA"也是一个有效的答案，但"Aabb"是不正确的。
+// 注意'A'和'a'被认为是两种不同的字符。
+// */
+// string frequencySort(const string &s)
+// {
+//     if (s.empty())
+//         return {};
+
+//     // 统计频率
+//     unordered_map<char, int> chr_cnt_map;
+//     for (char c : s)
+//         ++chr_cnt_map[c];
+
+//     // 按频率排序
+//     vector<pair<int, char>> cnt_chr_vec;
+//     cnt_chr_vec.reserve(chr_cnt_map.size());
+//     for (const auto &kv : chr_cnt_map)
+//         cnt_chr_vec.emplace_back(make_pair(kv.second, kv.first));
+//     std::sort(cnt_chr_vec.begin(), cnt_chr_vec.end(), [](const pair<int, char> &a, const pair<int, char> &b) {
+//         return a.first > b.first;
+//     });
+
+//     // 生成结果
+//     ostringstream oss;
+//     for (const auto &p : cnt_chr_vec)
+//         oss << string(p.first, p.second);
+
+//     return oss.str();
+// }
+
+// /*
+// 在二维空间中有许多球形的气球。
+// 对于每个气球，提供的输入是水平方向上，气球直径的开始和结束坐标。
+// 由于它是水平的，所以y坐标并不重要，因此只要知道开始和结束的x坐标就足够了。
+// 开始坐标总是小于结束坐标。平面内最多存在10^4个气球。
+// 一支弓箭可以沿着x轴从不同点完全垂直地射出。
+// 在坐标x处射出一支箭，若有一个气球的直径的开始和结束坐标为 xstart，xend， 且满足  xstart ≤ x ≤ xend，则该气球会被引爆。
+// 可以射出的弓箭的数量没有限制。
+// 弓箭一旦被射出之后，可以无限地前进。我们想找到使得所有气球全部被引爆，所需的弓箭的最小数量。
+
+// Example:
+// 输入:
+// [[10,16], [2,8], [1,6], [7,12]]
+// 输出:
+// 2
+// 解释:
+// 对于该样例，我们可以在x = 6（射爆[2,8],[1,6]两个气球）和 x = 11（射爆另外两个气球）。
+
+// 思路：统计非重叠区间的个数
+// */
+// int findMinArrowShots(vector<vector<int>> &points)
+// {
+//     int length = points.size();
+//     if (length == 0)
+//         return 0;
+
+//     std::sort(points.begin(), points.end(), [](const vector<int> &a, const vector<int> &b) {
+//         return a[1] < b[1];
+//     });
+
+//     int res = 1;
+//     int pre_end = points[0][1];
+//     for (int i = 1; i < length; i++)
+//     {
+//         if (points[i][0] > pre_end)
+//         {
+//             ++res;
+//             pre_end = points[i][1];
+//         }
+//     }
+
+//     return res;
+// }
+
+// /*
+// 给定四个包含整数的数组列表 A , B , C , D ,计算有多少个元组 (i, j, k, l) ，使得 A[i] + B[j] + C[k] + D[l] = 0。
+// 为了使问题简单化，所有的 A, B, C, D 具有相同的长度 N，且 0 ≤ N ≤ 500 。所有整数的范围在 -2^28 到 2^28 - 1 之间，最终结果不会超过 2^31 - 1 。
+
+// 例如:
+// 输入:
+// A = [ 1, 2]
+// B = [-2,-1]
+// C = [-1, 2]
+// D = [ 0, 2]
+// 输出:
+// 2
+// 解释:
+// 两个元组如下:
+// 1. (0, 0, 0, 1) -> A[0] + B[0] + C[0] + D[1] = 1 + (-2) + (-1) + 2 = 0
+// 2. (1, 1, 0, 0) -> A[1] + B[1] + C[0] + D[0] = 2 + (-1) + (-1) + 0 = 0
+
+// 思路：暴力法（超时）
+// */
+// int fourSumCount(vector<int> &A, vector<int> &B, vector<int> &C, vector<int> &D)
+// {
+//     int length = A.size();
+//     if (length == 0)
+//         return 0;
+
+//     std::sort(A.begin(), A.end());
+//     std::sort(B.begin(), B.end());
+//     std::sort(C.begin(), C.end());
+//     std::sort(D.begin(), D.end());
+
+//     int res = 0;
+//     for (int i = 0; i < length; i++)
+//     {
+//         int ti = 0 - A[i];
+//         for (int j = 0; j < length; j++)
+//         {
+//             int tj = ti - B[j];
+//             for (int k = 0; k < length; k++)
+//             {
+//                 int tk = tj - C[k];
+//                 auto iters = std::equal_range(D.begin(), D.end(), tk);
+//                 res += iters.second - iters.first;
+//             }
+//         }
+//     }
+//     return res;
+// }
+// /*
+// 思路2：利用哈希表加速
+// */
+// int fourSumCount2(vector<int> &A, vector<int> &B, vector<int> &C, vector<int> &D)
+// {
+//     int res = 0;
+//     unordered_map<int, int> map;
+
+//     for (const auto &a : A)
+//         for (const auto &b : B)
+//             ++map[a + b];
+
+//     for (const auto &c : C)
+//     {
+//         for (const auto &d : D)
+//         {
+//             int t = -(c + d);
+//             if (map.count(t) != 0)
+//                 res += map[t];
+//         }
+//     }
+
+//     return res;
+// }
+
+// /*
+// 给定一个整数序列：a1, a2, ..., an，一个132模式的子序列 ai, aj, ak 被定义为：当 i < j < k 时，ai < ak < aj。
+// 设计一个算法，当给定有 n 个数字的序列时，验证这个序列中是否含有132模式的子序列。
+// 注意：n 的值小于15000。
+
+// 示例1:
+// 输入: [1, 2, 3, 4]
+// 输出: False
+// 解释: 序列中不存在132模式的子序列。
+
+// 示例 2:
+// 输入: [3, 1, 4, 2]
+// 输出: True
+// 解释: 序列中有 1 个132模式的子序列： [1, 4, 2].
+
+// 示例 3:
+// 输入: [-1, 3, 2, 0]
+// 输出: True
+// 解释: 序列中有 3 个132模式的的子序列: [-1, 3, 2], [-1, 3, 0] 和 [-1, 2, 0].
+
+// 思路：单调栈（https://www.jianshu.com/p/43bb5204bc6f）（https://blog.csdn.net/Prasnip_/article/details/83690038）
+// 1）从右往左扫描，记录最大值aj以及次大值ak
+// 2）扫描过程中，对于当前ai，如果ai<ak，返回true，否则更新aj和ak
+// */
+// bool find132pattern(const vector<int> &nums)
+// {
+//     int length = nums.size();
+//     if (length < 3)
+//         return false;
+
+//     stack<int> aj;    // 记录从右往左扫描过程中的最大值
+//     int ak = INT_MIN; // 记录用更大的值更新aj时的次大值
+//     for (int i = length - 1; i >= 0; i--)
+//     {
+//         int ai = nums[i];
+//         if (ai < ak) // ak是次大值，如果ai<ak，说明找到
+//             return true;
+
+//         // 否则，用ai更新aj和ak
+//         while (!aj.empty() && ai > aj.top())
+//         {
+//             ak = aj.top();
+//             aj.pop();
+//         }
+//         aj.push(nums[i]);
+//     }
+//     return false;
+// }
+
+// /*
+// 给定一个含有正整数和负整数的环形数组 nums。
+// 如果某个索引中的数 k 为正数，则向前移动 k 个索引。
+// 相反，如果是负数 (-k)，则向后移动 k 个索引。
+// 因为数组是环形的，所以可以假设最后一个元素的下一个元素是第一个元素，而第一个元素的前一个元素是最后一个元素。
+// 确定 nums 中是否存在循环（或周期）。
+// 循环必须在相同的索引处开始和结束并且循环长度 > 1。
+// 此外，一个循环中的所有运动都必须沿着同一方向进行。
+// 换句话说，一个循环中不能同时包括向前的运动和向后的运动。
+
+// 示例 1：
+// 输入：[2,-1,1,2,2]
+// 输出：true
+// 解释：存在循环，按索引 0 -> 2 -> 3 -> 0 。循环长度为 3 。
+
+// 示例 2：
+// 输入：[-1,2]
+// 输出：false
+// 解释：按索引 1 -> 1 -> 1 ... 的运动无法构成循环，因为循环的长度为 1 。根据定义，循环的长度必须大于 1 。
+
+// 示例 3:
+// 输入：[-2,1,-1,-2,-2]
+// 输出：false
+// 解释：按索引 1 -> 2 -> 1 -> ... 的运动无法构成循环，因为按索引 1 -> 2 的运动是向前的运动，而按索引 2 -> 1 的运动是向后的运动。
+// 一个循环中的所有运动都必须沿着同一方向进行。
+
+// 提示：
+// -1000 ≤ nums[i] ≤ 1000
+// nums[i] ≠ 0
+// 1 ≤ nums.length ≤ 5000
+
+// 进阶：
+// 你能写出时间时间复杂度为 O(n) 和额外空间复杂度为 O(1) 的算法吗？
+
+// 思路：模拟法。遍历所有可能情况（https://www.cnblogs.com/grandyang/p/7658128.html）
+// */
+// bool circularArrayLoop(const vector<int> &nums)
+// {
+//     int length = nums.size();
+//     if (length < 2)
+//         return false;
+
+//     vector<int> visit(length, 0); // 是否遍历标识
+//     int color = 1;                // 对于每一次遍历，着一种颜色
+//     for (int i = 0; i < length; i++)
+//     {
+//         if (visit[i] == 0) // 未着色
+//         {
+//             int j = i;
+//             // 遍历着色
+//             while (visit[j] == 0 && nums[j] * nums[i] > 0)
+//             {
+//                 visit[j] = color;
+//                 j = ((j + nums[j]) % length + length) % length;
+//             }
+//             // 着的是同一种颜色并且循环长度大于1，返回true
+//             if (visit[j] == color && ((j + nums[j]) % length + length) % length != j)
+//                 return true;
+//         }
+//         color++; // 换一种颜色
+//     }
+//     return false;
+// }
+
+// /*
+// 给定一个非空整数数组，找到使所有数组元素相等所需的最小移动数，其中每次移动可将选定的一个元素加1或减1。 您可以假设数组的长度最多为10000。
+
+// 例如:
+// 输入:
+// [1,2,3]
+// 输出:
+// 2
+// 说明：
+// 只有两个动作是必要的（记得每一步仅可使其中一个元素加1或减1）：
+// [1,2,3]  =>  [2,2,3]  =>  [2,2,2]
+
+// 思路：找中位数。所有数往总位数靠能够得到最小的移动数量
+// */
+// int minMoves2(vector<int> &nums)
+// {
+//     int length = nums.size();
+//     if (length < 2)
+//         return 0;
+
+//     nth_element(nums.begin(), nums.begin() + length / 2, nums.end());
+//     int mid = nums[length / 2];
+//     int res = 0;
+//     for (int num : nums)
+//         res += std::abs(num - mid);
+//     return res;
+// }
+
+// /*
+// 在 "100 game" 这个游戏中，两名玩家轮流选择从 1 到 10 的任意整数，累计整数和，先使得累计整数和达到 100 的玩家，即为胜者。
+// 如果我们将游戏规则改为 “玩家不能重复使用整数” 呢？
+// 例如，两个玩家可以轮流从公共整数池中抽取从 1 到 15 的整数（不放回），直到累计整数和 >= 100。
+// 给定一个整数 maxChoosableInteger （整数池中可选择的最大数）和另一个整数 desiredTotal（累计和），判断先出手的玩家是否能稳赢（假设两位玩家游戏时都表现最佳）？
+// 你可以假设 maxChoosableInteger 不会大于 20， desiredTotal 不会大于 300。
+
+// 示例：
+// 输入：
+// maxChoosableInteger = 10
+// desiredTotal = 11
+// 输出：
+// false
+// 解释：
+// 无论第一个玩家选择哪个整数，他都会失败。
+// 第一个玩家可以选择从 1 到 10 的整数。
+// 如果第一个玩家选择 1，那么第二个玩家只能选择从 2 到 10 的整数。
+// 第二个玩家可以通过选择整数 10（那么累积和为 11 >= desiredTotal），从而取得胜利.
+// 同样地，第一个玩家选择任意其他整数，第二个玩家都会赢。
+
+// 思路：记忆化搜索
+// */
+// bool canWin(int length, int nowTarget, int used, unordered_map<int, bool> &myMap)
+// {
+//     //由于maxChoosableInteger 不会大于 20，所以可以使用一个int型的各个位标记是否使用
+//     //myMap[used]用于标记在使用used（二进制各个位真值代表某个元素是否已经使用，比如used = “1101”代表使用了1，3，4）情况本次挑选是否能赢
+
+//     if (myMap.count(used)) //如果之前搜索过
+//         return myMap[used];
+
+//     //穷举当前可选的元素
+//     for (int i = 0; i < length; ++i)
+//     {
+//         int cur = (1 << i);    //第i位表示选择[1,2,3, maxChoosableInteger]选择i + 1这个值
+//         if ((cur & used) == 0) //这个值没有使用过
+//         {
+//             //nowTarget <= i + 1是代表已经达到预期值
+//             //nowTarget - (i + 1)表示选择了i + 1
+//             //cur | used 代表使用i + 1，将used的第i位（从第到高）标记为1
+//             //!canWin(length, total - (i + 1), cur | used, myMap)表示的是对方选择输了
+//             if (nowTarget <= i + 1 || !canWin(length, nowTarget - (i + 1), cur | used, myMap))
+//             {
+//                 myMap[used] = true;
+//                 return true;
+//             }
+//         }
+//     }
+//     myMap[used] = false;
+//     return false;
+// }
+// bool canIWin(int maxChoosableInteger, int desiredTotal)
+// {
+//     //第一种特殊情况，第一个人选一次即可到达预期值
+//     if (maxChoosableInteger >= desiredTotal)
+//         return true;
+//     //第二种特殊情况，所有元素的和都小于预期值，则永远无法赢
+//     if (maxChoosableInteger * (maxChoosableInteger + 1) / 2 < desiredTotal)
+//         return false;
+
+//     unordered_map<int, bool> myMap;
+//     return canWin(maxChoosableInteger, desiredTotal, 0, myMap);
+// }
+
+// /*
+// 把字符串 s 看作是“abcdefghijklmnopqrstuvwxyz”的无限环绕字符串，
+// 所以 s 看起来是这样的："...zabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcd....". 
+// 现在我们有了另一个字符串 p 。
+// 你需要的是找出 s 中有多少个唯一的 p 的非空子串，尤其是当你的输入是字符串 p ，你需要输出字符串 s 中 p 的不同的非空子串的数目。 
+// 注意: p 仅由小写的英文字母组成，p 的大小可能超过 10000。
+
+// 示例 1:
+// 输入: "a"
+// 输出: 1
+// 解释: 字符串 S 中只有一个"a"子字符。
+
+// 示例 2:
+// 输入: "cac"
+// 输出: 2
+// 解释: 字符串 S 中的字符串“cac”只有两个子串“a”、“c”。.
+
+// 示例 3:
+// 输入: "zab"
+// 输出: 6
+// 解释: 在字符串 S 中有六个子串“z”、“a”、“b”、“za”、“ab”、“zab”。.
+
+// 思路：
+// 1）统计的是 字符串中连续子字符串 中的 连续子串数目，注意...za...也是连续的
+// 2）注意到字符串中一个连续子串可能包含另一个连续子串
+//     比如abcdcd，子串abcd包含了后面的子串cd，统计abcd的连续子串数目时，也间接统计了cd的数目
+// 3）为了解决上面的问题，使用结尾字符和连续子串的长度来标定一个连续子串
+//     比如abcdcd的连续子串abcd用dp['d']=4来标记，另一个子串cd用dp['d']=2来标记，最后dp['d']=max(4,2)=4
+// 4）最后累加dp即可
+// */
+// int findSubstringInWraproundString(const string &p)
+// {
+//     if (p.empty())
+//         return 0;
+
+//     int n = p.size();
+//     vector<int> dp(26, 0);
+//     int len = 1;
+//     for (int i = 0; i < n; i++)
+//     {
+//         if (i > 0 && (p[i] - p[i - 1] == 1 || p[i] - p[i - 1] == -25))
+//             ++len;
+//         else
+//             len = 1;
+//         dp[p[i] - 'a'] = std::max(dp[p[i] - 'a'], len);
+//     }
+//     return accumulate(dp.begin(), dp.end(), 0);
+// }
+
+// /*
+// 编写一个函数来验证输入的字符串是否是有效的 IPv4 或 IPv6 地址。
+// IPv4 地址由十进制数和点来表示，每个地址包含4个十进制数，其范围为 0 - 255， 用(".")分割。比如，172.16.254.1；
+// 同时，IPv4 地址内的数不会以 0 开头。比如，地址 172.16.254.01 是不合法的。
+// IPv6 地址由8组16进制的数字来表示，每组表示 16 比特。这些组数字通过 (":")分割。
+// 比如,  2001:0db8:85a3:0000:0000:8a2e:0370:7334 是一个有效的地址。
+// 而且，我们可以加入一些以 0 开头的数字，字母可以使用大写，也可以是小写。
+// 所以， 2001:db8:85a3:0:0:8A2E:0370:7334 也是一个有效的 IPv6 address地址 (即，忽略 0 开头，忽略大小写)。
+// 然而，我们不能因为某个组的值为 0，而使用一个空的组，以至于出现 (::) 的情况。 比如， 2001:0db8:85a3::8A2E:0370:7334 是无效的 IPv6 地址。
+// 同时，在 IPv6 地址中，多余的 0 也是不被允许的。比如， 02001:0db8:85a3:0000:0000:8a2e:0370:7334 是无效的。
+// 说明: 你可以认为给定的字符串里没有空格或者其他特殊字符。
+
+// 示例 1:
+// 输入: "172.16.254.1"
+// 输出: "IPv4"
+// 解释: 这是一个有效的 IPv4 地址, 所以返回 "IPv4"。
+
+// 示例 2:
+// 输入: "2001:0db8:85a3:0:0:8A2E:0370:7334"
+// 输出: "IPv6"
+// 解释: 这是一个有效的 IPv6 地址, 所以返回 "IPv6"。
+
+// 示例 3:
+// 输入: "256.256.256.256"
+// 输出: "Neither"
+// 解释: 这个地址既不是 IPv4 也不是 IPv6 地址。
+// */
+// string validIPAddress(const string &IP)
+// {
+//     int length = IP.size();
+//     if (length < 7 || length > 39)
+//         return "Neither";
+//     if (IP.front() == '.' || IP.front() == ':' || IP.back() == '.' || IP.back() == ':')
+//         return "Neither";
+
+//     vector<string> strs;
+//     bool is4 = false, is6 = false;
+//     int start = 0, idx = 0;
+//     while (idx < length)
+//     {
+//         if (is4)
+//         {
+//             while (idx < length && IP[idx] != '.' && IP[idx] != ':')
+//                 ++idx;
+//             if (idx < length)
+//                 if (IP[idx] == ':')
+//                     return "Neither";
+//             strs.emplace_back(IP.substr(start, idx - start));
+//             ++idx;
+//             start = idx;
+//         }
+//         else if (is6)
+//         {
+//             while (idx < length && IP[idx] != '.' && IP[idx] != ':')
+//                 ++idx;
+//             if (idx < length)
+//                 if (IP[idx] == '.')
+//                     return "Neither";
+//             strs.emplace_back(IP.substr(start, idx - start));
+//             ++idx;
+//             start = idx;
+//         }
+//         else
+//         {
+//             while (idx < length && IP[idx] != '.' && IP[idx] != ':')
+//                 ++idx;
+//             if (idx < length)
+//                 if (IP[idx] == '.')
+//                     is4 = true;
+//                 else
+//                     is6 = true;
+//             strs.emplace_back(IP.substr(start, idx - start));
+//             ++idx;
+//             start = idx;
+//         }
+//     }
+
+//     if (is4)
+//     {
+//         if (strs.size() != 4)
+//             return "Neither";
+//         for (const auto &str : strs)
+//         {
+//             if (str.empty() || str.size() > 3)
+//                 return "Neither";
+//             else if (str.size() == 1)
+//             {
+//                 if (!std::isdigit(str[0]))
+//                     return "Neither";
+//             }
+//             else
+//             {
+//                 if (str[0] == '0')
+//                     return "Neither";
+
+//                 int n = 0;
+//                 for (char c : str)
+//                 {
+//                     if (std::isdigit(c))
+//                         n = n * 10 + c - '0';
+//                     else
+//                         return "Neither";
+//                 }
+//                 if (n > 255)
+//                     return "Neither";
+//             }
+//         }
+//         return "IPv4";
+//     }
+//     else if (is6)
+//     {
+//         if (strs.size() != 8)
+//             return "Neither";
+//         for (const auto &str : strs)
+//         {
+//             if (str.empty() || str.size() > 4)
+//                 return "Neither";
+//             for (char c : str)
+//                 if (!isxdigit(c))
+//                     return "Neither";
+//         }
+//         return "IPv6";
+//     }
+//     else
+//         return "Neither";
+// }
+
+// /*
+// 已有方法 rand7 可生成 1 到 7 范围内的均匀随机整数，试写一个方法 rand10 生成 1 到 10 范围内的均匀随机整数。
+// 不要使用系统的 Math.random() 方法。
+
+// 示例 1:
+// 输入: 1
+// 输出: [7]
+
+// 示例 2:
+// 输入: 2
+// 输出: [8,4]
+
+// 示例 3:
+// 输入: 3
+// 输出: [8,1,10]
+//  
+// 提示:
+// rand7 已定义。
+// 传入参数: n 表示 rand10 的调用次数。
+
+// 进阶:
+// rand7()调用次数的 期望值 是多少 ?
+// 你能否尽量少调用 rand7() ?
+
+// 思路：拒绝采样
+// Implement randM() using randN() when M > N:
+// Step 1: Use randN() to generate randX(), where X >= M.
+// In this problem, I use 7 * (rand7() - 1) + (rand7() - 1) to generate rand49() - 1.
+// Step 2: Use randX() to generate randM().
+// In this problem, I use rand49() to generate rand40() then generate rand10.
+// */
+// int rand7()
+// {
+//     random_device rd;
+//     static default_random_engine e(rd());
+//     uniform_int_distribution<int> uid(1, 7);
+//     return uid(e);
+// }
+// int rand10()
+// {
+//     while (true)
+//     {
+//         int num = (rand7() - 1) * 7 + rand7() - 1; // [0, 48]
+//         if (num < 40)                              // [0, 39]
+//             return num % 10 + 1;                   // [0, 9] + 1 -> [1, 10]
+//     }
+// }
+
+// /*
+// 还记得童话《卖火柴的小女孩》吗？现在，你知道小女孩有多少根火柴，请找出一种能使用所有火柴拼成一个正方形的方法。不能折断火柴，可以把火柴连接起来，并且每根火柴都要用到。
+// 输入为小女孩拥有火柴的数目，每根火柴用其长度表示。输出即为是否能用所有的火柴拼成正方形。
+
+// 示例 1:
+// 输入: [1,1,2,2,2]
+// 输出: true
+// 解释: 能拼成一个边长为2的正方形，每边两根火柴。
+
+// 示例 2:
+// 输入: [3,3,3,3,4]
+// 输出: false
+// 解释: 不能用所有火柴拼成一个正方形。
+
+// 注意:
+// 给定的火柴长度和在 0 到 10^9之间。
+// 火柴数组的长度不超过15。
+
+// 思路：深搜+剪枝（超时）
+// 1）用一个数组存储3条边
+// 2）递归所有情况，直到3条边都得到总长的四分之一
+// */
+// bool makesquareRecursively(const vector<int> &nums, const unsigned long long int &edge_len, vector<bool> &used, vector<unsigned long long int> &edges)
+// {
+//     if (edges[0] == edge_len && edges[0] == edges[1] && edges[1] == edges[2])
+//         return true;
+
+//     auto maxval = std::max_element(edges.begin(), edges.end());
+//     if ((*maxval) > edge_len)
+//         return false;
+
+//     for (int i = nums.size() - 1; i >= 0; --i)
+//     {
+//         if (!used[i])
+//         {
+//             used[i] = true;
+//             for (int j = 0; j < 3; ++j)
+//             {
+//                 if (edges[j] == edge_len)
+//                     continue;
+//                 edges[j] += nums[i];
+//                 if (makesquareRecursively(nums, edge_len, used, edges))
+//                     return true;
+//                 edges[j] -= nums[i];
+//             }
+//             used[i] = false;
+//         }
+//     }
+//     return false;
+// }
+// bool makesquare(vector<int> &nums)
+// {
+//     int length = nums.size();
+//     if (length < 4)
+//         return false;
+
+//     std::sort(nums.begin(), nums.end());
+//     unsigned long long int total_length = std::accumulate(nums.begin(), nums.end(), 0ULL);
+//     if (total_length % 4 != 0 || total_length / 4 < nums.back())
+//         return false;
+
+//     vector<bool> used(length, false);
+//     vector<unsigned long long int> edges(3, 0);
+//     return makesquareRecursively(nums, total_length / 4, used, edges);
+// }
+// /*
+// 思路：深搜
+// 依次构建3条边，直到3条边都得到总长的四分之一
+// */
+// bool makesquareRecursively2(const vector<int> &nums, vector<bool> &used, const unsigned long long int &edge_len, unsigned long long int cur_len, int cur_idx)
+// {
+//     if (cur_len > edge_len)
+//         return false;
+//     if (cur_len == edge_len)
+//         return true;
+
+//     // 从左到右搜索
+//     for (int i = cur_idx; i < nums.size(); i++)
+//     {
+//         if (!used[i])
+//         {
+//             used[i] = true;
+//             if (makesquareRecursively2(nums, used, edge_len, cur_len + nums[i], i + 1))
+//                 return true;
+//             used[i] = false;
+//         }
+//     }
+//     return false;
+// }
+// bool makesquare2(vector<int> &nums)
+// {
+//     int length = nums.size();
+//     if (length < 4)
+//         return false;
+
+//     // 降序排序
+//     std::sort(nums.begin(), nums.end(), greater<int>());
+//     // 累计总长
+//     unsigned long long int total_length = std::accumulate(nums.begin(), nums.end(), 0ULL);
+//     // 得到边长
+//     unsigned long long int edge_len = total_length / 4;
+//     // 总长不能被4整除 或 最长火柴大于边长，则不能构成正方形
+//     if (total_length % 4 != 0 || edge_len < nums.front())
+//         return false;
+
+//     // 标记
+//     vector<bool> used(length, false);
+//     // 依次构建3条边
+//     for (int i = 0; i < 3; i++)
+//         if (!makesquareRecursively2(nums, used, edge_len, 0, 0))
+//             return false;
+
+//     return true;
+// }
+
+// /*
+// 在计算机界中，我们总是追求用有限的资源获取最大的收益。
+// 现在，假设你分别支配着 m 个 0 和 n 个 1。另外，还有一个仅包含 0 和 1 字符串的数组。
+// 你的任务是使用给定的 m 个 0 和 n 个 1 ，找到能拼出存在于数组中的字符串的最大数量。每个 0 和 1 至多被使用一次。
+
+// 注意:
+// 给定 0 和 1 的数量都不会超过 100。
+// 给定字符串数组的长度不会超过 600。
+
+// 示例 1:
+// 输入: Array = {"10", "0001", "111001", "1", "0"}, m = 5, n = 3
+// 输出: 4
+// 解释: 总共 4 个字符串可以通过 5 个 0 和 3 个 1 拼出，即 "10","0001","1","0" 。
+
+// 示例 2:
+// 输入: Array = {"10", "0", "1"}, m = 1, n = 1
+// 输出: 2
+// 解释: 你可以拼出 "10"，但之后就没有剩余数字了。更好的选择是拼出 "0" 和 "1" 。
+
+// 思路：动态规划
+// 这个题最重要的是找到物品 和 容量。
+// 换个思路：
+// A:如果题目是给你一个序列，里面存的是由0组成的字符串，每个字符串的长度不一定，但是都由0组成，给你m个0.求这m个0最多可以装多少个字符串？
+// B:如果题目给你一个序列，里面存了好多个字符串，每个字符串代表一个物品，长度越长代表物品越沉，背包最大承载量为100，求最多能装多少个物品？
+// 这就熟悉了->01背包
+// 题目就是换了个思路，两维了。一方面要考虑0的情况，一方面要考虑1的情况。
+// 物品没有变，是strs
+// 容量有两个，m和n，要都满足。
+// 动态转移方程
+// for(0..strs.size)
+//  for(m...0)
+//   for(n...0)
+//     dp[i][j] = max(dp[i][j], dp[i-0数量][j-1数量]+1)
+// */
+// int findMaxForm(vector<string> &strs, int m, int n)
+// {
+//     if (strs.empty() || (m <= 0 && n <= 0))
+//         return 0;
+
+//     vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
+//     for (const auto &str : strs)
+//     {
+//         int zero_cnt = 0, one_cnt = 0;
+//         for (auto ch : str)
+//         {
+//             if (ch == '0')
+//                 ++zero_cnt;
+//             else
+//                 ++one_cnt;
+//         }
+
+//         for (int i = m; i >= zero_cnt; --i)
+//         {
+//             for (int j = n; j >= one_cnt; --j)
+//             {
+//                 dp[i][j] = std::max(dp[i][j], dp[i - zero_cnt][j - one_cnt] + 1);
+//             }
+//         }
+//     }
+//     return dp[m][n];
+// }
+// /*
+// 思路：更像是一种贪心算法, 优先选择长度较小的
+// */
+// int findMaxForm(vector<string> &strs, int m, int n)
+// {
+//     int length = strs.size();
+//     if (length == 0 || (m <= 0 && n <= 0))
+//         return 0;
+
+//     std::sort(strs.begin(), strs.end());
+//     std::stable_sort(strs.begin(), strs.end(), [](const string &a, const string &b) {
+//         return a.size() < b.size();
+//     });
+
+//     vector<vector<int>> cnt_0_1;
+//     cnt_0_1.reserve(length);
+//     for (const auto &str : strs)
+//     {
+//         int cnt_0 = 0, cnt_1 = 0;
+//         for (auto c : str)
+//             if (c == '0')
+//                 ++cnt_0;
+//             else
+//                 ++cnt_1;
+
+//         cnt_0_1.emplace_back(vector<int>{cnt_0, cnt_1});
+//     }
+
+//     int res = INT_MIN;
+//     for (int i = 0; i < length; i++)
+//     {
+//         int cur_max = 0;
+//         int cnt_total = m + n;
+//         int cnt_0 = m, cnt_1 = n;
+//         for (int j = i; j < length; j++)
+//         {
+//             //总的剩余字符个数
+//             cnt_total -= strs[j].size();
+
+//             // 长度有余
+//             if (cnt_total >= 0)
+//             {
+//                 //0剩下的个数
+//                 cnt_0 -= cnt_0_1[j][0];
+//                 //1剩下的个数
+//                 cnt_1 -= cnt_0_1[j][1];
+//                 // 0 和 1 数量足够
+//                 if (cnt_0 >= 0 && cnt_1 >= 0)
+//                     ++cur_max;
+//                 // 0 or 1 数量不够, 进行还原
+//                 else
+//                 {
+//                     cnt_total += strs[j].size();
+//                     cnt_0 += cnt_0_1[j][0];
+//                     cnt_1 += cnt_0_1[j][1];
+//                     continue;
+//                 }
+//             }
+//             // 长度不够, 后面只会更长
+//             else
+//                 break;
+//         }
+//         res = std::max(res, cur_max);
+//     }
+//     return res;
+// }
+
+// /*
+// 两个整数的 汉明距离 指的是这两个数字的二进制数对应位不同的数量。
+// 计算一个数组中，任意两个数之间汉明距离的总和。
+
+// 示例:
+// 输入: 4, 14, 2
+// 输出: 6
+// 解释: 在二进制表示中，4表示为0100，14表示为1110，2表示为0010。（这样表示是为了体现后四位之间关系）
+// 所以答案为：
+// HammingDistance(4, 14) + HammingDistance(4, 2) + HammingDistance(14, 2) = 2 + 2 + 2 = 6.
+// 注意:
+// 数组中元素的范围为从 0到 10^9。
+// 数组的长度不超过 10^4。
+
+// 思路：问题转化
+// 1）所有数两两的海明距离总和
+// 2）转化为所有二进制位上两两不同的数的个数
+// 3）转化为 二进制位长度*当前位上0和1不同的数的个数
+// 4）转化为 二进制位长度*(当前位上为0的数的个数*当前位上为1的数的个数)
+// */
+// int totalHammingDistance(const vector<int> &nums)
+// {
+//     int length = nums.size();
+//     if (length < 2)
+//         return 0;
+
+//     constexpr int total_bit_len = sizeof(int) * 8; // int的二进制位数
+//     unsigned int mask = 0x01;                      // 掩码，用于取得某位是否为1
+//     int res = 0;
+//     for (int i = 0; i < total_bit_len; ++i) // 遍历所有二进制位数
+//     {
+//         int cnt_one = 0;
+//         for (auto num : nums) // 遍历所有数，获得当前二进制位为1的数的个数
+//         {
+//             if (num & mask) // 当前数的该二进制位是否为1？
+//                 ++cnt_one;
+//         }
+
+//         mask <<= 1;
+//         res += cnt_one * (length - cnt_one); // 当前位的海明距离为 1的个数*0的个数
+//     }
+//     return res;
+// }
+
+// /*
+// 神奇的字符串 S 只包含 '1' 和 '2'，并遵守以下规则：
+// 字符串 S 是神奇的，因为串联字符 '1' 和 '2' 的连续出现次数会生成字符串 S 本身。
+// 字符串 S 的前几个元素如下：S = “1221121221221121122 ......”
+// 如果我们将 S 中连续的 1 和 2 进行分组，它将变成：
+// 1 22 11 2 1 22 1 22 11 2 11 22 ......
+// 并且每个组中 '1' 或 '2' 的出现次数分别是：
+// 1 2 2 1 1 2 1 2 2 1 2 2 ......
+// 你可以看到上面的出现次数就是 S 本身。
+// 给定一个整数 N 作为输入，返回神奇字符串 S 中前 N 个数字中的 '1' 的数目。
+// 注意：N 不会超过 100,000。
+
+// 示例：
+// 输入：6
+// 输出：3
+// 解释：神奇字符串 S 的前 6 个元素是 “122112”，它包含三个 1，因此返回 3。
+
+// 思路：按题目要求生成S，然后统计即可
+// */
+// int magicalString(int n)
+// {
+//     if (n <= 0)
+//         return 0;
+//     if (n < 4)
+//         return 1;
+
+//     string S = "122";
+//     bool turn_one = true; // 是否生成1
+//     int idx = 2;          // 当前下标
+//     int res = 1;
+//     while (idx <= n - 1)
+//     {
+//         if (S[idx] == '1') // 当前是1
+//         {
+//             ++res;
+//             if (turn_one) // 是生成1，那么加一个1
+//                 S.push_back('1');
+//             else // 生成2，那么加一个2
+//                 S.push_back('2');
+//         }
+//         else // 当前是2
+//         {
+//             if (turn_one) // 是生成1，加两个1
+//                 S += "11";
+//             else // 生成2，加两个2
+//                 S += "22";
+//         }
+//         turn_one = !turn_one; // 本次生成1，那么下次生成2，反之亦然
+//         ++idx;
+//     }
+//     return res;
+// }
+
+// /*
+// 给定一个表示分数的非负整数数组。
+// 玩家1从数组任意一端拿取一个分数，
+// 随后玩家2继续从剩余数组任意一端拿取分数，然后玩家1拿，……。每次一个玩家只能拿取一个分数，分数被拿取之后不再可取。
+// 直到没有剩余分数可取时游戏结束。
+// 最终获得分数总和最多的玩家获胜。
+// 给定一个表示分数的数组，预测玩家1是否会成为赢家。
+// 你可以假设每个玩家的玩法都会使他的分数最大化。
+
+// 示例 1:
+// 输入: [1, 5, 2]
+// 输出: False
+// 解释: 一开始，玩家1可以从1和2中进行选择。
+// 如果他选择2（或者1），那么玩家2可以从1（或者2）和5中进行选择。如果玩家2选择了5，那么玩家1则只剩下1（或者2）可选。
+// 所以，玩家1的最终分数为 1 + 2 = 3，而玩家2为 5。
+// 因此，玩家1永远不会成为赢家，返回 False。
+
+// 示例 2:
+// 输入: [1, 5, 233, 7]
+// 输出: True
+// 解释: 玩家1一开始选择1。然后玩家2必须从5和7中进行选择。无论玩家2选择了哪个，玩家1都可以选择233。
+// 最终，玩家1（234分）比玩家2（12分）获得更多的分数，所以返回 True，表示玩家1可以成为赢家。
+
+// 注意:
+// 1 <= 给定的数组长度 <= 20.
+// 数组里所有分数都为非负数且不会大于10000000。
+// 如果最终两个玩家的分数相等，那么玩家1仍为赢家。
+
+// 思路：递归
+// */
+// int PredictTheWinnerRecursively(const vector<int> &nums, int start, int stop)
+// {
+//     if (start == stop) // 只有一个数时，玩家1先手直接选择它
+//         return nums[start];
+//     else if (start + 1 == stop) // 有两个数时，玩家1先手选择最大的那个
+//         return std::max(nums[start], nums[stop]);
+
+//     // 有多个数时，不论玩家1还是玩家2，都会选择最大的那个
+//     // 假设玩家1选择了头部最大的之后，剩余的最大的还是头部，那么玩家2为了自己最大化，那么会选择头部
+//     // 再轮到玩家1时，挑玩家2挑完后的最大的
+//     return std::max(nums[start] + std::min(PredictTheWinnerRecursively(nums, start + 1, stop - 1), PredictTheWinnerRecursively(nums, start + 2, stop)),
+//                     nums[stop] + std::min(PredictTheWinnerRecursively(nums, start + 1, stop - 1), PredictTheWinnerRecursively(nums, start, stop - 2)));
+// }
+// bool PredictTheWinner(const vector<int> &nums)
+// {
+//     if (nums.size() == 1)
+//         return true;
+
+//     // 计算总和
+//     int sum = std::accumulate(nums.begin(), nums.end(), 0);
+//     // 计算玩家1先手获得的总和
+//     int sum1 = PredictTheWinnerRecursively(nums, 0, nums.size() - 1);
+//     // 玩家1得总和不小于玩家2的总和则胜利
+//     return sum1 >= (sum - sum1);
+// }
+// // 思路2：动态规划
+// bool PredictTheWinner2(const vector<int> &nums)
+// {
+//     int length = nums.size();
+//     // 偶数直接返回true，因为假设玩家1先手挑失败了，那么换一头挑就会赢
+//     if (length == 1 || length % 2 == 0)
+//         return true;
+
+//     int sum = 0;
+//     // dp[i][j]表示在区间[i, j]玩家1选手取得的总和
+//     vector<vector<int>> dp(length, vector<int>(length, 0));
+
+//     for (int i = 0; i < length; i++) // 只有一个数，那么玩家1先手选它
+//     {
+//         dp[i][i] = nums[i];
+//         sum += nums[i];
+//     }
+
+//     for (int i = 1; i < length; i++) // 两个数，那么玩家1先手选最大的那个
+//         dp[i - 1][i] = std::max(nums[i - 1], nums[i]);
+
+//     for (int len = 2; len < length; len++)
+//     {
+//         for (int start = 0; start + len < length; start++)
+//         {
+//             int stop = start + len;
+//             // 每个玩家都想拿最大的
+//             // 本次玩家1拿最大的，接着玩家2也拿最大的，再轮到玩家1只能拿玩家2拿完后的最大值
+//             dp[start][stop] = std::max(nums[start] + std::min(dp[start + 1][stop - 1], dp[start + 2][stop]),
+//                                        // 玩家1拿走头，玩家2能选头和尾，然后玩家1再选，但由于玩家2拿走了最大，那么玩家1再选只能获得较小的那个
+//                                        nums[stop] + std::min(dp[start + 1][stop - 1], dp[start][stop - 2]));
+//         }
+//     }
+//     return dp[0][length - 1] >= sum - dp[0][length - 1];
+// }
+
+// /*
+// 给定一个整型数组, 你的任务是找到所有该数组的递增子序列，递增子序列的长度至少是2。
+
+// 示例:
+// 输入: [4, 6, 7, 7]
+// 输出: [[4, 6], [4, 7], [4, 6, 7], [4, 6, 7, 7], [6, 7], [6, 7, 7], [7,7], [4,7,7]]
+
+// 说明:
+// 给定数组的长度不会超过15。
+// 数组中的整数范围是 [-100,100]。
+// 给定数组中可能包含重复数字，相等的数字应该被视为递增的一种情况。
+
+// 思路：递归深搜（注意去重）
+// */
+// void findSubsequencesRecursively(const vector<int> &nums, int start, vector<int> &out, vector<vector<int>> &res)
+// {
+//     if (out.size() >= 2)
+//         res.push_back(out);
+
+//     unordered_set<int> st;
+//     for (int i = start; i < nums.size(); ++i)
+//     {
+//         // 已访问过相同的元素 或 不是递增的 跳过
+//         if (st.count(nums[i]) || !out.empty() && out.back() > nums[i])
+//             continue;
+
+//         out.push_back(nums[i]);
+//         st.insert(nums[i]);
+//         findSubsequencesRecursively(nums, i + 1, out, res);
+//         out.pop_back();
+//     }
+// }
+// vector<vector<int>> findSubsequences(const vector<int> &nums)
+// {
+//     vector<vector<int>> res;
+//     vector<int> out;
+//     findSubsequencesRecursively(nums, 0, out, res);
+//     return res;
+// }
+
 int main(int argc, char **argv)
 {
+    // for (const auto &vec : findSubsequences({4, 6, 7, 7}))
+    //     printContainer(vec);
+
+    // cout << std::boolalpha << PredictTheWinner2({1, 5, 2}) << endl;
+    // cout << std::boolalpha << PredictTheWinner2({1, 5, 233, 7}) << endl;
+
+    // cout << magicalString(6) << endl;
+
+    // cout << totalHammingDistance({4, 14, 2}) << endl;
+
+    // vector<int> vec{1, 1, 2, 2, 2};
+    // cout << std::boolalpha << makesquare2(vec) << endl;
+    // vec = {3, 3, 3, 3, 4};
+    // cout << std::boolalpha << makesquare2(vec) << endl;
+    // vec = {5, 5, 5, 5, 4, 4, 4, 4, 3, 3, 3, 3};
+    // cout << std::boolalpha << makesquare2(vec) << endl;
+
+    // int cnt[11]{0};
+    // int total = 1000000;
+    // for (int i = 0; i < total; i++)
+    //     ++cnt[rand10()];
+    // for (int i = 1; i <= 10; i++)
+    //     cout << i << ": " << cnt[i] << endl;
+
+    // cout << validIPAddress("2001:0db8:85a3:0:0:8A2E:0370:7334:") << endl;
+    // cout << validIPAddress("172.16.254.1") << endl;
+    // cout << validIPAddress("2001:0db8:85a3:0:0:8A2E:0370:7334") << endl;
+    // cout << validIPAddress("256.256.256.256") << endl;
+
+    // cout << findSubstringInWraproundString("a") << endl;
+    // cout << findSubstringInWraproundString("cac") << endl;
+    // cout << findSubstringInWraproundString("zab") << endl;
+
+    // vector<int> nums{1, 2};
+    // cout << minMoves2(nums) << endl;
+
+    // cout << std::boolalpha << circularArrayLoop({1, 1, 2}) << endl;
+    // cout << std::boolalpha << circularArrayLoop({-2, -3, -9}) << endl;
+
+    // cout << std::boolalpha << find132pattern({1, 2, 3, 4}) << endl;
+    // cout << std::boolalpha << find132pattern({3, 1, 4, 2}) << endl;
+    // cout << std::boolalpha << find132pattern({-1, 3, 2, 0}) << endl;
+
+    // vector<int> A{1, 2}, B{-2, -1}, C{-1, 2}, D{0, 2};
+    // cout << fourSumCount2(A, B, C, D) << endl;
+
+    // vector<vector<int>> points{{10, 16}, {2, 8}, {1, 6}, {7, 12}};
+    // cout << findMinArrowShots(points) << endl;
+
+    // cout << frequencySort("tree") << endl;
+
     // vector<int> vec{4, 3, 2, 7, 8, 2, 3, 1};
     // printContainer(findDuplicates2(vec));
 

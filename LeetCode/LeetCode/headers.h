@@ -1086,4 +1086,226 @@ public:
     }
 };
 
+/*
+序列化是将数据结构或对象转换为一系列位的过程，以便它可以存储在文件或内存缓冲区中，或通过网络连接链路传输，以便稍后在同一个或另一个计算机环境中重建。
+设计一个算法来序列化和反序列化二叉搜索树。 
+对序列化/反序列化算法的工作方式没有限制。 
+您只需确保二叉搜索树可以序列化为字符串，并且可以将该字符串反序列化为最初的二叉搜索树。
+编码的字符串应尽可能紧凑。
+注意：不要使用类成员/全局/静态变量来存储状态。 你的序列化和反序列化算法应该是无状态的。
+*/
+class Codec
+{
+public:
+    /*
+    思路：一般化的二叉树序列化
+    1）前序遍历
+    2）每个节点用特殊符号隔开，比如","
+    3）空节点（叶子节点的两个子节点 以及 只有一个子节点的父节点的另一个空节点）用特殊字符表示，比如"$"
+    */
+    // Encodes a tree to a single string.
+    string serialize(TreeNode *root)
+    {
+        if (root == nullptr)
+            return {};
+
+        ostringstream oss;
+        serializeRecursively(root, oss);
+        return oss.str();
+    }
+    // Decodes your encoded data to tree.
+    TreeNode *deserialize(const string &data)
+    {
+        if (data.empty())
+            return nullptr;
+
+        TreeNode *root;
+        int idx = 0;
+        deserializeRecursively(data, idx, &root);
+        return root;
+    }
+
+    /*
+    思路2：根据二叉搜索树的性质：左子节点的值 <= 父节点值 <= 右子节点值
+    序列化：
+    1）前序遍历
+    2）每个非空节点值用特殊符号隔开，比如"#"
+    反序列化：
+    1）第一个值是根节点
+    2）后面小于当前节点值的是左子树
+    3）后面大于当前节点值的是右子树
+    4）切分成了两部分，再递归
+    */
+    // Encodes a tree to a single string.
+    string serialize2(TreeNode *root)
+    {
+        if (root == nullptr)
+            return {};
+
+        ostringstream oss;
+        serializeRecursively2(root, oss);
+        return oss.str();
+    }
+    // Decodes your encoded data to tree.
+    TreeNode *deserialize2(const string &data)
+    {
+        if (data.empty())
+            return nullptr;
+
+        vector<int> vals;
+        int now = 0;
+        while (now < data.size())
+        {
+            int val = 0;
+            while (data[now] != '#')
+            {
+                val = val * 10 + (data[now] - '0');
+                ++now;
+            }
+            ++now;
+            vals.push_back(val);
+        }
+
+        return deserializeRecursively2(vals, 0, vals.size() - 1);
+    }
+
+private:
+    void deserializeRecursively(const string &s, int &idx, TreeNode **p)
+    {
+        if (idx >= s.size())
+            return;
+
+        if (s[idx] == '$')
+        {
+            idx += 2;
+            return;
+        }
+
+        int val = 0;
+        while (idx < s.size() && s[idx] != ',')
+        {
+            val = val * 10 + (s[idx] - '0');
+            ++idx;
+        }
+        ++idx;
+
+        *p = new TreeNode{val};
+        deserializeRecursively(s, idx, &((*p)->left));
+        deserializeRecursively(s, idx, &((*p)->right));
+    }
+    void serializeRecursively(TreeNode *p, ostringstream &oss)
+    {
+        if (p == nullptr)
+        {
+            oss << "$,";
+            return;
+        }
+
+        oss << p->val << ",";
+        serializeRecursively(p->left, oss);
+        serializeRecursively(p->right, oss);
+    }
+
+    TreeNode *deserializeRecursively2(const vector<int> &vals, int start, int stop)
+    {
+        if (start > stop)
+            return nullptr;
+
+        TreeNode *root = new TreeNode{vals[start]};
+
+        int pos = -1;
+        for (int i = start + 1; i <= stop; i++)
+        {
+            if (vals[i] > (root->val))
+            {
+                pos = i;
+                break;
+            }
+        }
+
+        if (pos != -1)
+        {
+            root->left = deserializeRecursively2(vals, start + 1, pos - 1);
+            root->right = deserializeRecursively2(vals, pos, stop);
+        }
+        else
+        {
+            root->left = deserializeRecursively2(vals, start + 1, stop);
+        }
+
+        return root;
+    }
+    void serializeRecursively2(TreeNode *p, ostringstream &oss)
+    {
+        if (p == nullptr)
+            return;
+
+        oss << p->val << "#";
+        serializeRecursively2(p->left, oss);
+        serializeRecursively2(p->right, oss);
+    }
+};
+
+/*
+给定圆的半径和圆心的 x、y 坐标，写一个在圆中产生均匀随机点的函数 randPoint 。
+说明:
+输入值和输出值都将是浮点数。
+圆的半径和圆心的 x、y 坐标将作为参数传递给类的构造函数。
+圆周上的点也认为是在圆中。
+randPoint 返回一个包含随机点的x坐标和y坐标的大小为2的数组。
+
+示例 1：
+输入: 
+["Solution","randPoint","randPoint","randPoint"]
+[[1,0,0],[],[],[]]
+输出: [null,[-0.72939,-0.65505],[-0.78502,-0.28626],[-0.83119,-0.19803]]
+
+示例 2：
+输入: 
+["Solution","randPoint","randPoint","randPoint"]
+[[10,5,-7.5],[],[],[]]
+输出: [null,[11.52438,-8.33273],[2.46992,-16.21705],[11.13430,-12.42337]]
+
+输入语法说明：
+输入是两个列表：调用成员函数名和调用的参数。
+Solution 的构造函数有三个参数，圆的半径、圆心的 x 坐标、圆心的 y 坐标。
+randPoint 没有参数。输入参数是一个列表，即使参数为空，也会输入一个 [] 空列表。
+
+思路：拒绝采样
+1）先生成圆的外接正方形内的点
+2）然后拒绝采样，在圆内的点接受
+*/
+class RandomPointInCircle
+{
+public:
+    RandomPointInCircle(double radius,
+                        double x_center,
+                        double y_center) : r_{radius},
+                                           x_{x_center},
+                                           y_{y_center},
+                                           e_(random_device{}()),
+                                           urd_x_{x_ - r_, std::nextafter(x_ + r_, std::numeric_limits<double>::max())},
+                                           urd_y_{y_ - r_, std::nextafter(y_ + r_, std::numeric_limits<double>::max())}
+    {
+    }
+
+    vector<double> randPoint()
+    {
+        double x, y;
+        do
+        {
+            x = urd_x_(e_);
+            y = urd_y_(e_);
+        } while (((x - x_) * (x - x_) + (y - y_) * (y - y_)) > r_ * r_);
+        return {x, y};
+    }
+
+private:
+    double r_;
+    double x_, y_;
+
+    default_random_engine e_;
+    uniform_real_distribution<double> urd_x_, urd_y_;
+};
+
 #endif
