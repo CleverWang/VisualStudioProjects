@@ -26,6 +26,7 @@
 #include <numeric>
 #include <bitset>
 #include <list>
+#include <complex>
 
 using namespace std;
 
@@ -1088,8 +1089,8 @@ public:
 
 /*
 序列化是将数据结构或对象转换为一系列位的过程，以便它可以存储在文件或内存缓冲区中，或通过网络连接链路传输，以便稍后在同一个或另一个计算机环境中重建。
-设计一个算法来序列化和反序列化二叉搜索树。 
-对序列化/反序列化算法的工作方式没有限制。 
+设计一个算法来序列化和反序列化二叉搜索树。
+对序列化/反序列化算法的工作方式没有限制。
 您只需确保二叉搜索树可以序列化为字符串，并且可以将该字符串反序列化为最初的二叉搜索树。
 编码的字符串应尽可能紧凑。
 注意：不要使用类成员/全局/静态变量来存储状态。 你的序列化和反序列化算法应该是无状态的。
@@ -1255,13 +1256,13 @@ private:
 randPoint 返回一个包含随机点的x坐标和y坐标的大小为2的数组。
 
 示例 1：
-输入: 
+输入:
 ["Solution","randPoint","randPoint","randPoint"]
 [[1,0,0],[],[],[]]
 输出: [null,[-0.72939,-0.65505],[-0.78502,-0.28626],[-0.83119,-0.19803]]
 
 示例 2：
-输入: 
+输入:
 ["Solution","randPoint","randPoint","randPoint"]
 [[10,5,-7.5],[],[],[]]
 输出: [null,[11.52438,-8.33273],[2.46992,-16.21705],[11.13430,-12.42337]]
@@ -1278,14 +1279,13 @@ randPoint 没有参数。输入参数是一个列表，即使参数为空，也
 class RandomPointInCircle
 {
 public:
-    RandomPointInCircle(double radius,
-                        double x_center,
-                        double y_center) : r_{radius},
-                                           x_{x_center},
-                                           y_{y_center},
-                                           e_(random_device{}()),
-                                           urd_x_{x_ - r_, std::nextafter(x_ + r_, std::numeric_limits<double>::max())},
-                                           urd_y_{y_ - r_, std::nextafter(y_ + r_, std::numeric_limits<double>::max())}
+    RandomPointInCircle(double radius, double x_center, double y_center) :
+        r_{radius},
+        x_{x_center},
+        y_{y_center},
+        e_(random_device{}()),
+        urd_x_{x_ - r_, std::nextafter(x_ + r_, std::numeric_limits<double>::max())},
+        urd_y_{y_ - r_, std::nextafter(y_ + r_, std::numeric_limits<double>::max())}
     {
     }
 
@@ -1306,6 +1306,278 @@ private:
 
     default_random_engine e_;
     uniform_real_distribution<double> urd_x_, urd_y_;
+};
+
+/*
+给定一个非重叠轴对齐矩形的列表 rects，写一个函数 pick 随机均匀地选取矩形覆盖的空间中的整数点。
+提示：
+整数点是具有整数坐标的点。
+矩形周边上的点包含在矩形覆盖的空间中。
+第 i 个矩形 rects [i] = [x1，y1，x2，y2]，其中 [x1，y1] 是左下角的整数坐标，[x2，y2] 是右上角的整数坐标。
+每个矩形的长度和宽度不超过 2000。
+1 <= rects.length <= 100
+pick 以整数坐标数组 [p_x, p_y] 的形式返回一个点。
+pick 最多被调用10000次。
+
+示例 1：
+输入:
+["Solution","pick","pick","pick"]
+[[[[1,1,5,5]]],[],[],[]]
+输出:
+[null,[4,1],[4,1],[3,3]]
+
+示例 2：
+输入:
+["Solution","pick","pick","pick","pick","pick"]
+[[[[-2,-2,-1,-1],[1,0,3,0]]],[],[],[],[],[]]
+输出:
+[null,[-1,-2],[2,0],[-2,-1],[3,0],[-2,-2]]
+
+输入语法的说明：
+输入是两个列表：调用的子例程及其参数。Solution 的构造函数有一个参数，即矩形数组 rects。pick 没有参数。参数总是用列表包装的，即使没有也是如此。
+*/
+class PickPointInRectList
+{
+public:
+    // 思路：拒绝采样（严重超时）
+    // PickPointInRectList(vector<vector<int>> &rects) : rects_(rects),
+    //                                                   e_(random_device{}()),
+    //                                                   x1(INT_MAX), y1(INT_MAX),
+    //                                                   x2(INT_MIN), y2(INT_MIN)
+    // {
+    //     std::sort(rects_.begin(), rects_.end(), [](const vector<int> &a, const vector<int> &b) {
+    //         return a[2] < b[2];
+    //     });
+    //     for (const auto &rect : rects)
+    //     {
+    //         x1 = std::min(x1, rect[0]);
+    //         y1 = std::min(y1, rect[1]);
+    //         x2 = std::max(x2, rect[2]);
+    //         y2 = std::max(y2, rect[3]);
+    //     }
+    // }
+    // vector<int> pick()
+    // {
+    //     uniform_int_distribution<int> dx(x1, x2), dy(y1, y2);
+    //     int x, y;
+    //     do
+    //     {
+    //         x = dx(e_);
+    //         y = dy(e_);
+    //     } while (!inRange(x, y));
+    //     return {x, y};
+    // }
+
+    /*
+    思路2：
+    1）直接随机选择矩形，然后在这个矩形中随机选出一个点就是结果，但这种方法是错误的
+    2）矩形在二维平面是有面积，我们需要根据面积权重进行选择矩形
+        a.|--矩形1面积--|--矩形2面积--|...|--矩形n面积--|，构成一维区间，每个矩形面积占据一段区间
+        b.在整个区间上随机选取一个点，然后确定该点落在哪个矩形面积中
+        c.最后在该矩形中随机选一点
+    3）注意一个点的矩形也需要算面积，可令其面积为1
+    */
+    PickPointInRectList(vector<vector<int>> &rects) : rects_(rects), e_(random_device{}())
+    {
+        unsigned long long int sum = 0;
+        // 构造矩形面积一维区间
+        for (const auto &rect : rects_)
+        {
+            // 注意一个点的矩形
+            sum += (rect[2] - rect[0] + 1) * (rect[3] - rect[1] + 1);
+            areas_.push_back(sum);
+        }
+    }
+
+    vector<int> pick()
+    {
+        // 在区间中随机选一点
+        uniform_int_distribution<unsigned long long int> rand_rect(1, areas_.back());
+        // 确定是哪个矩形
+        auto it = std::lower_bound(areas_.begin(), areas_.end(), rand_rect(e_));
+        int idx = it - areas_.begin();
+        // 在该矩形中随机选一点
+        uniform_int_distribution<int> rand_x(rects_[idx][0], rects_[idx][2]);
+        uniform_int_distribution<int> rand_y(rects_[idx][1], rects_[idx][3]);
+        return {rand_x(e_), rand_y(e_)};
+    }
+
+private:
+    // vector<vector<int>> &rects_;
+    // default_random_engine e_;
+    // int x1, y1;
+    // int x2, y2;
+    // bool inRange(int x, int y)
+    // {
+    //     auto it = std::lower_bound(rects_.begin(), rects_.end(), x, [](const vector<int> &a, int b) {
+    //         return a[2] < b;
+    //     });
+    //     if (it == rects_.end())
+    //         return false;
+    //     else if ((*it)[0] <= x && (*it)[1] <= y && y <= (*it)[3])
+    //         return true;
+    //     return false;
+    // }
+    const vector<vector<int>> &rects_;
+    vector<unsigned long long int> areas_;
+    default_random_engine e_;
+};
+
+/*
+题中给出一个二维矩阵 (n_rows,n_cols)，且所有值被初始化为 0。
+要求编写一个 flip 函数，均匀随机的将矩阵中的 0 变为 1，并返回该值的位置下标 [row_id,col_id]；
+同样编写一个 reset 函数，将所有的值都重新置为 0。
+尽量最少调用随机函数 Math.random()，并且优化时间和空间复杂度。
+
+注意:
+1.1 <= n_rows, n_cols <= 10000
+2. 0 <= row.id < n_rows 并且 0 <= col.id < n_cols
+3.当矩阵中没有值为 0 时，不可以调用 flip 函数
+4.调用 flip 和 reset 函数的次数加起来不会超过 1000 次
+
+示例 1：
+输入:
+["Solution","flip","flip","flip","flip"]
+[[2,3],[],[],[],[]]
+输出: [null,[0,1],[1,2],[1,0],[1,1]]
+
+示例 2：
+输入:
+["Solution","flip","flip","reset","flip"]
+[[1,2],[],[],[],[]]
+输出: [null,[0,0],[0,1],null,[0,0]]
+输入语法解释：
+输入包含两个列表：被调用的子程序和他们的参数。
+Solution 的构造函数有两个参数，分别为 n_rows 和 n_cols。
+flip 和 reset 没有参数，参数总会以列表形式给出，哪怕该列表为空
+*/
+class MatrixBitFlip
+{
+    // 思路：将二维坐标一维化，每次从一维坐标中抽一个，然后还原成二维坐标（超时）
+    //public:
+    //    MatrixBitFlip(int n_rows, int n_cols) :
+    //        rows_(n_rows),
+    //        cols_(n_cols),
+    //        len_(rows_ *cols_),
+    //        m_(len_),
+    //        end_idx_(len_ - 1),
+    //        e_(random_device{}())
+    //    {
+    //        for (int i = 0; i < len_; i++)
+    //        {
+    //            m_[i] = i;
+    //        }
+    //    }
+    //
+    //    vector<int> flip()
+    //    {
+    //        uniform_int_distribution<int> randint(0, end_idx_);
+    //        std::swap(m_[randint(e_)], m_[end_idx_]);
+    //        int res = m_[end_idx_];
+    //        --end_idx_;
+    //        return {res / cols_, res % cols_};
+    //    }
+    //
+    //    void reset()
+    //    {
+    //        end_idx_ = len_ - 1;
+    //        for (int i = 0; i < len_; i++)
+    //        {
+    //            m_[i] = i;
+    //        }
+    //    }
+    //private:
+    //    int rows_, cols_, len_;
+    //    vector<int> m_;
+    //    int end_idx_;
+    //
+    //    default_random_engine e_;
+
+    // 思路2：同样地，将二维坐标一维化，但是不存储一维化的坐标，而是维护一个已反转坐标集
+    // 每次从一维坐标抽一个，判断是否已经反转过，如果未反转，换算成二维坐标返回并加入已反转集，否则继续抽
+public:
+    MatrixBitFlip(int n_rows, int n_cols) :
+        rows_(n_rows),
+        cols_(n_cols),
+        len_(rows_ *cols_),
+        visited_(),
+        e_(random_device{}()),
+        randint_(0, len_ - 1)
+    {
+    }
+
+    vector<int> flip()
+    {
+        int res;
+        do
+        {
+            res = randint_(e_);
+        } while (visited_.count(res));
+        visited_.insert(res);
+
+        return {res / cols_, res % cols_};
+    }
+
+    void reset()
+    {
+        visited_.clear();
+    }
+private:
+    int rows_, cols_, len_;
+    unordered_set<int> visited_;
+
+    default_random_engine e_;
+    uniform_int_distribution<int> randint_;
+};
+
+/*
+给定一个正整数数组 w ，其中 w[i] 代表位置 i 的权重，请写一个函数 pickIndex ，它可以随机地获取位置 i，选取位置 i 的概率与 w[i] 成正比。
+
+说明:
+1 <= w.length <= 10000
+1 <= w[i] <= 10^5
+pickIndex 将被调用不超过 10000 次
+
+示例1:
+输入:
+["Solution","pickIndex"]
+[[[1]],[]]
+输出: [null,0]
+
+示例2:
+输入:
+["Solution","pickIndex","pickIndex","pickIndex","pickIndex","pickIndex"]
+[[[1,3]],[],[],[],[],[]]
+输出: [null,0,1,1,1,0]
+
+输入语法说明：
+输入是两个列表：调用成员函数名和调用的参数。
+Solution 的构造函数有一个参数，即数组 w。
+pickIndex 没有参数。
+输入参数是一个列表，即使参数为空，也会输入一个 [] 空列表。
+
+思路：轮盘赌算法
+*/
+class PickByWeight
+{
+public:
+    PickByWeight(vector<int> &w) : p_(w), e_{random_device{}()}
+    {
+        int length = p_.size();
+        for (int i = 1; i < length; i++)
+            p_[i] += p_[i - 1];
+    }
+
+    int pickIndex()
+    {
+        uniform_int_distribution<int> randint(1, p_.back());
+        int rd = randint(e_);
+        return std::lower_bound(p_.begin(), p_.end(), rd) - p_.begin();
+    }
+private:
+    vector<int> &p_;
+
+    default_random_engine e_;
 };
 
 #endif
