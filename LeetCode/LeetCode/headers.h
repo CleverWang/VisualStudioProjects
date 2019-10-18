@@ -6,6 +6,9 @@
 #include <cstdlib>
 #include <climits>
 #include <cctype>
+#include <cassert>
+#include <ctime>
+#include <cstdio>
 
 #include <iostream>
 #include <fstream>
@@ -27,36 +30,33 @@
 #include <bitset>
 #include <list>
 #include <complex>
+#include <array>
 
 using namespace std;
 
 template <typename ContainerType>
-void printContainer(const ContainerType &c)
-{
+void printContainer(const ContainerType &c) {
     for (const auto &item : c)
         cout << item << " ";
     cout << endl;
 }
 
 // Definition for singly-linked list.
-struct ListNode
-{
+struct ListNode {
     int val;
     ListNode *next;
     ListNode(int x) : val(x), next(NULL) {}
 };
 
 //Definition for binary tree
-struct TreeNode
-{
+struct TreeNode {
     int val;
     TreeNode *left;
     TreeNode *right;
     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-void preOrder(TreeNode *root)
-{
+void preOrder(TreeNode *root) {
     if (root == NULL)
         return;
 
@@ -65,8 +65,7 @@ void preOrder(TreeNode *root)
     preOrder(root->right);
 }
 
-void middleOrder(TreeNode *root)
-{
+void middleOrder(TreeNode *root) {
     if (root == NULL)
         return;
 
@@ -75,8 +74,7 @@ void middleOrder(TreeNode *root)
     middleOrder(root->right);
 }
 
-void postOrder(TreeNode *root)
-{
+void postOrder(TreeNode *root) {
     if (root == NULL)
         return;
 
@@ -86,31 +84,24 @@ void postOrder(TreeNode *root)
 }
 
 template <typename T>
-class StackBy2Queue
-{
+class StackBy2Queue {
 public:
-    void push(T data)
-    {
-        if (!queue1.empty())
-        {
+    void push(T data) {
+        if (!queue1.empty()) {
             queue1.push(data);
             return;
         }
-        if (!queue2.empty())
-        {
+        if (!queue2.empty()) {
             queue2.push(data);
             return;
         }
         queue1.push(data);
     }
 
-    T pop()
-    {
-        if (!queue1.empty())
-        {
+    T pop() {
+        if (!queue1.empty()) {
             T ret;
-            while (!queue1.empty())
-            {
+            while (!queue1.empty()) {
                 ret = queue1.front();
                 queue1.pop();
                 if (queue1.empty())
@@ -119,11 +110,9 @@ public:
             }
             return ret;
         }
-        if (!queue2.empty())
-        {
+        if (!queue2.empty()) {
             T ret;
-            while (!queue2.empty())
-            {
+            while (!queue2.empty()) {
                 ret = queue2.front();
                 queue2.pop();
                 if (queue2.empty())
@@ -145,40 +134,29 @@ private:
 思路：双栈法，一个保存数据，另一个保存最小值，压入数据时，比较当前数与最小栈的栈顶，将较小的压入最小栈
 */
 template <typename T>
-class StackWithMin
-{
+class StackWithMin {
 public:
-    void push(T value)
-    {
+    void push(T value) {
         st.push(value);
 
-        if (min_st.empty())
-        {
+        if (min_st.empty()) {
             min_st.push(value);
-        }
-        else if (value < min_st.top())
-        {
+        } else if (value < min_st.top()) {
             min_st.push(value);
-        }
-        else
-        {
+        } else {
             min_st.push(min_st.top());
         }
     }
-    void pop()
-    {
-        if (!st.empty() && !min_st.empty())
-        {
+    void pop() {
+        if (!st.empty() && !min_st.empty()) {
             st.pop();
             min_st.pop();
         }
     }
-    T top()
-    {
+    T top() {
         return st.top();
     }
-    T min()
-    {
+    T min() {
         return min_st.top();
     }
 
@@ -187,17 +165,14 @@ private:
     stack<T> min_st;
 };
 
-struct RandomListNode
-{
+struct RandomListNode {
     int label;
     struct RandomListNode *next, *random;
-    RandomListNode(int x) : label(x), next(NULL), random(NULL)
-    {
+    RandomListNode(int x) : label(x), next(NULL), random(NULL) {
     }
 };
 
-struct TreeLinkNode
-{
+struct TreeLinkNode {
     int val;
     struct TreeLinkNode *left;
     struct TreeLinkNode *right;
@@ -205,11 +180,9 @@ struct TreeLinkNode
     TreeLinkNode(int x) : val(x), left(NULL), right(NULL), next(NULL) {}
 };
 
-class TreeExample
-{
+class TreeExample {
 public:
-    TreeExample()
-    {
+    TreeExample() {
         TreeNode *node1 = new TreeNode(1);
         TreeNode *node2 = new TreeNode(2);
         TreeNode *node3 = new TreeNode(3);
@@ -225,14 +198,12 @@ public:
 
         this->pRoot = node1;
     }
-    TreeExample(std::function<TreeNode *()> buildTreeFunc)
-    {
+    TreeExample(std::function<TreeNode *()> buildTreeFunc) {
         this->pRoot = buildTreeFunc();
     }
     TreeExample(TreeNode *p) : pRoot(p) {}
 
-    ~TreeExample()
-    {
+    ~TreeExample() {
         destroyTree(this->pRoot);
     }
 
@@ -241,8 +212,7 @@ public:
 private:
     TreeNode *pRoot;
 
-    void destroyTree(TreeNode *pNode)
-    {
+    void destroyTree(TreeNode *pNode) {
         if (pNode == nullptr)
             return;
         destroyTree(pNode->left);
@@ -265,41 +235,31 @@ private:
     1.插入左边时，如果新的数比右边最小的数要大，把新节点插入右边，并把右边最小的数插入左边
     1.插入右边时，如果新的数比左边最大的数要小，把新节点插入左边，并把左边最大的数插入右边
 */
-class MedianInStream
-{
+class MedianInStream {
 public:
     MedianInStream() : right_min_heap(greater<int>()) {}
 
-    void Insert(int num)
-    {
-        if ((left_max_heap.size() + right_min_heap.size()) % 2 == 0)
-        {
-            if (!right_min_heap.empty() && right_min_heap.top() < num)
-            {
+    void Insert(int num) {
+        if ((left_max_heap.size() + right_min_heap.size()) % 2 == 0) {
+            if (!right_min_heap.empty() && right_min_heap.top() < num) {
                 int t = right_min_heap.top();
                 right_min_heap.pop();
                 right_min_heap.push(num);
                 left_max_heap.push(t);
-            }
-            else
+            } else
                 left_max_heap.push(num);
-        }
-        else
-        {
-            if (!left_max_heap.empty() && left_max_heap.top() > num)
-            {
+        } else {
+            if (!left_max_heap.empty() && left_max_heap.top() > num) {
                 int t = left_max_heap.top();
                 left_max_heap.pop();
                 left_max_heap.push(num);
                 right_min_heap.push(t);
-            }
-            else
+            } else
                 right_min_heap.push(num);
         }
     }
 
-    double GetMedian()
-    {
+    double GetMedian() {
         if ((left_max_heap.size() + right_min_heap.size()) == 0)
             throw runtime_error("Empty stream!");
 
@@ -314,14 +274,12 @@ private:
     priority_queue<int, vector<int>, greater<int>> right_min_heap; // 右部分小根堆
 };
 
-ListNode *buildList(const vector<int> &vec)
-{
+ListNode *buildList(const vector<int> &vec) {
     if (vec.empty())
         return nullptr;
 
     ListNode *head = new ListNode(vec[0]), *p = head;
-    for (auto citer = vec.cbegin() + 1; citer != vec.cend(); ++citer)
-    {
+    for (auto citer = vec.cbegin() + 1; citer != vec.cend(); ++citer) {
         p->next = new ListNode(*citer);
         p = p->next;
     }
@@ -329,10 +287,8 @@ ListNode *buildList(const vector<int> &vec)
     return head;
 }
 
-void printList(ListNode *head)
-{
-    while (head != nullptr)
-    {
+void printList(ListNode *head) {
+    while (head != nullptr) {
         cout << head->val << " ";
         head = head->next;
     }
@@ -358,16 +314,14 @@ void printList(ListNode *head)
 //     }
 // };
 
-class UndirectedGraphNode
-{
+class UndirectedGraphNode {
 public:
     int val;
     vector<UndirectedGraphNode *> neighbors;
 
     UndirectedGraphNode() {}
 
-    UndirectedGraphNode(int _val, vector<UndirectedGraphNode *> _neighbors)
-    {
+    UndirectedGraphNode(int _val, vector<UndirectedGraphNode *> _neighbors) {
         val = _val;
         neighbors = _neighbors;
     }
@@ -389,32 +343,37 @@ trie.search("app");     // 返回 true
 你可以假设所有的输入都是由小写字母 a-z 构成的。
 保证所有输入均为非空字符串。
 */
-class Trie
-{
+class Trie {
 public:
+    struct TrieNode {
+        bool isWord;
+        TrieNode *childNodes[26];
+
+        TrieNode() : isWord(false) {
+            for (int i = 0; i < 26; i++)
+                childNodes[i] = nullptr;
+        }
+    };
+
     /** Initialize your data structure here. */
-    Trie()
-    {
-        this->root = new TrieNode();
+    Trie() : root_(new TrieNode) {
     }
 
-    ~Trie()
-    {
-        this->deleteTrie(this->root);
+    ~Trie() {
+        this->deleteTrie(this->root_);
     }
+
+    TrieNode *root() const { return this->root_; }
 
     /** Inserts a word into the trie. */
-    void insert(const string &word)
-    {
+    void insert(const string &word) {
         if (word.empty())
             return;
 
-        TrieNode *pnode = this->root;
-        for (char c : word)
-        {
+        TrieNode *pnode = this->root_;
+        for (char c : word) {
             int idx = c - 'a';
-            if (pnode->childNodes[idx] == nullptr)
-            {
+            if (pnode->childNodes[idx] == nullptr) {
                 pnode->childNodes[idx] = new TrieNode();
             }
             pnode = pnode->childNodes[idx];
@@ -423,17 +382,14 @@ public:
     }
 
     /** Returns if the word is in the trie. */
-    bool search(const string &word)
-    {
+    bool search(const string &word) {
         if (word.empty())
             return true;
 
-        TrieNode *pnode = this->root;
-        for (char c : word)
-        {
+        TrieNode *pnode = this->root_;
+        for (char c : word) {
             int idx = c - 'a';
-            if (pnode->childNodes[idx] == nullptr)
-            {
+            if (pnode->childNodes[idx] == nullptr) {
                 return false;
             }
             pnode = pnode->childNodes[idx];
@@ -441,18 +397,35 @@ public:
         return pnode->isWord;
     }
 
+    /** Find and return the prefix of the word in the trie. */
+    string searchPrefixIn(const string &word) {
+        if (word.empty())
+            return {};
+
+        string res;
+        TrieNode *pnode = this->root_;
+        for (char c : word) {
+            int idx = c - 'a';
+            if (pnode->childNodes[idx] == nullptr)
+                return {};
+
+            pnode = pnode->childNodes[idx];
+            res.push_back(c);
+            if (pnode->isWord)
+                return res;
+        }
+        return {};
+    }
+
     /** Returns if there is any word in the trie that starts with the given prefix. */
-    bool startsWith(const string &prefix)
-    {
+    bool startsWith(const string &prefix) {
         if (prefix.empty())
             return true;
 
-        TrieNode *pnode = this->root;
-        for (char c : prefix)
-        {
+        TrieNode *pnode = this->root_;
+        for (char c : prefix) {
             int idx = c - 'a';
-            if (pnode->childNodes[idx] == nullptr)
-            {
+            if (pnode->childNodes[idx] == nullptr) {
                 return false;
             }
             pnode = pnode->childNodes[idx];
@@ -461,26 +434,10 @@ public:
     }
 
 private:
-    static constexpr int kChildNodeNum = 26;
-    struct TrieNode
-    {
-        bool isWord;
-        TrieNode *childNodes[kChildNodeNum];
+    TrieNode *root_;
 
-        TrieNode() : isWord(false)
-        {
-            for (int i = 0; i < kChildNodeNum; i++)
-            {
-                childNodes[i] = nullptr;
-            }
-        }
-    };
-    TrieNode *root;
-
-    void deleteTrie(TrieNode *pnode)
-    {
-        for (int i = 0; i < kChildNodeNum; i++)
-        {
+    void deleteTrie(TrieNode *pnode) {
+        for (int i = 0; i < 26; i++) {
             if (pnode->childNodes[i] != nullptr)
                 deleteTrie(pnode->childNodes[i]);
         }
@@ -506,27 +463,22 @@ search("b..") -> true
 说明:
 你可以假设所有单词都是由小写字母 a-z 组成的
 */
-class WordDictionary
-{
+class WordDictionary {
 public:
     /** Initialize your data structure here. */
-    WordDictionary()
-    {
+    WordDictionary() {
         this->root = new TrieNode();
     }
 
     /** Adds a word into the data structure. */
-    void addWord(const string &word)
-    {
+    void addWord(const string &word) {
         if (word.empty())
             return;
 
         TrieNode *pnode = this->root;
-        for (char c : word)
-        {
+        for (char c : word) {
             int idx = c - 'a';
-            if (pnode->childNodes[idx] == nullptr)
-            {
+            if (pnode->childNodes[idx] == nullptr) {
                 pnode->childNodes[idx] = new TrieNode();
             }
             pnode = pnode->childNodes[idx];
@@ -535,8 +487,7 @@ public:
     }
 
     /** Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. */
-    bool search(const string &word)
-    {
+    bool search(const string &word) {
         if (word.empty())
             return false;
 
@@ -547,25 +498,20 @@ public:
 
 private:
     static constexpr int kChildNodeNum = 26;
-    struct TrieNode
-    {
+    struct TrieNode {
         bool isWord;
         TrieNode *childNodes[kChildNodeNum];
 
-        TrieNode() : isWord(false)
-        {
-            for (int i = 0; i < kChildNodeNum; i++)
-            {
+        TrieNode() : isWord(false) {
+            for (int i = 0; i < kChildNodeNum; i++) {
                 childNodes[i] = nullptr;
             }
         }
     };
     TrieNode *root;
 
-    void searchRecursively(const string &w, int idx, TrieNode *p, bool &res)
-    {
-        if (idx == w.size() && p->isWord == true)
-        {
+    void searchRecursively(const string &w, int idx, TrieNode *p, bool &res) {
+        if (idx == w.size() && p->isWord == true) {
             res = true;
             return;
         }
@@ -574,20 +520,14 @@ private:
             return;
 
         char c = w[idx];
-        if (c != '.')
-        {
+        if (c != '.') {
             int i = c - 'a';
-            if (p->childNodes[i] != nullptr)
-            {
+            if (p->childNodes[i] != nullptr) {
                 searchRecursively(w, idx + 1, p->childNodes[i], res);
             }
-        }
-        else
-        {
-            for (int i = 0; res != true && i < kChildNodeNum; ++i)
-            {
-                if (p->childNodes[i] != nullptr)
-                {
+        } else {
+            for (int i = 0; res != true && i < kChildNodeNum; ++i) {
+                if (p->childNodes[i] != nullptr) {
                     searchRecursively(w, idx + 1, p->childNodes[i], res);
                 }
             }
@@ -615,11 +555,9 @@ sumRegion(1, 2, 2, 4) -> 12
 会多次调用 sumRegion 方法。
 你可以假设 row1 ≤ row2 且 col1 ≤ col2。
 */
-class NumMatrix
-{
+class NumMatrix {
 public:
-    NumMatrix(const vector<vector<int>> &matrix) : cachedMatrix_(std::move(matrix))
-    {
+    NumMatrix(const vector<vector<int>> &matrix) : cachedMatrix_(std::move(matrix)) {
         int rows = cachedMatrix_.size();
         if (rows < 1)
             return;
@@ -627,10 +565,8 @@ public:
         if (cols < 1)
             return;
 
-        for (int row = 0; row < rows; row++)
-        {
-            for (int col = 0; col < cols; col++)
-            {
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
                 if (row == 0 && col == 0)
                     continue;
                 else if (row == 0)
@@ -643,8 +579,7 @@ public:
         }
     }
 
-    int sumRegion(int row1, int col1, int row2, int col2)
-    {
+    int sumRegion(int row1, int col1, int row2, int col2) {
         if (row1 > 0 && col1 == 0)
             return cachedMatrix_[row2][col2] - cachedMatrix_[row1 - 1][col2];
         else if (row1 == 0 && col1 > 0)
@@ -675,30 +610,24 @@ sumRange(0, 2) -> 8
 
 思路：树状数组
 */
-class NumArray
-{
+class NumArray {
 public:
-    NumArray(const vector<int> &nums) : nums_(nums.size(), 0), treeArray_(nums.size() + 1, 0)
-    {
-        for (int i = 0; i < nums.size(); i++)
-        {
+    NumArray(const vector<int> &nums) : nums_(nums.size(), 0), treeArray_(nums.size() + 1, 0) {
+        for (int i = 0; i < nums.size(); i++) {
             update(i, nums[i]);
         }
     }
 
-    void update(int i, int val)
-    {
+    void update(int i, int val) {
         int diff = val - nums_[i];
         nums_[i] = val;
         ++i;
-        for (; i < treeArray_.size(); i += lowBit(i))
-        {
+        for (; i < treeArray_.size(); i += lowBit(i)) {
             treeArray_[i] += diff;
         }
     }
 
-    int sumRange(int i, int j)
-    {
+    int sumRange(int i, int j) {
         return sum(j) - sum(i - 1);
     }
 
@@ -706,17 +635,14 @@ private:
     vector<int> nums_;
     vector<int> treeArray_;
 
-    int lowBit(int i)
-    {
+    int lowBit(int i) {
         return i & -i;
     }
 
-    int sum(int i)
-    {
+    int sum(int i) {
         int res = 0;
         ++i;
-        for (; i > 0; i -= lowBit(i))
-        {
+        for (; i > 0; i -= lowBit(i)) {
             res += treeArray_[i];
         }
         return res;
@@ -734,22 +660,18 @@ getRandom：随机返回现有集合中的一项。每个元素应该有相同�
 2）vector存储元素，哈希表存储元素到下标的映射
 3）删除时，先找到下标，并和最后一个元素交换，然后删除即可
  */
-class RandomizedSet
-{
+class RandomizedSet {
 public:
     /** Initialize your data structure here. */
-    RandomizedSet()
-    {
+    RandomizedSet() {
         std::srand(std::time(nullptr));
     }
 
     /** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
-    bool insert(int val)
-    {
+    bool insert(int val) {
         if (val_idx_map_.count(val) == 1)
             return false;
-        else
-        {
+        else {
             vals_.push_back(val);
             val_idx_map_[val] = vals_.size() - 1;
             return true;
@@ -757,12 +679,10 @@ public:
     }
 
     /** Removes a value from the set. Returns true if the set contained the specified element. */
-    bool remove(int val)
-    {
+    bool remove(int val) {
         if (val_idx_map_.count(val) == 0)
             return false;
-        else
-        {
+        else {
             int idx = val_idx_map_[val];
             using std::swap;
             swap(vals_[idx], vals_.back());
@@ -774,8 +694,7 @@ public:
     }
 
     /** Get a random element from the set. */
-    int getRandom()
-    {
+    int getRandom() {
         return vals_[std::rand() % vals_.size()];
     }
 
@@ -792,24 +711,20 @@ private:
 
 思路：蓄水池算法抽样(https://www.cnblogs.com/snowInPluto/p/5996269.html)
  */
-class ReservoirSampling
-{
+class ReservoirSampling {
 public:
     /** @param head The linked list's head.
         Note that the head is guaranteed to be not null, so it contains at least one node. */
-    ReservoirSampling(ListNode *head) : head_(head)
-    {
+    ReservoirSampling(ListNode *head) : head_(head) {
         std::srand(std::time(nullptr));
     }
 
     /** Returns a random node's value. */
-    int getRandom()
-    {
+    int getRandom() {
         int res = head_->val;
         int n = 2;
         ListNode *cur = head_->next;
-        while (cur != nullptr)
-        {
+        while (cur != nullptr) {
             if (std::rand() % n == 0)
                 res = cur->val;
             ++n;
@@ -827,29 +742,24 @@ private:
 
 思路：洗牌算法（https://blog.csdn.net/qq_26399665/article/details/79831490）
  */
-class Shuffle
-{
+class Shuffle {
 public:
-    Shuffle(vector<int> &nums) : origin_(nums)
-    {
+    Shuffle(vector<int> &nums) : origin_(nums) {
         std::srand(std::time(nullptr));
     }
 
     /** Resets the array to its original configuration and return it. */
-    vector<int> reset()
-    {
+    vector<int> reset() {
         return origin_;
     }
 
     /** Returns a random shuffling of the array. */
-    vector<int> shuffle()
-    {
+    vector<int> shuffle() {
         vector<int> res = origin_;
 
         // Knuth-Durstenfeld Shuffle
         int length = res.size();
-        for (int i = 0; i < length; i++)
-        {
+        for (int i = 0; i < length; i++) {
             int idx = i + std::rand() % (length - i);
             using std::swap;
             swap(res[i], res[idx]);
@@ -906,13 +816,11 @@ private:
     b.当前是0，选择前缀是1的子节点
     c.通过上面操作，这样最高位尽可能是1
 */
-class FindTwoNumsMaximumXORInArray
-{
+class FindTwoNumsMaximumXORInArray {
 public:
     FindTwoNumsMaximumXORInArray() {}
 
-    int findMaximumXOR(const vector<int> &nums)
-    {
+    int findMaximumXOR(const vector<int> &nums) {
         vector<TrieNode> nodes;
         nodes.push_back(TrieNode({0, 0}));
         for (auto x : nums) // 遍历建树
@@ -921,8 +829,7 @@ public:
             for (int i = 30; i >= 0; --i) // 从高位到低位
             {
                 int t = (x >> i) & 1;
-                if (nodes[p].son[t] == 0)
-                {
+                if (nodes[p].son[t] == 0) {
                     nodes.push_back(TrieNode({0, 0}));
                     nodes[p].son[t] = nodes.size() - 1;
                 }
@@ -931,8 +838,7 @@ public:
         }
 
         int res = 0;
-        for (auto x : nums)
-        {
+        for (auto x : nums) {
             int p = 0, max_xor = 0;
             for (int i = 30; i >= 0; --i) // 从高位到低位
             {
@@ -941,8 +847,7 @@ public:
                 {
                     p = nodes[p].son[!t];
                     max_xor += 1 << i;
-                }
-                else // 否则只能选择相同的前进
+                } else // 否则只能选择相同的前进
                 {
                     p = nodes[p].son[t];
                 }
@@ -953,8 +858,7 @@ public:
         return res;
     }
 
-    int findMaximumXOR2(const vector<int> &nums)
-    {
+    int findMaximumXOR2(const vector<int> &nums) {
         int length = nums.size();
         if (length <= 1)
             return 0;
@@ -962,20 +866,15 @@ public:
             return nums[0] ^ nums[1];
 
         TrieTreeNode *root = new TrieTreeNode{nullptr, nullptr};
-        for (int num : nums)
-        {
+        for (int num : nums) {
             TrieTreeNode *p = root;
-            for (int i = 30; i >= 0; --i)
-            {
+            for (int i = 30; i >= 0; --i) {
                 int digit = (num >> i) & 1;
-                if (digit)
-                {
+                if (digit) {
                     if (p->one == nullptr)
                         p->one = new TrieTreeNode{nullptr, nullptr};
                     p = p->one;
-                }
-                else
-                {
+                } else {
                     if (p->zero == nullptr)
                         p->zero = new TrieTreeNode{nullptr, nullptr};
                     p = p->zero;
@@ -984,31 +883,22 @@ public:
         }
 
         int res = INT_MIN;
-        for (int num : nums)
-        {
+        for (int num : nums) {
             TrieTreeNode *p = root;
             int t = 0;
-            for (int i = 30; i >= 0; --i)
-            {
+            for (int i = 30; i >= 0; --i) {
                 int digit = (num >> i) & 1;
-                if (digit)
-                {
-                    if (p->zero != nullptr)
-                    {
+                if (digit) {
+                    if (p->zero != nullptr) {
                         p = p->zero;
                         t |= (1 << i);
-                    }
-                    else
+                    } else
                         p = p->one;
-                }
-                else
-                {
-                    if (p->one != nullptr)
-                    {
+                } else {
+                    if (p->one != nullptr) {
                         p = p->one;
                         t |= (1 << i);
-                    }
-                    else
+                    } else
                         p = p->zero;
                 }
             }
@@ -1021,18 +911,15 @@ public:
     }
 
 private:
-    struct TrieNode
-    {
+    struct TrieNode {
         int son[2];
     };
-    struct TrieTreeNode
-    {
+    struct TrieTreeNode {
         TrieTreeNode *one;
         TrieTreeNode *zero;
     };
 
-    void destoryTrieTree(TrieTreeNode *root)
-    {
+    void destoryTrieTree(TrieTreeNode *root) {
         if (root == nullptr)
             return;
 
@@ -1068,8 +955,7 @@ private:
 // };
 
 // Definition for a Node.
-class Node
-{
+class Node {
 public:
     int val;
     Node *prev;
@@ -1078,8 +964,7 @@ public:
 
     Node() {}
 
-    Node(int _val, Node *_prev, Node *_next, Node *_child)
-    {
+    Node(int _val, Node *_prev, Node *_next, Node *_child) {
         val = _val;
         prev = _prev;
         next = _next;
@@ -1095,8 +980,7 @@ public:
 编码的字符串应尽可能紧凑。
 注意：不要使用类成员/全局/静态变量来存储状态。 你的序列化和反序列化算法应该是无状态的。
 */
-class Codec
-{
+class Codec {
 public:
     /*
     思路：一般化的二叉树序列化
@@ -1105,8 +989,7 @@ public:
     3）空节点（叶子节点的两个子节点 以及 只有一个子节点的父节点的另一个空节点）用特殊字符表示，比如"$"
     */
     // Encodes a tree to a single string.
-    string serialize(TreeNode *root)
-    {
+    string serialize(TreeNode *root) {
         if (root == nullptr)
             return {};
 
@@ -1115,8 +998,7 @@ public:
         return oss.str();
     }
     // Decodes your encoded data to tree.
-    TreeNode *deserialize(const string &data)
-    {
+    TreeNode *deserialize(const string &data) {
         if (data.empty())
             return nullptr;
 
@@ -1138,8 +1020,7 @@ public:
     4）切分成了两部分，再递归
     */
     // Encodes a tree to a single string.
-    string serialize2(TreeNode *root)
-    {
+    string serialize2(TreeNode *root) {
         if (root == nullptr)
             return {};
 
@@ -1148,18 +1029,15 @@ public:
         return oss.str();
     }
     // Decodes your encoded data to tree.
-    TreeNode *deserialize2(const string &data)
-    {
+    TreeNode *deserialize2(const string &data) {
         if (data.empty())
             return nullptr;
 
         vector<int> vals;
         int now = 0;
-        while (now < data.size())
-        {
+        while (now < data.size()) {
             int val = 0;
-            while (data[now] != '#')
-            {
+            while (data[now] != '#') {
                 val = val * 10 + (data[now] - '0');
                 ++now;
             }
@@ -1171,20 +1049,17 @@ public:
     }
 
 private:
-    void deserializeRecursively(const string &s, int &idx, TreeNode **p)
-    {
+    void deserializeRecursively(const string &s, int &idx, TreeNode **p) {
         if (idx >= s.size())
             return;
 
-        if (s[idx] == '$')
-        {
+        if (s[idx] == '$') {
             idx += 2;
             return;
         }
 
         int val = 0;
-        while (idx < s.size() && s[idx] != ',')
-        {
+        while (idx < s.size() && s[idx] != ',') {
             val = val * 10 + (s[idx] - '0');
             ++idx;
         }
@@ -1194,10 +1069,8 @@ private:
         deserializeRecursively(s, idx, &((*p)->left));
         deserializeRecursively(s, idx, &((*p)->right));
     }
-    void serializeRecursively(TreeNode *p, ostringstream &oss)
-    {
-        if (p == nullptr)
-        {
+    void serializeRecursively(TreeNode *p, ostringstream &oss) {
+        if (p == nullptr) {
             oss << "$,";
             return;
         }
@@ -1207,37 +1080,30 @@ private:
         serializeRecursively(p->right, oss);
     }
 
-    TreeNode *deserializeRecursively2(const vector<int> &vals, int start, int stop)
-    {
+    TreeNode *deserializeRecursively2(const vector<int> &vals, int start, int stop) {
         if (start > stop)
             return nullptr;
 
         TreeNode *root = new TreeNode{vals[start]};
 
         int pos = -1;
-        for (int i = start + 1; i <= stop; i++)
-        {
-            if (vals[i] > (root->val))
-            {
+        for (int i = start + 1; i <= stop; i++) {
+            if (vals[i] > (root->val)) {
                 pos = i;
                 break;
             }
         }
 
-        if (pos != -1)
-        {
+        if (pos != -1) {
             root->left = deserializeRecursively2(vals, start + 1, pos - 1);
             root->right = deserializeRecursively2(vals, pos, stop);
-        }
-        else
-        {
+        } else {
             root->left = deserializeRecursively2(vals, start + 1, stop);
         }
 
         return root;
     }
-    void serializeRecursively2(TreeNode *p, ostringstream &oss)
-    {
+    void serializeRecursively2(TreeNode *p, ostringstream &oss) {
         if (p == nullptr)
             return;
 
@@ -1276,8 +1142,7 @@ randPoint 没有参数。输入参数是一个列表，即使参数为空，也
 1）先生成圆的外接正方形内的点
 2）然后拒绝采样，在圆内的点接受
 */
-class RandomPointInCircle
-{
+class RandomPointInCircle {
 public:
     RandomPointInCircle(double radius, double x_center, double y_center) :
         r_{radius},
@@ -1289,11 +1154,9 @@ public:
     {
     }
 
-    vector<double> randPoint()
-    {
+    vector<double> randPoint() {
         double x, y;
-        do
-        {
+        do {
             x = urd_x_(e_);
             y = urd_y_(e_);
         } while (((x - x_) * (x - x_) + (y - y_) * (y - y_)) > r_ * r_);
@@ -1336,8 +1199,7 @@ pick 最多被调用10000次。
 输入语法的说明：
 输入是两个列表：调用的子例程及其参数。Solution 的构造函数有一个参数，即矩形数组 rects。pick 没有参数。参数总是用列表包装的，即使没有也是如此。
 */
-class PickPointInRectList
-{
+class PickPointInRectList {
 public:
     // 思路：拒绝采样（严重超时）
     // PickPointInRectList(vector<vector<int>> &rects) : rects_(rects),
@@ -1377,20 +1239,17 @@ public:
         c.最后在该矩形中随机选一点
     3）注意一个点的矩形也需要算面积，可令其面积为1
     */
-    PickPointInRectList(vector<vector<int>> &rects) : rects_(rects), e_(random_device{}())
-    {
+    PickPointInRectList(vector<vector<int>> &rects) : rects_(rects), e_(random_device{}()) {
         unsigned long long int sum = 0;
         // 构造矩形面积一维区间
-        for (const auto &rect : rects_)
-        {
+        for (const auto &rect : rects_) {
             // 注意一个点的矩形
             sum += (rect[2] - rect[0] + 1) * (rect[3] - rect[1] + 1);
             areas_.push_back(sum);
         }
     }
 
-    vector<int> pick()
-    {
+    vector<int> pick() {
         // 在区间中随机选一点
         uniform_int_distribution<unsigned long long int> rand_rect(1, areas_.back());
         // 确定是哪个矩形
@@ -1451,8 +1310,7 @@ private:
 Solution 的构造函数有两个参数，分别为 n_rows 和 n_cols。
 flip 和 reset 没有参数，参数总会以列表形式给出，哪怕该列表为空
 */
-class MatrixBitFlip
-{
+class MatrixBitFlip {
     // 思路：将二维坐标一维化，每次从一维坐标中抽一个，然后还原成二维坐标（超时）
     //public:
     //    MatrixBitFlip(int n_rows, int n_cols) :
@@ -1502,15 +1360,12 @@ public:
         len_(rows_ *cols_),
         visited_(),
         e_(random_device{}()),
-        randint_(0, len_ - 1)
-    {
+        randint_(0, len_ - 1) {
     }
 
-    vector<int> flip()
-    {
+    vector<int> flip() {
         int res;
-        do
-        {
+        do {
             res = randint_(e_);
         } while (visited_.count(res));
         visited_.insert(res);
@@ -1518,8 +1373,7 @@ public:
         return {res / cols_, res % cols_};
     }
 
-    void reset()
-    {
+    void reset() {
         visited_.clear();
     }
 private:
@@ -1558,8 +1412,7 @@ pickIndex 没有参数。
 
 思路：轮盘赌算法
 */
-class PickByWeight
-{
+class PickByWeight {
 public:
     PickByWeight(vector<int> &w) : p_(w), e_{random_device{}()}
     {
@@ -1568,8 +1421,7 @@ public:
             p_[i] += p_[i - 1];
     }
 
-    int pickIndex()
-    {
+    int pickIndex() {
         uniform_int_distribution<int> randint(1, p_.back());
         int rd = randint(e_);
         return std::lower_bound(p_.begin(), p_.end(), rd) - p_.begin();
@@ -1579,5 +1431,541 @@ private:
 
     default_random_engine e_;
 };
+
+/*
+622. 设计循环队列
+设计你的循环队列实现。
+循环队列是一种线性数据结构，其操作表现基于 FIFO（先进先出）原则并且队尾被连接在队首之后以形成一个循环。
+它也被称为“环形缓冲器”。
+循环队列的一个好处是我们可以利用这个队列之前用过的空间。
+在一个普通队列里，一旦一个队列满了，我们就不能插入下一个元素，即使在队列前面仍有空间。
+但是使用循环队列，我们能使用这些空间去存储新的值。
+
+你的实现应该支持如下操作：
+MyCircularQueue(k): 构造器，设置队列长度为 k 。
+Front: 从队首获取元素。如果队列为空，返回 -1 。
+Rear: 获取队尾元素。如果队列为空，返回 -1 。
+enQueue(value): 向循环队列插入一个元素。如果成功插入则返回真。
+deQueue(): 从循环队列中删除一个元素。如果成功删除则返回真。
+isEmpty(): 检查循环队列是否为空。
+isFull(): 检查循环队列是否已满。
+ 
+示例：
+MyCircularQueue circularQueue = new MycircularQueue(3); // 设置长度为 3
+circularQueue.enQueue(1);  // 返回 true
+circularQueue.enQueue(2);  // 返回 true
+circularQueue.enQueue(3);  // 返回 true
+circularQueue.enQueue(4);  // 返回 false，队列已满
+circularQueue.Rear();  // 返回 3
+circularQueue.isFull();  // 返回 true
+circularQueue.deQueue();  // 返回 true
+circularQueue.enQueue(4);  // 返回 true
+circularQueue.Rear();  // 返回 4
+
+提示：
+所有的值都在 0 至 1000 的范围内；
+操作数将在 1 至 1000 的范围内；
+请不要使用内置的队列库。
+*/
+class MyCircularQueue {
+public:
+    /** Initialize your data structure here. Set the size of the queue to be k. */
+    MyCircularQueue(int k) : qu_(k), size_(0), front_(0), rear_(0) {
+
+    }
+
+    /** Insert an element into the circular queue. Return true if the operation is successful. */
+    bool enQueue(int value) {
+        if (!isFull()) {
+            qu_[rear_] = value;
+            rear_ = (rear_ + 1) % qu_.size();
+            ++size_;
+            return true;
+        }
+        return false;
+    }
+
+    /** Delete an element from the circular queue. Return true if the operation is successful. */
+    bool deQueue() {
+        if (!isEmpty()) {
+            front_ = (front_ + 1) % qu_.size();
+            --size_;
+            return true;
+        }
+        return false;
+    }
+
+    /** Get the front item from the queue. */
+    int Front() {
+        if (!isEmpty())
+            return qu_[front_];
+        return -1;
+    }
+
+    /** Get the last item from the queue. */
+    int Rear() {
+        if (!isEmpty())
+            return qu_[(rear_ + qu_.size() - 1) % qu_.size()];
+        return -1;
+    }
+
+    /** Checks whether the circular queue is empty or not. */
+    bool isEmpty() {
+        return size_ == 0;
+    }
+
+    /** Checks whether the circular queue is full or not. */
+    bool isFull() {
+        return size_ == qu_.size();
+    }
+
+private:
+    vector<int> qu_; // 线性空间模拟环形空间
+    int size_; // 当前环形空间中元素个数
+    int front_, rear_; // 指向头元素的下标，指向尾元素下一个位置的下标
+};
+
+/*
+641. 设计循环双端队列
+设计实现双端队列。
+你的实现需要支持以下操作：
+MyCircularDeque(k)：构造函数,双端队列的大小为k。
+insertFront()：将一个元素添加到双端队列头部。 如果操作成功返回 true。
+insertLast()：将一个元素添加到双端队列尾部。如果操作成功返回 true。
+deleteFront()：从双端队列头部删除一个元素。 如果操作成功返回 true。
+deleteLast()：从双端队列尾部删除一个元素。如果操作成功返回 true。
+getFront()：从双端队列头部获得一个元素。如果双端队列为空，返回 -1。
+getRear()：获得双端队列的最后一个元素。 如果双端队列为空，返回 -1。
+isEmpty()：检查双端队列是否为空。
+isFull()：检查双端队列是否满了。
+
+示例：
+MyCircularDeque circularDeque = new MycircularDeque(3); // 设置容量大小为3
+circularDeque.insertLast(1);			        // 返回 true
+circularDeque.insertLast(2);			        // 返回 true
+circularDeque.insertFront(3);			        // 返回 true
+circularDeque.insertFront(4);			        // 已经满了，返回 false
+circularDeque.getRear();  				// 返回 2
+circularDeque.isFull();				        // 返回 true
+circularDeque.deleteLast();			        // 返回 true
+circularDeque.insertFront(4);			        // 返回 true
+circularDeque.getFront();				// 返回 4
+
+提示：
+所有值的范围为 [1, 1000]
+操作次数的范围为 [1, 1000]
+请不要使用内置的双端队列库。
+*/
+class MyCircularDeque {
+public:
+    /** Initialize your data structure here. Set the size of the deque to be k. */
+    MyCircularDeque(int k) : qu_(k), size_(0), front_(0), rear_(1 % k) {
+
+    }
+
+    /** Adds an item at the front of Deque. Return true if the operation is successful. */
+    bool insertFront(int value) {
+        if (!isFull()) {
+            qu_[front_] = value;
+            front_ = (front_ + qu_.size() - 1) % qu_.size();
+            ++size_;
+            return true;
+        }
+        return false;
+    }
+
+    /** Adds an item at the rear of Deque. Return true if the operation is successful. */
+    bool insertLast(int value) {
+        if (!isFull()) {
+            qu_[rear_] = value;
+            rear_ = (rear_ + 1) % qu_.size();
+            ++size_;
+            return true;
+        }
+        return false;
+    }
+
+    /** Deletes an item from the front of Deque. Return true if the operation is successful. */
+    bool deleteFront() {
+        if (!isEmpty()) {
+            front_ = (front_ + 1) % qu_.size();
+            --size_;
+            return true;
+        }
+        return false;
+    }
+
+    /** Deletes an item from the rear of Deque. Return true if the operation is successful. */
+    bool deleteLast() {
+        if (!isEmpty()) {
+            rear_ = (rear_ + qu_.size() - 1) % qu_.size();
+            --size_;
+            return true;
+        }
+        return false;
+    }
+
+    /** Get the front item from the deque. */
+    int getFront() {
+        if (!isEmpty())
+            return qu_[(front_ + 1) % qu_.size()];
+        return -1;
+    }
+
+    /** Get the last item from the deque. */
+    int getRear() {
+        if (!isEmpty())
+            return qu_[(rear_ + qu_.size() - 1) % qu_.size()];
+        return -1;
+    }
+
+    /** Checks whether the circular deque is empty or not. */
+    bool isEmpty() {
+        return size_ == 0;
+    }
+
+    /** Checks whether the circular deque is full or not. */
+    bool isFull() {
+        return size_ == qu_.size();
+    }
+private:
+    vector<int> qu_; // 线性空间模拟环形空间
+    int size_; // 当前环形空间中元素个数
+    int front_, rear_; // 指向头元素前一个位置的下标，指向尾元素下一个位置的下标
+};
+
+/*
+676. 实现一个魔法字典
+实现一个带有buildDict, 以及 search方法的魔法字典。
+对于buildDict方法，你将被给定一串不重复的单词来构建一个字典。
+对于search方法，你将被给定一个单词，并且判定能否只将这个单词中一个字母换成另一个字母，使得所形成的新单词存在于你构建的字典中。
+
+示例 1:
+Input: buildDict(["hello", "leetcode"]), Output: Null
+Input: search("hello"), Output: False
+Input: search("hhllo"), Output: True
+Input: search("hell"), Output: False
+Input: search("leetcoded"), Output: False
+
+注意:
+你可以假设所有输入都是小写字母 a-z。
+为了便于竞赛，测试所用的数据量很小。你可以在竞赛结束后，考虑更高效的算法。
+请记住重置MagicDictionary类中声明的类变量，因为静态/类变量会在多个测试用例中保留。 请参阅这里了解更多详情。
+*/
+class MagicDictionary {
+public:
+    /** Initialize your data structure here. */
+    MagicDictionary() {
+
+    }
+
+    /** Build a dictionary through a list of words */
+    void buildDict(const vector<string> &dict) {
+        if (dict.empty())
+            return;
+
+        for (const auto &word : dict)
+            trie_.insert(word);
+    }
+
+    /** Returns if there is any word in the trie that equals to the given word after modifying exactly one character */
+    bool search(string word) {
+        if (word.empty())
+            return false;
+
+        for (int i = 0; i < word.size(); i++) {
+            char c = word[i];
+            for (int j = 0; j < 26; j++) {
+                if (j + 'a' == c)
+                    continue;
+                word[i] = j + 'a';
+                if (trie_.search(word))
+                    return true;
+            }
+            word[i] = c;
+        }
+        return false;
+    }
+
+private:
+    Trie trie_;
+};
+
+/*
+677. 键值映射
+实现一个 MapSum 类里的两个方法，insert 和 sum。
+对于方法 insert，你将得到一对（字符串，整数）的键值对。字符串表示键，整数表示值。如果键已经存在，那么原来的键值对将被替代成新的键值对。
+对于方法 sum，你将得到一个表示前缀的字符串，你需要返回所有以该前缀开头的键的值的总和。
+
+示例 1:
+输入: insert("apple", 3), 输出: Null
+输入: sum("ap"), 输出: 3
+输入: insert("app", 2), 输出: Null
+输入: sum("ap"), 输出: 5
+*/
+class MapSum {
+public:
+    /** Initialize your data structure here. */
+    MapSum() : root_(new TrieNode) {}
+
+    ~MapSum() { this->deleteTrie(this->root_); }
+
+    void insert(const string &key, int val) {
+        if (key.empty())
+            return;
+
+        bool is_inserted = dict_.count(key); // 判断键值是否之前插入过
+        TrieNode *pnode = this->root_;
+        for (char c : key) {
+            // 沿着前缀树根节点向下
+            int idx = c - 'a';
+            if (pnode->childNodes[idx] == nullptr)
+                pnode->childNodes[idx] = new TrieNode();
+
+            if (is_inserted) // 之前插入过，那么沿途的节点需要先减去旧值
+                pnode->val -= dict_[key];
+            pnode->val += val; // 然后再加上新值
+
+            pnode = pnode->childNodes[idx];
+        }
+        pnode->isWord = true;
+        if (is_inserted)
+            pnode->val -= dict_[key];
+        pnode->val += val;
+        dict_[key] = val; // 更新键值
+    }
+
+    int sum(const string &prefix) {
+        if (prefix.empty())
+            return 0;
+
+        auto pnode = this->root_;
+        for (char c : prefix) {
+            int idx = c - 'a';
+            if (pnode->childNodes[idx] == nullptr)
+                return 0;
+            pnode = pnode->childNodes[idx];
+        }
+        return pnode->val;
+    }
+
+private:
+    struct TrieNode {
+        bool isWord; // 是否是单词
+        int val; // 所有以该前缀开头的键的值的总和
+        TrieNode *childNodes[26]; // 子节点
+
+        TrieNode() : isWord(false), val(0), childNodes{nullptr} {}
+    };
+
+    TrieNode *root_; // 前缀树的根节点
+    unordered_map<string, int> dict_; // 保存键值映射
+
+    void deleteTrie(TrieNode *pnode) {
+        for (int i = 0; i < 26; i++) {
+            if (pnode->childNodes[i] != nullptr)
+                deleteTrie(pnode->childNodes[i]);
+        }
+        delete pnode;
+    }
+};
+
+/*
+729. 我的日程安排表 I
+实现一个 MyCalendar 类来存放你的日程安排。如果要添加的时间内没有其他安排，则可以存储这个新的日程安排。
+MyCalendar 有一个 book(int start, int end)方法。
+它意味着在 start 到 end 时间内增加一个日程安排，注意，这里的时间是半开区间，即 [start, end), 实数 x 的范围为，  start <= x < end。
+当两个日程安排有一些时间上的交叉时（例如两个日程安排都在同一时间内），就会产生重复预订。
+每次调用 MyCalendar.book方法时，如果可以将日程安排成功添加到日历中而不会导致重复预订，返回 true。
+否则，返回 false 并且不要将该日程安排添加到日历中。
+请按照以下步骤调用 MyCalendar 类: MyCalendar cal = new MyCalendar(); MyCalendar.book(start, end)
+
+示例 1:
+MyCalendar();
+MyCalendar.book(10, 20); // returns true
+MyCalendar.book(15, 25); // returns false
+MyCalendar.book(20, 30); // returns true
+解释:
+第一个日程安排可以添加到日历中.  第二个日程安排不能添加到日历中，因为时间 15 已经被第一个日程安排预定了。
+第三个日程安排可以添加到日历中，因为第一个日程安排并不包含时间 20 。
+
+说明:
+每个测试用例，调用 MyCalendar.book 函数最多不超过 100次。
+调用函数 MyCalendar.book(start, end)时， start 和 end 的取值范围为 [0, 10^9]。
+*/
+class MyCalendar {
+public:
+    MyCalendar() {}
+
+    bool book(int start, int end) {
+        if (calendar_.empty()) {
+            calendar_.insert({start, end});
+            return true;
+        } else {
+            ScheduleType schedule = {start, end};
+            auto it = calendar_.upper_bound(schedule);
+            if (it == calendar_.end()) {
+                --it;
+                if (it->second <= schedule.first) {
+                    calendar_.insert(it, schedule);
+                    return true;
+                } else
+                    return false;
+            } else {
+                if (it->first >= schedule.second) {
+                    if (it == calendar_.begin()) {
+                        calendar_.insert(schedule);
+                        return true;
+                    } else if ((--it)->second <= schedule.first) {
+                        calendar_.insert(it, schedule);
+                        return true;
+                    } else
+                        return false;
+                } else
+                    return false;
+            }
+        }
+    }
+
+private:
+    using ScheduleType = std::pair<int, int>;
+    struct ScheduleCompare {
+        bool operator()(const ScheduleType &a, const ScheduleType &b) const {
+            return a.second < b.second;
+        }
+    };
+
+    set<ScheduleType, ScheduleCompare> calendar_;
+};
+
+/*
+731. 我的日程安排表 II
+实现一个 MyCalendar 类来存放你的日程安排。如果要添加的时间内不会导致三重预订时，则可以存储这个新的日程安排。
+MyCalendar 有一个 book(int start, int end)方法。
+它意味着在 start 到 end 时间内增加一个日程安排，注意，这里的时间是半开区间，即 [start, end), 实数 x 的范围为，  start <= x < end。
+当三个日程安排有一些时间上的交叉时（例如三个日程安排都在同一时间内），就会产生三重预订。
+每次调用 MyCalendar.book方法时，如果可以将日程安排成功添加到日历中而不会导致三重预订，返回 true。
+否则，返回 false 并且不要将该日程安排添加到日历中。
+请按照以下步骤调用MyCalendar 类: MyCalendar cal = new MyCalendar(); MyCalendar.book(start, end)
+
+示例：
+MyCalendar();
+MyCalendar.book(10, 20); // returns true
+MyCalendar.book(50, 60); // returns true
+MyCalendar.book(10, 40); // returns true
+MyCalendar.book(5, 15); // returns false
+MyCalendar.book(5, 10); // returns true
+MyCalendar.book(25, 55); // returns true
+解释：
+前两个日程安排可以添加至日历中。 第三个日程安排会导致双重预订，但可以添加至日历中。
+第四个日程安排活动（5,15）不能添加至日历中，因为它会导致三重预订。
+第五个日程安排（5,10）可以添加至日历中，因为它未使用已经双重预订的时间10。
+第六个日程安排（25,55）可以添加至日历中，因为时间 [25,40] 将和第三个日程安排双重预订；
+时间 [40,50] 将单独预订，时间 [50,55）将和第二个日程安排双重预订。
+
+提示：
+每个测试用例，调用 MyCalendar.book 函数最多不超过 1000次。
+调用函数 MyCalendar.book(start, end)时， start 和 end 的取值范围为 [0, 10^9]。
+
+思路：线段树
+*/
+class MyCalendarTwo {
+public:
+    MyCalendarTwo() : tree_(nullptr) {}
+
+    bool book(int start, int end) {
+        if (!insertable(tree_, start, end))
+            return false;
+
+        tree_ = insert(tree_, start, end);
+        return true;
+    }
+
+private:
+    struct BSTreeNode {
+        int start, end; // 线段起始，线段终止（不包含）
+        bool overlap; // 是否是重叠线段
+        BSTreeNode *left, *right; // 左子节点，右子节点
+
+        BSTreeNode()
+            : start(0), end(0), overlap(false),
+            left(nullptr), right(nullptr) {
+        }
+
+        BSTreeNode(int s, int e)
+            : start(s), end(e), overlap(false),
+            left(nullptr), right(nullptr) {
+        }
+    };
+
+    BSTreeNode *insert(BSTreeNode *root, int start, int end) {
+        if (start >= end) // 无效线段，直接返回
+            return root;
+        if (root == nullptr) // 空树，直接插入
+            return new BSTreeNode(start, end);
+
+        if (root->start >= end) // 待插入的线段 在 当前线段 左侧
+        {
+            // 插入左侧
+            root->left = insert(root->left, start, end);
+            return root;
+        }
+
+        if (root->end <= start) // 待插入的线段 在 当前线段 右侧
+        {
+            // 插入右侧
+            root->right = insert(root->right, start, end);
+            return root;
+        }
+
+
+        // 待插入线段 与 当前线段 重叠
+        auto min_s = std::min(root->start, start);
+        auto max_s = std::max(root->start, start);
+        auto min_e = std::min(root->end, end);
+        auto max_e = std::max(root->end, end);
+
+        // 当前线段 变成 重叠线段
+        root->start = max_s;
+        root->end = min_e;
+        root->overlap = true;
+
+        // 左侧 未重叠线段 插入 当前线段 左侧
+        root->left = insert(root->left, min_s, max_s);
+        // 右侧 未重叠线段 插入 当前线段 右侧
+        root->right = insert(root->right, min_e, max_e);
+
+        return root;
+    }
+
+    bool insertable(BSTreeNode *root, int start, int end) {
+        // 无效线段 或 空树
+        if (start >= end || root == nullptr)
+            return true;
+
+        // 待插入的线段 在 当前线段 左侧
+        if (root->start >= end)
+            return insertable(root->left, start, end);
+
+        // 待插入的线段 在 当前线段 右侧
+        if (root->end <= start)
+            return insertable(root->right, start, end);
+
+        // 待插入线段 与 当前线段 重叠，并且 当前线段 已是 重叠线段
+        if (root->overlap)
+            return false;
+
+        // 当前线段 不是 重叠线段，并且待插入线段 包含在 当前线段 中
+        if (start >= root->start && end <= root->end)
+            return true;
+
+        // 待插入线段 与 当前线段 部分重叠，递归判断 未重叠部分 是否与 其他线段 重叠
+        return insertable(root->left, start, root->start) && insertable(root->right, root->end, end);
+    }
+
+private:
+    BSTreeNode *tree_;
+};
+
 
 #endif
