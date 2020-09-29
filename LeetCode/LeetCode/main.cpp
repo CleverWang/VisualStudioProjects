@@ -1,48 +1,48 @@
 ﻿#include "headers.h"
 
-/*
-3. 无重复字符的最长子串
-给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。
-
-示例 1:
-输入: "abcabcbb"
-输出: 3
-解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
-
-示例 2:
-输入: "bbbbb"
-输出: 1
-解释: 因为无重复字符的最长子串是 "b"，所以其长度为 1。
-
-示例 3:
-输入: "pwwkew"
-输出: 3
-解释: 因为无重复字符的最长子串是 "wke"，所以其长度为 3。
-     请注意，你的答案必须是 子串 的长度，"pwke" 是一个子序列，不是子串。
-
-思路：滑动窗口法
-*/
-int lengthOfLongestSubstring(const string &s) {
-    int length = s.size();
-    if (length < 2)
-        return length;
-
-    vector<int> chr_cnt(256, 0);
-    int start = 0, stop = 1; // 滑动窗口的开头和结尾
-    ++chr_cnt[s[start]];
-    int res = 1;
-    while (stop < length) {
-        ++chr_cnt[s[stop]];
-        while (chr_cnt[s[stop]] > 1) // 当窗口内的字符出现重复时，右滑开头
-        {
-            --chr_cnt[s[start]];
-            ++start;
-        }
-        res = std::max(res, stop - start + 1);
-        ++stop;
-    }
-    return res;
-}
+///*
+//3. 无重复字符的最长子串
+//给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。
+//
+//示例 1:
+//输入: "abcabcbb"
+//输出: 3
+//解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
+//
+//示例 2:
+//输入: "bbbbb"
+//输出: 1
+//解释: 因为无重复字符的最长子串是 "b"，所以其长度为 1。
+//
+//示例 3:
+//输入: "pwwkew"
+//输出: 3
+//解释: 因为无重复字符的最长子串是 "wke"，所以其长度为 3。
+//     请注意，你的答案必须是 子串 的长度，"pwke" 是一个子序列，不是子串。
+//
+//思路：滑动窗口法
+//*/
+//int lengthOfLongestSubstring(const string &s) {
+//    int length = s.size();
+//    if (length < 2)
+//        return length;
+//
+//    vector<int> chr_cnt(256, 0);
+//    int start = 0, stop = 1; // 滑动窗口的开头和结尾
+//    ++chr_cnt[s[start]];
+//    int res = 1;
+//    while (stop < length) {
+//        ++chr_cnt[s[stop]];
+//        while (chr_cnt[s[stop]] > 1) // 当窗口内的字符出现重复时，右滑开头
+//        {
+//            --chr_cnt[s[start]];
+//            ++start;
+//        }
+//        res = std::max(res, stop - start + 1);
+//        ++stop;
+//    }
+//    return res;
+//}
 
 // // 最长回文子串（动态规划）
 // string longestPalindromeDP(const string &s)
@@ -4210,7 +4210,7 @@ int lengthOfLongestSubstring(const string &s) {
 //         return vector<TreeNode *>({new TreeNode(1)});
 
 //     vector<TreeNode *> res;
-//     res.push_back(new TreeNode(1)); // 初始只有一棵树，并且只有一个节点1
+//     res.push_back(new TreeNode(1)); // 初始只有一棵树，并且只有一个节点      1
 
 //     int pre_length = 0, now_length; // 用于确定上一次的结果区间（res包含了所有的结果，但本次只需要上次的结果）
 //     for (int i = 2; i <= n; i++)    // 每次插入一个新的节点
@@ -20105,8 +20105,1233 @@ int lengthOfLongestSubstring(const string &s) {
 //    }
 //}
 
-int main(int argc, char **argv) {
+///*
+//m*n的办公区，'.'表示有电源，'*'表示无电源，员工需要坐在有电源的办公桌，
+//同时，员工的前后左右不能有其他员工，
+//求办公区最多能容纳多少员工
+//其中1 <= m, n <= 8
+//
+//思路：压缩dp
+//用位图表示一行的员工的分布，bit为1的位置表示有员工坐，否则无
+//那么假设有8列，那么员工的分布的位图有00000000~11111111共256种情况，也就是256种状态
+//*/
+//int GetMaxStaffs(const vector<vector<char>> &pos) {
+//    int rows = pos.size(), cols = pos[0].size();
+//    int total_status_cnt = 1 << cols; // 每一行状态的数量
+//    // dp[r][s]表示r行的第s种状态时，最多的员工数
+//    vector<vector<int>> dp(rows + 1, vector<int>(total_status_cnt));
+//
+//    for (int row = 1; row <= rows; row++) { // 遍历每一行
+//        for (int status = 0; status < total_status_cnt; status++) { // 遍历所有状态
+//            bitset<8> status_bits(status); // 当前状态
+//            bool is_status_ok = true; // 当前状态是否符合要求
+//            // 需要满足有员工的地方有电源，员工的左右没有其他员工
+//            for (int col = 0; col < cols; col++) {
+//                if ((status_bits[col] && pos[row - 1][col] == '*')
+//                    || (col < cols - 1 && status_bits[col] && status_bits[col + 1])) {
+//                    is_status_ok = false;
+//                    break;
+//                }
+//            }
+//            if (!is_status_ok) { // 当前状态不符合要求，置为不合法，跳过
+//                dp[row][status] = -1;
+//                continue;
+//            }
+//            // 当前状态符合要求，遍历上一行的所有状态，进行dp
+//            for (int last_status = 0; last_status < total_status_cnt; last_status++) {
+//                if (dp[row - 1][last_status] == -1) { // 无效的跳过
+//                    continue;
+//                }
+//                bitset<8> last_status_bits(last_status);
+//                bool is_last_status_ok = true; // 上一个状态和本状态是否冲突
+//                // 不冲突的条件：当前员工的前面不能有其他员工
+//                for (int col = 0; col < cols; col++) {
+//                    if (last_status_bits[col] && status_bits[col]) {
+//                        is_last_status_ok = false;
+//                        break;
+//                    }
+//                }
+//                // 上一个状态和本状态不冲突
+//                if (is_last_status_ok) {
+//                    // 状态转移方程
+//                    dp[row][status] = std::max(dp[row][status],
+//                                               dp[row - 1][last_status] + static_cast<int>(status_bits.count()));
+//                }
+//            }
+//        }
+//    }
+//
+//    // 取最后一行最大的结果
+//    int res = 0;
+//    for (int i = 0; i < total_status_cnt; i++) {
+//        if (dp[rows][i] > res) {
+//            res = dp[rows][i];
+//        }
+//    }
+//    return res;
+//}
 
+///*
+//932. 漂亮数组
+//对于某些固定的 N，如果数组 A 是整数 1, 2, ..., N 组成的排列，使得：
+//对于每个 i < j，都不存在 k 满足 i < k < j 使得 A[k] * 2 = A[i] + A[j]。
+//那么数组 A 是漂亮数组。
+//给定 N，返回任意漂亮数组 A（保证存在一个）。
+//
+//示例 1：
+//输入：4
+//输出：[2,1,4,3]
+//
+//示例 2：
+//输入：5
+//输出：[3,1,2,5,4]
+//
+//提示：
+//1 <= N <= 1000
+//
+//思路1：带备忘录的递归
+//*/
+//vector<int> beautifulArrayRecursively(unordered_map<int, vector<int>> &mem, int n) {
+//    if (n == 1)
+//        return {1};
+//
+//    if (mem.count(n))
+//        return mem[n];
+//
+//    vector<int> odds = beautifulArrayRecursively(mem, (n + 1) / 2);
+//    vector<int> evens = beautifulArrayRecursively(mem, n / 2);
+//    vector<int> res;
+//    res.reserve(odds.size() + evens.size());
+//    for (int odd : odds)
+//        res.push_back(2 * odd - 1);
+//    for (int even : evens)
+//        res.push_back(2 * even);
+//    mem[n] = res;
+//    return res;
+//}
+//vector<int> beautifulArray(int N) {
+//    unordered_map<int, vector<int>> mem;
+//    mem[1] = {1};
+//    return beautifulArrayRecursively(mem, N);
+//}
+//// 思路2：直接构造
+//vector<int> beautifulArray2(int N) {
+//    if (N == 1)
+//        return {1};
+//
+//    vector<int> arr = {1};
+//    while (arr.size() <= N) {
+//        for (int &a : arr)
+//            a = a * 2 - 1;
+//        for (int i = 0, length = arr.size(); i < length; i++)
+//            arr.push_back(arr[i] + 1);
+//    }
+//    vector<int> res;
+//    for (int a : arr) {
+//        if (a <= N)
+//            res.push_back(a);
+//    }
+//    return res;
+//}
+
+///************************排序*****************************/
+//template<typename Container, typename Cmp = std::less_equal<typename Container::value_type>>
+//bool is_sorted(const Container &arr, Cmp cmp = std::less_equal<typename Container::value_type>()) {
+//    auto length = arr.size();
+//    if (length <= 1)
+//        return true;
+//
+//    for (size_t i = 0; i < length - 1; i++) {
+//        if (!cmp(arr[i], arr[i + 1]))
+//            return false;
+//    }
+//    return true;
+//}
+//
+///*
+//冒泡排序
+//时间复杂度（平均）   时间复杂度（最坏）   时间复杂度（最好）   空间复杂度   稳定性
+//O(n^2)            O(n^2)           O(n)              O(1)       稳定
+//*/
+//template<typename Container, typename Cmp = std::less<typename Container::value_type>>
+//void bubble_sort(Container &arr, Cmp cmp = std::less<typename Container::value_type>()) {
+//    auto length = arr.size();
+//    if (length <= 1)
+//        return;
+//
+//    for (size_t i = 0; i < length - 1; i++) {
+//        bool is_sorted = true;
+//        for (size_t j = 0; j < length - i - 1; j++) {
+//            if (cmp(arr[j + 1], arr[j])) {
+//                std::swap(arr[j], arr[j + 1]);
+//                is_sorted = false;
+//            }
+//        }
+//        if (is_sorted)
+//            break;
+//    }
+//}
+//
+///*
+//选择排序
+//时间复杂度（平均）   时间复杂度（最坏）   时间复杂度（最好）   空间复杂度   稳定性
+//O(n^2)            O(n^2)           O(n^2)            O(1)       不稳定
+//*/
+//template<typename Container, typename Cmp = std::less<typename Container::value_type>>
+//void select_sort(Container &arr, Cmp cmp = std::less<typename Container::value_type>()) {
+//    auto length = arr.size();
+//    if (length <= 1)
+//        return;
+//
+//    for (size_t i = 0; i < length - 1; i++) {
+//        size_t min_idx = i;
+//        for (size_t j = i + 1; j < length; j++) {
+//            if (cmp(arr[j], arr[min_idx]))
+//                min_idx = j;
+//        }
+//        std::swap(arr[i], arr[min_idx]);
+//    }
+//}
+//
+///*
+//插入排序
+//时间复杂度（平均）   时间复杂度（最坏）   时间复杂度（最好）   空间复杂度   稳定性
+//O(n^2)            O(n^2)           O(n)              O(1)       稳定
+//*/
+//template<typename Container, typename Cmp = std::less<typename Container::value_type>>
+//void insert_sort(Container &arr, Cmp cmp = std::less<typename Container::value_type>()) {
+//    auto length = arr.size();
+//    if (length <= 1)
+//        return;
+//
+//    for (size_t i = 0; i < length - 1; i++) {
+//        auto pre_idx = i;
+//        typename Container::value_type val = arr[i + 1];
+//        bool stop_at_first = false;
+//        while (pre_idx >= 0 && cmp(val, arr[pre_idx])) {
+//            arr[pre_idx + 1] = arr[pre_idx];
+//            if (pre_idx == 0) {
+//                arr[0] = val;
+//                stop_at_first = true;
+//                break;
+//            }
+//            --pre_idx;
+//        }
+//        if (!stop_at_first && pre_idx != i)
+//            arr[pre_idx + 1] = val;
+//    }
+//}
+//
+///*
+//shell排序
+//时间复杂度（平均）   时间复杂度（最坏）   时间复杂度（最好）   空间复杂度   稳定性
+//O(n^1.3)          O(n^2)           O(n)              O(1)       不稳定
+//*/
+//template<typename Container, typename Cmp = std::less<typename Container::value_type>>
+//void shell_sort(Container &arr, Cmp cmp = std::less<typename Container::value_type>()) {
+//    auto length = arr.size();
+//    if (length <= 1)
+//        return;
+//
+//    size_t gap = 1;
+//    while (gap < length / 3) // 改进版，动态间隔
+//        gap = gap * 3 + 1;
+//
+//    // for (size_t gap = length / 2; gap > 0; gap /= 2) { // 原始的shell排序所定义的间隔
+//    for (; gap > 0; gap /= 3) {
+//        for (size_t i = gap; i < length; i++) {
+//            typename Container::value_type val = arr[i];
+//            auto pre_idx = i - gap;
+//            bool stop_at_first = false;
+//            while (pre_idx >= 0 && cmp(val, arr[pre_idx])) {
+//                arr[pre_idx + gap] = arr[pre_idx];
+//                if (pre_idx == 0 || pre_idx < gap) {
+//                    arr[pre_idx] = val;
+//                    stop_at_first = true;
+//                    break;
+//                }
+//                pre_idx -= gap;
+//            }
+//            if (!stop_at_first && pre_idx != i - gap)
+//                arr[pre_idx + gap] = val;
+//        }
+//    }
+//}
+//
+///*
+//归并排序
+//时间复杂度（平均）   时间复杂度（最坏）   时间复杂度（最好）   空间复杂度   稳定性
+//O(nlogn)          O(nlogn)         O(nlogn)          n          稳定
+//*/
+//template<typename Container, typename Cmp>
+//void do_merge(Container &arr, size_t start, size_t middle, size_t stop, Cmp cmp) {
+//    static vector<typename Container::value_type> tmp(arr.size());
+//    tmp.clear();
+//    size_t i = start, j = middle + 1;
+//    while (i <= middle && j <= stop) {
+//        if (cmp(arr[i], arr[j])) {
+//            tmp.push_back(arr[i]);
+//            i++;
+//        } else {
+//            tmp.push_back(arr[j]);
+//            j++;
+//        }
+//    }
+//    while (j <= stop) {
+//        tmp.push_back(arr[j]);
+//        j++;
+//    }
+//    while (i <= middle) {
+//        tmp.push_back(arr[i]);
+//        i++;
+//    }
+//    size_t tmp_idx = 0, arr_idx = start;
+//    while (arr_idx <= stop) {
+//        arr[arr_idx++] = tmp[tmp_idx++];
+//    }
+//}
+//template<typename Container, typename Cmp>
+//void do_merge_sort(Container &arr, size_t start, size_t stop, Cmp cmp) {
+//    if (start >= stop)
+//        return;
+//
+//    size_t middle = start + (stop - start) / 2;
+//    do_merge_sort(arr, start, middle, cmp);
+//    do_merge_sort(arr, middle + 1, stop, cmp);
+//    do_merge(arr, start, middle, stop, cmp);
+//}
+//template<typename Container, typename Cmp = std::less<typename Container::value_type>>
+//void merge_sort(Container &arr, Cmp cmp = std::less<typename Container::value_type>()) {
+//    auto length = arr.size();
+//    if (length <= 1)
+//        return;
+//
+//    do_merge_sort(arr, 0, length - 1, cmp);
+//}
+//
+///*
+//快速排序
+//时间复杂度（平均）   时间复杂度（最坏）   时间复杂度（最好）   空间复杂度   稳定性
+//O(nlogn)          O(n^2)           O(nlogn)          O(logn)    不稳定
+//*/
+//template<typename Container, typename Cmp>
+//size_t do_partition(Container &arr, size_t start, size_t stop, Cmp cmp) {
+//    typename Container::value_type pivot_val = arr[start];
+//    auto i = start, j = stop;
+//    while (i < j) {
+//        while (i < j && !cmp(arr[j], pivot_val))
+//            j--;
+//        arr[i] = arr[j];
+//        while (i < j && cmp(arr[i], pivot_val))
+//            i++;
+//        arr[j] = arr[i];
+//    }
+//    arr[i] = pivot_val;
+//    return i;
+//}
+//template<typename Container, typename Cmp>
+//void do_quick_sort(Container &arr, size_t start, size_t stop, Cmp cmp) {
+//    if (start >= stop)
+//        return;
+//
+//    size_t pivot = do_partition(arr, start, stop, cmp);
+//    if (pivot > start)
+//        do_quick_sort(arr, start, pivot - 1, cmp);
+//    if (pivot < stop)
+//        do_quick_sort(arr, pivot + 1, stop, cmp);
+//}
+//template<typename Container, typename Cmp = std::less<typename Container::value_type>>
+//void quick_sort(Container &arr, Cmp cmp = std::less<typename Container::value_type>()) {
+//    auto length = arr.size();
+//    if (length <= 1)
+//        return;
+//
+//    do_quick_sort(arr, 0, length - 1, cmp);
+//}
+//
+///*
+//堆排序
+//时间复杂度（平均）   时间复杂度（最坏）   时间复杂度（最好）   空间复杂度   稳定性
+//O(nlogn)          O(nlogn)         O(nlogn)          O(1)       不稳定
+//*/
+//template<typename Container, typename Cmp = std::less<typename Container::value_type>>
+//void heap_sort(Container &arr, Cmp cmp = std::less<typename Container::value_type>()) {
+//    auto length = arr.size();
+//    if (length <= 1)
+//        return;
+//
+//    std::make_heap(arr.begin(), arr.end(), cmp);
+//    std::sort_heap(arr.begin(), arr.end(), cmp);
+//}
+///************************排序*****************************/
+
+///*
+//887. 鸡蛋掉落
+//你将获得 K 个鸡蛋，并可以使用一栋从 1 到 N  共有 N 层楼的建筑。
+//每个蛋的功能都是一样的，如果一个蛋碎了，你就不能再把它掉下去。
+//你知道存在楼层 F ，满足 0 <= F <= N 任何从高于 F 的楼层落下的鸡蛋都会碎，从 F 楼层或比它低的楼层落下的鸡蛋都不会破。
+//每次移动，你可以取一个鸡蛋（如果你有完整的鸡蛋）并把它从任一楼层 X 扔下（满足 1 <= X <= N）。
+//你的目标是确切地知道 F 的值是多少。
+//无论 F 的初始值如何，你确定 F 的值的最小移动次数是多少？
+//
+//示例 1：
+//输入：K = 1, N = 2
+//输出：2
+//解释：
+//鸡蛋从 1 楼掉落。如果它碎了，我们肯定知道 F = 0 。
+//否则，鸡蛋从 2 楼掉落。如果它碎了，我们肯定知道 F = 1 。
+//如果它没碎，那么我们肯定知道 F = 2 。
+//因此，在最坏的情况下我们需要移动 2 次以确定 F 是多少。
+//
+//示例 2：
+//输入：K = 2, N = 6
+//输出：3
+//
+//示例 3：
+//输入：K = 3, N = 14
+//输出：4
+//
+//提示：
+//1 <= K <= 100
+//1 <= N <= 10000
+//*/
+//int superEggDrop(int K, int N) {
+//    if (K == 1)
+//        return N;
+//    if (N == 1)
+//        return 1;
+//
+//    vector<vector<int>> dp(K + 1, vector<int>(N + 1));
+//    for (int i = 0; i <= N; i++) {
+//        dp[1][i] = i;
+//    }
+//
+//    for (int i = 2; i <= K; i++) {
+//        for (int j = 1; j <= N; j++) {
+//            int res = std::numeric_limits<int>::max();
+//            //for (int k = 1; k <= j; k++) {
+//            //    res = std::min(res, std::max(dp[i][j - k], dp[i - 1][k - 1]) + 1);
+//            //}
+//
+//            int l = 1, r = j, mid;
+//            while (l <= r) {
+//                mid = l + (r - l) / 2;
+//                if (dp[i - 1][mid - 1] == dp[i][j - mid]) {
+//                    res = std::min(res, dp[i - 1][mid - 1] + 1);
+//                    break;
+//                } else if (dp[i - 1][mid - 1] > dp[i][j - mid]) {
+//                    r = mid - 1;
+//                    res = std::min(res, dp[i - 1][mid - 1] + 1);
+//                } else {
+//                    l = mid + 1;
+//                    res = std::min(res, dp[i][j - mid] + 1);
+//                }
+//            }
+//
+//            dp[i][j] = res;
+//        }
+//    }
+//
+//    return dp[K][N];
+//}
+//
+///*
+//851. 喧闹和富有
+//在一组 N 个人（编号为 0, 1, 2, ..., N-1）中，每个人都有不同数目的钱，以及不同程度的安静（quietness）。
+//为了方便起见，我们将编号为 x 的人简称为 "person x "。
+//如果能够肯定 person x 比 person y 更有钱的话，我们会说 richer[i] = [x, y] 。注意 richer 可能只是有效观察的一个子集。
+//另外，如果 person x 的安静程度为 q ，我们会说 quiet[x] = q 。
+//现在，返回答案 answer ，其中 answer[x] = y 的前提是，在所有拥有的钱不少于 person x 的人中，person y 是最安静的人（也就是安静值 quiet[y] 最小的人）。
+//
+//示例：
+//输入：richer = [[1,0],[2,1],[3,1],[3,7],[4,3],[5,3],[6,3]], quiet = [3,2,5,4,6,1,7,0]
+//输出：[5,5,2,5,4,5,6,7]
+//解释：
+//answer[0] = 5，
+//person 5 比 person 3 有更多的钱，person 3 比 person 1 有更多的钱，person 1 比 person 0 有更多的钱。
+//唯一较为安静（有较低的安静值 quiet[x]）的人是 person 7，
+//但是目前还不清楚他是否比 person 0 更有钱。
+//answer[7] = 7，
+//在所有拥有的钱肯定不少于 person 7 的人中(这可能包括 person 3，4，5，6 以及 7)，
+//最安静(有较低安静值 quiet[x])的人是 person 7。
+//其他的答案也可以用类似的推理来解释。
+//
+//提示：
+//1 <= quiet.length = N <= 500
+//0 <= quiet[i] < N，所有 quiet[i] 都不相同。
+//0 <= richer.length <= N * (N-1) / 2
+//0 <= richer[i][j] < N
+//richer[i][0] != richer[i][1]
+//richer[i] 都是不同的。
+//对 richer 的观察在逻辑上是一致的。
+//*/
+//int loudAndRichRecursively(const vector<vector<int>> &rich, const vector<int> &quiet, int cur, vector<int> &res) {
+//    if (res[cur] != -1)
+//        return res[cur];
+//
+//    if (rich[cur].empty())
+//        return cur;
+//
+//    int ret = cur;
+//    for (int r : rich[cur]) {
+//        int idx = loudAndRichRecursively(rich, quiet, r, res);
+//        if (quiet[ret] > quiet[idx]) {
+//            ret = idx;
+//        }
+//    }
+//    res[cur] = ret;
+//    return ret;
+//}
+//vector<int> loudAndRich(const vector<vector<int>> &richer, const vector<int> &quiet) {
+//    int N = quiet.size();
+//    if (N == 1)
+//        return {0};
+//
+//    vector<vector<int>> rich(N);
+//    for (const auto &r : richer) {
+//        rich[r[1]].push_back(r[0]);
+//    }
+//
+//    vector<int> res(N, -1);
+//    for (int i = 0; i < N; i++) {
+//        if (res[i] == -1) {
+//            res[i] = loudAndRichRecursively(rich, quiet, i, res);
+//        }
+//    }
+//
+//    return res;
+//}
+
+///*
+//7. 整数反转
+//给出一个 32 位的有符号整数，你需要将这个整数中每位上的数字进行反转。
+//
+//示例 1:
+//输入: 123
+//输出: 321
+//
+//示例 2:
+//输入: -123
+//输出: -321
+//
+//示例 3:
+//输入: 120
+//输出: 21
+//
+//注意:
+//假设我们的环境只能存储得下 32 位的有符号整数，则其数值范围为 [−2^31,  2^31 − 1]。请根据这个假设，如果反转后整数溢出那么就返回 0。
+//*/
+//int reverse(int x) {
+//    long long res = 0;
+//    while (x != 0) {
+//        res = res * 10 + x % 10;
+//        x /= 10;
+//    }
+//
+//    return res < INT_MIN || res > INT_MAX ? 0 : res;
+//}
+
+//// 原地翻转链表
+//void reverse_link_list(ListNode *head) {
+//    if (head == nullptr || head->next == nullptr)
+//        return;
+//
+//    ListNode *pre = head, *cur = head->next;
+//    while (cur != nullptr) {
+//        ListNode *t = cur->next;
+//        cur->next = pre;
+//        pre = cur;
+//        cur = t;
+//    }
+//
+//    ListNode *last_second_node = head->next;
+//    std::swap(*head, *pre);
+//    last_second_node->next = pre;
+//    pre->next = nullptr;
+//}
+
+///*
+//166. 分数到小数
+//给定两个整数，分别表示分数的分子 numerator 和分母 denominator，以字符串形式返回小数。
+//如果小数部分为循环小数，则将循环的部分括在括号内。
+//
+//示例 1:
+//输入: numerator = 1, denominator = 2
+//输出: "0.5"
+//
+//示例 2:
+//输入: numerator = 2, denominator = 1
+//输出: "2"
+//
+//示例 3:
+//输入: numerator = 2, denominator = 3
+//输出: "0.(6)"
+//*/
+//string fractionToDecimal(int numerator, int denominator) {
+//    if (numerator == 0)
+//        return "0";
+//
+//    // 符号位
+//    string res = (numerator < 0 && denominator > 0 || numerator > 0 && denominator < 0) ? "-" : "";
+//
+//    // 分子分母转正数，同时为防止溢出，转long
+//    long up = std::abs(numerator);
+//    long down = std::abs(denominator);
+//
+//    // 求得整数部分
+//    long int_part = up / down;
+//    res.append(std::to_string(int_part));
+//
+//    // 能够整除
+//    long leftover = up % down;
+//    if (leftover == 0)
+//        return res;
+//
+//    // 不能整除，添加小数点
+//    res.push_back('.');
+//
+//    // 求得小数部分
+//    vector<char> decimals;
+//    unordered_map<long, int> leftover2idx;
+//    int idx = 0, loop_start_idx = -1;
+//    while (leftover > 0) {
+//        leftover *= 10;
+//        // 相同余数再次出现，记录第一次出现的位置为循环小数位置
+//        if (leftover2idx.count(leftover)) {
+//            loop_start_idx = leftover2idx[leftover];
+//            break;
+//        }
+//
+//        leftover2idx[leftover] = idx++;
+//        decimals.push_back(leftover / down + '0');
+//        leftover %= down;
+//    }
+//    string decimal_part;
+//    for (int i = 0; i < decimals.size(); i++) {
+//        // 在循环小数位置前添加括号
+//        if (i == loop_start_idx)
+//            decimal_part.push_back('(');
+//        decimal_part.push_back(decimals[i]);
+//    }
+//    if (loop_start_idx != -1)
+//        decimal_part.push_back(')');
+//
+//    return std::move(res) + std::move(decimal_part);
+//}
+
+///*
+//179. 最大数
+//给定一组非负整数，重新排列它们的顺序使之组成一个最大的整数。
+//
+//示例 1:
+//输入: [10,2]
+//输出: 210
+//
+//示例 2:
+//输入: [3,30,34,5,9]
+//输出: 9534330
+//说明: 输出结果可能非常大，所以你需要返回一个字符串而不是整数。
+//*/
+//string largestNumber(const vector<int> &nums) {
+//    if (nums.empty())
+//        return "";
+//
+//    vector<string> strs;
+//    strs.reserve(nums.size());
+//    bool is_all_zero = true;
+//    for (int num : nums) {
+//        if (num != 0) {
+//            is_all_zero = false;
+//        }
+//
+//        strs.push_back(std::to_string(num));
+//    }
+//    if (is_all_zero) {
+//        return "0";
+//    }
+//
+//    using Iter = vector<string>::iterator;
+//    vector<Iter> iters;
+//    iters.reserve(strs.size());
+//    for (auto it = strs.begin(); it != strs.end(); ++it) {
+//        iters.push_back(it);
+//    }
+//
+//    std::sort(iters.begin(), iters.end(), [](Iter a, Iter b) {
+//        return *a + *b > *b + *a;
+//    });
+//
+//    string res;
+//    for (Iter it : iters) {
+//        res.append(*it);
+//    }
+//
+//    return res;
+//}
+
+///*
+//400. 第N个数字
+//在无限的整数序列 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ...中找到第 n 个数字。
+//注意:
+//n 是正数且在32位整数范围内 ( n < 231)。
+//
+//示例 1:
+//输入:
+//3
+//输出:
+//3
+//
+//示例 2:
+//输入:
+//11
+//输出:
+//0
+//说明:
+//第11个数字在序列 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ... 里是0，它是10的一部分。
+//*/
+//int findNthDigit(int n) {
+//    if (n < 10) {
+//        return n;
+//    }
+//
+//    int digit_cnt = 1;
+//    int factor = 1;
+//    long long cnt = 0;
+//    while (cnt + 9ll * factor * digit_cnt < n) {
+//        cnt += 9ll * factor * digit_cnt;
+//        factor *= 10;
+//        ++digit_cnt;
+//    }
+//
+//    int num = factor + (n - cnt - 1) / digit_cnt;
+//    int idx = (n - cnt - 1) % digit_cnt;
+//    return std::to_string(num)[idx] - '0';
+//}
+
+/*
+437. 路径总和 III
+给定一个二叉树，它的每个结点都存放着一个整数值。
+找出路径和等于给定数值的路径总数。
+路径不需要从根节点开始，也不需要在叶子节点结束，但是路径方向必须是向下的（只能从父节点到子节点）。
+二叉树不超过1000个节点，且节点数值范围是 [-1000000,1000000] 的整数。
+
+示例：
+root = [10,5,-3,3,2,null,11,3,-2,null,1], sum = 8
+      10
+     /  \
+    5   -3
+   / \    \
+  3   2   11
+ / \   \
+3  -2   1
+返回 3。和等于 8 的路径有:
+1.  5 -> 3
+2.  5 -> 2 -> 1
+3.  -3 -> 11
+*/
+// 双重DFS：第一重，获得子树的根节点；第二重，遍历子树获得路径
+//void getPathSumRecursively(TreeNode *p, int sum, int &res) {
+//    if (p == nullptr)
+//        return;
+//
+//    sum -= p->val;
+//    if (sum == 0)
+//        ++res;
+//
+//    getPathSumRecursively(p->left, sum, res);
+//    getPathSumRecursively(p->right, sum, res);
+//}
+//void pathSumRecursively(TreeNode *p, int sum, int &res) {
+//    if (p == nullptr)
+//        return;
+//
+//    getPathSumRecursively(p, sum, res);
+//    pathSumRecursively(p->left, sum, res);
+//    pathSumRecursively(p->right, sum, res);
+//}
+//int pathSum(TreeNode *root, int sum) {
+//    if (root == nullptr)
+//        return 0;
+//
+//    int res = 0;
+//    pathSumRecursively(root, sum, res);
+//    return res;
+//}
+///*
+//前缀和的思想
+//前缀和：根节点到当前节点的和。如果两个不同节点的前缀和相同，意味着这两个节点之间的路径和为0
+//同理，如果两个节点之间相差diff，那么两个节点之间的路径和为diff
+//*/
+//void pathSumRecursively(TreeNode *p, const int sum, unordered_map<int, int> &presum2cnt, int presum, int &res) {
+//    if (p == nullptr)
+//        return;
+//
+//    presum += p->val; // 计算前缀和
+//    if (presum2cnt.count(presum - sum)) // 如果当前节点和之前的节点相差sum，那么这两个节点之间的路径和为sum
+//        res += presum2cnt[presum - sum]; // 和当前节点相差sum的节点有多少个，那么就有这么多条路径
+//
+//    ++presum2cnt[presum]; // 前缀和为当前值的节点个数+1
+//    pathSumRecursively(p->left, sum, presum2cnt, presum, res);
+//    pathSumRecursively(p->right, sum, presum2cnt, presum, res);
+//    --presum2cnt[presum]; // 回溯思想
+//}
+//int pathSum(TreeNode *root, int sum) {
+//    if (root == nullptr)
+//        return 0;
+//
+//    int res = 0;
+//    unordered_map<int, int> presum2cnt;
+//    presum2cnt[0] = 1;
+//    pathSumRecursively(root, sum, presum2cnt, 0, res);
+//    return res;
+//}
+
+/*
+438. 找到字符串中所有字母异位词
+给定一个字符串 s 和一个非空字符串 p，找到 s 中所有是 p 的字母异位词的子串，返回这些子串的起始索引。
+字符串只包含小写英文字母，并且字符串 s 和 p 的长度都不超过 20100。
+
+说明：
+字母异位词指字母相同，但排列不同的字符串。
+不考虑答案输出的顺序。
+
+示例 1:
+输入:
+s: "cbaebabacd" p: "abc"
+输出:
+[0, 6]
+解释:
+起始索引等于 0 的子串是 "cba", 它是 "abc" 的字母异位词。
+起始索引等于 6 的子串是 "bac", 它是 "abc" 的字母异位词。
+
+示例 2:
+输入:
+s: "abab" p: "ab"
+输出:
+[0, 1, 2]
+解释:
+起始索引等于 0 的子串是 "ab", 它是 "ab" 的字母异位词。
+起始索引等于 1 的子串是 "ba", 它是 "ab" 的字母异位词。
+起始索引等于 2 的子串是 "ab", 它是 "ab" 的字母异位词。
+*/
+//vector<int> findAnagrams(const string &s, const string &p) {
+//    if (p.empty())
+//        return {};
+//    if (p.size() > s.size())
+//        return {};
+//
+//    unordered_map<char, int> need;
+//    for (char c : p) {
+//        ++need[c];
+//    }
+//
+//    unordered_map<char, int> window;
+//    int left = 0, right = 0;
+//    int valid = 0;
+//    vector<int> res;
+//    while (right < s.size()) {
+//        char c = s[right];
+//        ++right;
+//        if (need.count(c)) {
+//            ++window[c];
+//            if (window[c] == need[c]) {
+//                ++valid;
+//            }
+//        }
+//
+//        while (right - left >= p.size()) {
+//            if (valid == need.size()) {
+//                res.push_back(left);
+//            }
+//
+//            c = s[left];
+//            ++left;
+//            if (need.count(c)) {
+//                if (window[c] == need[c]) {
+//                    --valid;
+//                }
+//
+//                --window[c];
+//            }
+//        }
+//    }
+//
+//    return res;
+//}
+//vector<int> findAnagrams(const string &s, const string &p) {
+//    if (p.empty())
+//        return {};
+//    if (p.size() > s.size())
+//        return {};
+//
+//    int need[256] = {0};
+//    for (char c : p) {
+//        ++need[c];
+//    }
+//    int target = 0;
+//    for (int i = 0; i < 256; i++) {
+//        if (need[i] != 0) {
+//            ++target;
+//        }
+//    }
+//
+//    int window[256] = {0};
+//    int left = 0, right = 0;
+//    int valid = 0;
+//    vector<int> res;
+//    while (right < s.size()) {
+//        char c = s[right];
+//        ++right;
+//        if (need[c] > 0) {
+//            ++window[c];
+//            if (window[c] == need[c]) {
+//                ++valid;
+//            }
+//        }
+//
+//        while (right - left >= p.size()) {
+//            if (valid == target) {
+//                res.push_back(left);
+//            }
+//
+//            c = s[left];
+//            ++left;
+//            if (need[c] > 0) {
+//                if (window[c] == need[c]) {
+//                    --valid;
+//                }
+//
+//                --window[c];
+//            }
+//        }
+//    }
+//
+//    return res;
+//}
+
+int main(int argc, char **argv) {
+    //std::cout << "sizeof(std::string): " << sizeof(std::string) << '\n';
+    //std::cout << "sizeof(std::pmr::string): " << sizeof(std::pmr::string) << '\n';
+
+    //char buffer[256] = {}; // a small buffer on the stack
+    //std::fill_n(std::begin(buffer), std::size(buffer) - 1, '_');
+
+    //const auto BufferPrinter = [](std::string_view buf, std::string_view title) {
+    //    std::cout << title << ":\n";
+    //    for (auto &ch : buf) {
+    //        std::cout << (ch >= ' ' ? ch : '#');
+    //    }
+    //    std::cout << '\n';
+    //};
+
+    //BufferPrinter(buffer, "zeroed buffer");
+
+    //std::pmr::monotonic_buffer_resource pool{std::data(buffer), std::size(buffer)};
+    //std::pmr::vector<std::pmr::string> vec{&pool};
+    //vec.reserve(5);
+
+    //vec.push_back("Hello World");
+    //vec.push_back("One Two Three");
+    //BufferPrinter(std::string_view(buffer, std::size(buffer)), "after two short strings");
+
+    //vec.emplace_back("This is a longer string");
+    //BufferPrinter(std::string_view(buffer, std::size(buffer)), "after longer string strings");
+
+    //vec.push_back("Four Five Six");
+    //BufferPrinter(std::string_view(buffer, std::size(buffer)), "after the last string");
+
+    //char buffer[64] = {}; // a small buffer on the stack
+    //std::fill_n(std::begin(buffer), std::size(buffer) - 1, '_');
+    //std::cout << buffer << '\n';
+
+    //std::pmr::monotonic_buffer_resource pool{std::data(buffer), std::size(buffer)};
+
+    //std::pmr::vector<char> vec{&pool};
+    //for (char ch = 'a'; ch <= 'z'; ++ch)
+    //    vec.push_back(ch);
+
+    //std::cout << buffer << '\n';
+
+    //printContainer(findAnagrams("cbaebabacd", "abc"));
+    //printContainer(findAnagrams("abab", "ab"));
+
+    //assert(findNthDigit(10) == 1);
+    //assert(findNthDigit(11) == 0);
+    //assert(findNthDigit(12) == 1);
+    //assert(findNthDigit(13) == 1);
+    //assert(findNthDigit(14) == 1);
+    //assert(findNthDigit(15) == 2);
+    //assert(findNthDigit(1000) == 3);
+    //assert(findNthDigit(1000000000) == 1);
+
+    //cout << largestNumber({10,2}) << endl;
+    //cout << largestNumber({3,30,34,5,9}) << endl;
+    //cout << largestNumber({0,0,0,0}) << endl;
+    //cout << largestNumber({824,938,1399,5607,6973,5703,9609,4398,8247}) << endl;
+
+    //cout << fractionToDecimal(1, 2) << "\n";
+    //cout << fractionToDecimal(2, 1) << "\n";
+    //cout << fractionToDecimal(2, 3) << "\n";
+    //cout << fractionToDecimal(7, -12) << "\n";
+
+    //ListNode *head = new ListNode(0);
+    //head->next = new ListNode(1);
+    //head->next->next = new ListNode(2);
+    //head->next->next->next = new ListNode(3);
+
+    //auto print_link_list = [](ListNode *head) {
+    //    ListNode *p = head;
+    //    while (p != nullptr) {
+    //        cout << p->val << " ";
+    //        p = p->next;
+    //    }
+    //};
+
+    //print_link_list(head);
+    //cout << "\n";
+    //reverse_link_list(head);
+    //print_link_list(head);
+
+    //cout << reverse(123) << endl;
+    //cout << reverse(-123) << endl;
+    //cout << reverse(120) << endl;
+    //cout << reverse(INT_MIN) << endl;
+
+    //auto f = [] (int a, int b) -> bool {
+    //    return a < b;
+    //};
+    //cout << std::boolalpha << f(1, 2) << endl;
+
+    //vector<vector<int>> richer = {{1, 0}, {2, 1}, {3, 1}, {3, 7}, {4, 3}, {5, 3}, {6, 3}};
+    //vector<int> quiet = {3,2,5,4,6,1,7,0};
+    //printContainer(loudAndRich(richer, quiet));
+
+    //cout << superEggDrop(1, 2) << endl;
+    //cout << superEggDrop(2, 6) << endl;
+    //cout << superEggDrop(3, 14) << endl;
+
+    //int a[10] = {0};
+    //int a1[10] = {-1};
+    //for (int i : a)
+    //    cout << i << " ";
+    //cout << "\n";
+    //for (int i : a1)
+    //    cout << i << " ";
+
+
+    //char s[] = "Hello World!";
+    //char *p = s;
+    //printf("%p: %c\n", reinterpret_cast<void *>(p), *p);
+    //printf("%p: %c\n", reinterpret_cast<void *>(++p), *p);
+
+
+    //int cnt = 1024;
+    //RandInt<int> randint(0, cnt);
+    //vector<int> arr_origin;
+    //arr_origin.reserve(cnt);
+    //for (size_t i = 0; i < cnt; i++)
+    //    arr_origin.push_back(randint());
+    ////printContainer(arr);
+    //RandReal<float> randreal(0, nextafter(cnt, std::numeric_limits<float>::max()));
+    //vector<float> arr2_origin;
+    //arr2_origin.reserve(cnt);
+    //for (size_t i = 0; i < cnt; i++)
+    //    arr2_origin.push_back(randreal());
+    ////printContainer(arr2);
+
+    ////cout << endl;
+    //auto start_time = steady_clock::now(), stop_time = start_time;
+
+    //vector<int> arr_sorted;
+    //vector<float> arr2_sorted;
+    //cout << "std::sort排序" << endl;
+    //arr_sorted = arr_origin;
+    //arr2_sorted = arr2_origin;
+    //start_time = steady_clock::now();
+    //std::sort(arr_sorted.begin(), arr_sorted.end());
+    //stop_time = steady_clock::now();
+    ////printContainer(arr_sorted);
+    //printf("time spent(int): %ld us\n", duration_cast<microseconds>(stop_time - start_time).count());
+    //start_time = steady_clock::now();
+    //std::sort(arr2_sorted.begin(), arr2_sorted.end());
+    //stop_time = steady_clock::now();
+    ////printContainer(arr2_sorted);
+    //printf("time spent(real): %ld us\n", duration_cast<microseconds>(stop_time - start_time).count());
+
+    //vector<int> arr;
+    //vector<float> arr2;
+
+    //cout << "堆排序" << endl;
+    //arr = arr_origin;
+    //arr2 = arr2_origin;
+    //start_time = steady_clock::now();
+    //heap_sort(arr);
+    //stop_time = steady_clock::now();
+    //if (arr == arr_sorted) {
+    //    //printContainer(arr);
+    //    printf("time spent(int): %ld us\n", duration_cast<microseconds>(stop_time - start_time).count());
+    //}
+    //start_time = steady_clock::now();
+    //heap_sort(arr2);
+    //stop_time = steady_clock::now();
+    //if (arr2 == arr2_sorted) {
+    //    //printContainer(arr2);
+    //    printf("time spent(real): %ld us\n", duration_cast<microseconds>(stop_time - start_time).count());
+    //}
+
+    //cout << "快速排序" << endl;
+    //arr = arr_origin;
+    //arr2 = arr2_origin;
+    //start_time = steady_clock::now();
+    //quick_sort(arr);
+    //stop_time = steady_clock::now();
+    //if (arr == arr_sorted) {
+    //    //printContainer(arr);
+    //    printf("time spent(int): %ld us\n", duration_cast<microseconds>(stop_time - start_time).count());
+    //}
+    //start_time = steady_clock::now();
+    //quick_sort(arr2);
+    //stop_time = steady_clock::now();
+    //if (arr2 == arr2_sorted) {
+    //    //printContainer(arr2);
+    //    printf("time spent(real): %ld us\n", duration_cast<microseconds>(stop_time - start_time).count());
+    //}
+
+    //cout << "归并排序" << endl;
+    //arr = arr_origin;
+    //arr2 = arr2_origin;
+    //start_time = steady_clock::now();
+    //merge_sort(arr);
+    //stop_time = steady_clock::now();
+    //if (arr == arr_sorted) {
+    //    //printContainer(arr);
+    //    printf("time spent(int): %ld us\n", duration_cast<microseconds>(stop_time - start_time).count());
+    //}
+    //start_time = steady_clock::now();
+    //merge_sort(arr2);
+    //stop_time = steady_clock::now();
+    //if (arr2 == arr2_sorted) {
+    //    //printContainer(arr2);
+    //    printf("time spent(real): %ld us\n", duration_cast<microseconds>(stop_time - start_time).count());
+    //}
+
+    //cout << "shell排序" << endl;
+    //arr = arr_origin;
+    //arr2 = arr2_origin;
+    //start_time = steady_clock::now();
+    //shell_sort(arr);
+    //stop_time = steady_clock::now();
+    //if (arr == arr_sorted) {
+    //    //printContainer(arr);
+    //    printf("time spent(int): %ld us\n", duration_cast<microseconds>(stop_time - start_time).count());
+    //}
+    //start_time = steady_clock::now();
+    //shell_sort(arr2);
+    //stop_time = steady_clock::now();
+    //if (arr2 == arr2_sorted) {
+    //    //printContainer(arr2);
+    //    printf("time spent(real): %ld us\n", duration_cast<microseconds>(stop_time - start_time).count());
+    //}
+
+    //cout << "插入排序" << endl;
+    //arr = arr_origin;
+    //arr2 = arr2_origin;
+    //start_time = steady_clock::now();
+    //insert_sort(arr);
+    //stop_time = steady_clock::now();
+    //if (arr == arr_sorted) {
+    //    //printContainer(arr);
+    //    printf("time spent(int): %ld us\n", duration_cast<microseconds>(stop_time - start_time).count());
+    //}
+    //start_time = steady_clock::now();
+    //insert_sort(arr2);
+    //stop_time = steady_clock::now();
+    //if (arr2 == arr2_sorted) {
+    //    //printContainer(arr2);
+    //    printf("time spent(real): %ld us\n", duration_cast<microseconds>(stop_time - start_time).count());
+    //}
+
+    //cout << "选择排序" << endl;
+    //arr = arr_origin;
+    //arr2 = arr2_origin;
+    //start_time = steady_clock::now();
+    //select_sort(arr);
+    //stop_time = steady_clock::now();
+    //if (arr == arr_sorted) {
+    //    //printContainer(arr);
+    //    printf("time spent(int): %ld us\n", duration_cast<microseconds>(stop_time - start_time).count());
+    //}
+    //start_time = steady_clock::now();
+    //select_sort(arr2);
+    //stop_time = steady_clock::now();
+    //if (arr2 == arr2_sorted) {
+    //    //printContainer(arr2);
+    //    printf("time spent(real): %ld us\n", duration_cast<microseconds>(stop_time - start_time).count());
+    //}
+
+    //cout << "冒泡排序" << endl;
+    //arr = arr_origin;
+    //arr2 = arr2_origin;
+    //start_time = steady_clock::now();
+    //bubble_sort(arr);
+    //stop_time = steady_clock::now();
+    //if (arr == arr_sorted) {
+    //    //printContainer(arr);
+    //    printf("time spent(int): %ld us\n", duration_cast<microseconds>(stop_time - start_time).count());
+    //}
+    //start_time = steady_clock::now();
+    //bubble_sort(arr2);
+    //stop_time = steady_clock::now();
+    //if (arr2 == arr2_sorted) {
+    //    //printContainer(arr2);
+    //    printf("time spent(real): %ld us\n", duration_cast<microseconds>(stop_time - start_time).count());
+    //}
+
+    //printContainer(beautifulArray2(4));
+    //printContainer(beautifulArray2(5));
+    //printContainer(beautifulArray(4));
+    //printContainer(beautifulArray(5));
+
+    //LRU<int, int> lru(3);
+    //vector<int> arr = {7,0,1,2,0,3,0,4};
+    //for (int i : arr) {
+    //    lru.put(i, i);
+    //    lru.print();
+    //}
+    //lru.put(7, 1);
+    //lru.print();
+    //lru.put(0, 2);
+    //lru.print();
+    //lru.put(1, 3);
+    //lru.print();
+    //lru.put(2, 4);
+    //lru.print();
+    //cout << lru.get(0) << endl;
+    //lru.print();
+    //lru.put(3, 5);
+    //lru.print();
+    //cout << lru.get(0) << endl;
+    //lru.print();
+    //lru.put(4, 6);
+    //lru.print();
+
+
+    //list<int> l = {1,2,3,4,5};
+    //list<int>::iterator it = l.begin();
+    //++it;
+    //cout << *it << endl;
+    //l.insert(it, 100);
+    //std::copy(l.begin(), l.end(), ostream_iterator<int>(std::cout, " "));
+    //cout << endl;
+
+    //string testcase = "*.**.\n*.***\n*.**.";
+    //istringstream iss(testcase);
+    //vector<vector<char>> pos;
+    //string s;
+    //while (getline(iss, s)) {
+    //    pos.push_back(vector<char>(s.begin(), s.end()));
+    //}
+    //cout << GetMaxStaffs(pos) << endl;
 
     //cout << shortestSubarray({2, -1, 2}, 3) << endl;
 

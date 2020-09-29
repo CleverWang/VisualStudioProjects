@@ -1,5 +1,4 @@
-﻿#ifndef HEADERS_H
-#define HEADERS_H
+﻿#pragma once
 
 #include <cmath>
 #include <cstdio>
@@ -31,8 +30,11 @@
 #include <list>
 #include <complex>
 #include <array>
+#include <chrono>
+#include <memory_resource>
 
 using namespace std;
+using namespace std::chrono;
 
 template <typename ContainerType>
 void printContainer(const ContainerType &c) {
@@ -65,6 +67,27 @@ void preOrder(TreeNode *root) {
     preOrder(root->right);
 }
 
+vector<int> preOrderNonRecursive(TreeNode *root) {
+    if (root == nullptr)
+        return {};
+
+    vector<int> res;
+    stack<TreeNode *> st;
+    st.push(root);
+    while (!st.empty()) {
+        TreeNode *p = st.top();
+        st.pop();
+
+        res.push_back(p->val);
+        if (p->right != nullptr)
+            st.push(p->right);
+        if (p->left != nullptr)
+            st.push(p->left);
+    }
+
+    return res;
+}
+
 void middleOrder(TreeNode *root) {
     if (root == NULL)
         return;
@@ -74,6 +97,28 @@ void middleOrder(TreeNode *root) {
     middleOrder(root->right);
 }
 
+vector<int> middleOrderNonRecursively(TreeNode *root) {
+    if (root == nullptr)
+        return {};
+
+    vector<int> res;
+    stack<TreeNode *> st;
+    TreeNode *p = root;
+    while (!st.empty() || p != nullptr) {
+        while (p != nullptr) {
+            st.push(p);
+            p = p->left;
+        }
+
+        p = st.top();
+        st.pop();
+        res.push_back(p->val);
+        p = p->right;
+    }
+
+    return res;
+}
+
 void postOrder(TreeNode *root) {
     if (root == NULL)
         return;
@@ -81,6 +126,65 @@ void postOrder(TreeNode *root) {
     postOrder(root->left);
     postOrder(root->right);
     cout << root->val << " ";
+}
+
+vector<int> postOrderNonRecursive(TreeNode *root) {
+    if (root == nullptr)
+        return {};
+
+    vector<int> res;
+    stack<TreeNode *> path;
+    unordered_set<TreeNode *> visited; // 记录已经访问的结点
+    path.push(root);
+
+    while (!path.empty()) {
+        auto node = path.top();
+
+        bool left_visited = true, right_visited = true;
+
+        // 左右结点判断先后顺序不能互换，因为需要先把右结点放进stack中
+        if (node->right && visited.find(node->right) == visited.end()) {
+            right_visited = false;
+            path.push(node->right);
+        }
+
+        if (node->left && visited.find(node->left) == visited.end()) {
+            left_visited = false;
+            path.push(node->left);
+        }
+
+        if (left_visited && right_visited) { // 左右结点已经访问过了，才可以访问当前结点
+            res.push_back(node->val);
+            visited.insert(node);
+            path.pop(); // 访问过了，从path中移除
+        }
+    }
+
+    return res;
+}
+vector<int> postOrderNonRecursive1(TreeNode *root) {
+    if (root == nullptr)
+        return {};
+
+    vector<int> res;
+    TreeNode *p = root;
+    stack<TreeNode *> st;
+    st.push(root);
+
+    while (!st.empty()) {
+        p = st.top();
+        st.pop();
+
+        if (p->left != nullptr)
+            st.push(p->left);
+        if (p->right != nullptr)
+            st.push(p->right);
+        res.push_back(p->val);
+    }
+
+    std::reverse(res.begin(), res.end());
+
+    return res;
 }
 
 template <typename T>
@@ -1967,5 +2071,93 @@ private:
     BSTreeNode *tree_;
 };
 
+template<typename K, typename V>
+class LRU {
+public:
+    LRU(int capacity) : capacity_(capacity) {}
+    ~LRU() {}
 
-#endif
+    void put(K key, V value) {
+        if (map_.count(key)) {
+            list_.splice(list_.begin(), list_, map_[key]);
+            map_[key]->second = value;
+        } else {
+            if (list_.size() == capacity_) {
+                map_.erase(list_.back().first);
+                list_.pop_back();
+            }
+
+            list_.push_front({key, value});
+            map_[key] = list_.begin();
+        }
+    }
+
+    V get(K key) {
+        if (map_.count(key)) {
+            list_.splice(list_.begin(), list_, map_[key]);
+            return map_[key]->second;
+        }
+        throw runtime_error("key not found!");
+    }
+
+    V get(K key, V default_value) {
+        if (map_.count(key)) {
+            list_.splice(list_.begin(), list_, map_[key]);
+            return map_[key]->second;
+        }
+        return default_value;
+    }
+
+#ifdef _DEBUG
+    void print() const {
+        for (auto p : list_) {
+            cout << p.first << ":" << p.second << " ";
+        }
+        cout << endl;
+    }
+#endif // _DEBUG
+
+private:
+    unordered_map<K, typename list<pair<K, V>>::iterator> map_;
+    list<pair<K, V>> list_;
+    int capacity_;
+};
+
+
+template<typename Int = int>
+class RandInt {
+public:
+    RandInt(Int left = 0, Int right = std::numeric_limits<Int>::max()) :
+        e_(random_device{}()),
+        dis_(left, right) {
+    }
+
+    ~RandInt() {}
+
+    Int operator()() {
+        return dis_(e_);
+    }
+
+private:
+    default_random_engine e_;
+    uniform_int_distribution<Int> dis_;
+};
+
+template<typename Real = double>
+class RandReal {
+public:
+    RandReal(Real left = Real{0}, Real right = Real{1}) :
+        e_(random_device{}()),
+        dis_(left, right) {
+    }
+
+    ~RandReal() {}
+
+    Real operator()() {
+        return dis_(e_);
+    }
+
+private:
+    default_random_engine e_;
+    uniform_real_distribution<Real> dis_;
+};
