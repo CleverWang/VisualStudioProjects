@@ -21009,7 +21009,286 @@ s: "abab" p: "ab"
 //    return res;
 //}
 
+///*
+//316. 去除重复字母
+//给你一个仅包含小写字母的字符串，请你去除字符串中重复的字母，使得每个字母只出现一次。需保证返回结果的字典序最小（要求不能打乱其他字符的相对位置）。
+//
+//示例 1:
+//输入: "bcabc"
+//输出: "abc"
+//
+//示例 2:
+//输入: "cbacdcbc"
+//输出: "acdb"
+//*/
+//string removeDuplicateLetters(const string &s) {
+//    if (s.size() < 2) {
+//        return s;
+//    }
+//
+//    int last_occur[26] = {0};
+//    for (int i = 0; i < s.size(); i++) {
+//        last_occur[s[i] - 'a'] = i;
+//    }
+//
+//    bool seen[26] = {false};
+//    string res;
+//    for (int i = 0; i < s.size(); i++) {
+//        char c = s[i];
+//        if (!seen[c - 'a']) {
+//            while (!res.empty() && res.back() > c && last_occur[res.back() - 'a'] > i) {
+//                seen[res.back() - 'a'] = false;
+//                res.pop_back();
+//            }
+//
+//            seen[c - 'a'] = true;
+//            res.push_back(c);
+//        }
+//    }
+//
+//    return res;
+//}
+
+///*
+//443. 压缩字符串
+//给定一组字符，使用原地算法将其压缩。
+//压缩后的长度必须始终小于或等于原数组长度。
+//数组的每个元素应该是长度为1 的字符（不是 int 整数类型）。
+//在完成原地修改输入数组后，返回数组的新长度。
+//
+//进阶：
+//你能否仅使用O(1) 空间解决问题？
+//
+//示例 1：
+//输入：
+//["a","a","b","b","c","c","c"]
+//输出：
+//返回 6 ，输入数组的前 6 个字符应该是：["a","2","b","2","c","3"]
+//说明：
+//"aa" 被 "a2" 替代。"bb" 被 "b2" 替代。"ccc" 被 "c3" 替代。
+//
+//示例 2：
+//输入：
+//["a"]
+//输出：
+//返回 1 ，输入数组的前 1 个字符应该是：["a"]
+//解释：
+//没有任何字符串被替代。
+//
+//示例 3：
+//输入：
+//["a","b","b","b","b","b","b","b","b","b","b","b","b"]
+//输出：
+//返回 4 ，输入数组的前4个字符应该是：["a","b","1","2"]。
+//解释：
+//由于字符 "a" 不重复，所以不会被压缩。"bbbbbbbbbbbb" 被 “b12” 替代。
+//注意每个数字在数组中都有它自己的位置。
+//
+//提示：
+//所有字符都有一个ASCII值在[35, 126]区间内。
+//1 <= len(chars) <= 1000。
+//*/
+//int compress(vector<char> &chars) {
+//    if (chars.size() < 2) {
+//        return chars.size();
+//    }
+//
+//    int pre = 0, cur = 1;
+//    int idx = 0;
+//    while (cur <= chars.size()) {
+//        while (cur < chars.size() && chars[cur] == chars[cur - 1]) {
+//            ++cur;
+//        }
+//
+//        int cnt = cur - pre;
+//        chars[idx++] = chars[pre];
+//        if (cnt > 1) {
+//            string s = std::to_string(cnt);
+//            for (char c : s) {
+//                chars[idx++] = c;
+//            }
+//        }
+//
+//        pre = cur++;
+//    }
+//
+//    //chars.erase(chars.begin() + idx, chars.end());
+//
+//    return idx;
+//}
+
+/*
+532. 数组中的 k-diff 数对
+给定一个整数数组和一个整数 k，你需要在数组里找到不同的 k-diff 数对。这里将 k-diff 数对定义为一个整数对 (i, j)，其中 i 和 j 都是数组中的数字，且两数之差的绝对值是 k 。
+
+示例 1：
+输入：[3, 1, 4, 1, 5], k = 2
+输出：2
+解释：数组中有两个 2-diff 数对, (1, 3) 和 (3, 5)。
+尽管数组中有两个1，但我们只应返回不同的数对的数量。
+
+示例 2：
+输入：[1, 2, 3, 4, 5], k = 1
+输出：4
+解释：数组中有四个 1-diff 数对, (1, 2), (2, 3), (3, 4) 和 (4, 5)。
+
+示例 3：
+输入：[1, 3, 1, 5, 4], k = 0
+输出：1
+解释：数组中只有一个 0-diff 数对，(1, 1)。
+
+示例 4：
+输入：nums = [1,2,4,4,3,3,0,9,2,3], k = 3
+输出：2
+
+示例 5：
+输入：nums = [-1,-2,-3], k = 1
+输出：2
+
+提示：
+1 <= nums.length <= 104
+-107 <= nums[i] <= 107
+0 <= k <= 107
+*/
+//int findPairs(vector<int> &nums, int k) {
+//    if (nums.size() < 2) {
+//        return 0;
+//    }
+//
+//    std::sort(nums.begin(), nums.end());
+//    int res = 0;
+//    int i = 0;
+//    auto it = std::lower_bound(nums.begin() + 1, nums.end(), nums[i] + k);
+//    if (it == nums.end()) {
+//        return res;
+//    } else if (*it == nums[i] + k) {
+//        ++res;
+//    }
+//    ++i;
+//    for (; i < nums.size(); i++) {
+//        if (nums[i] == nums[i - 1]) {
+//            continue;
+//        }
+//
+//        it = std::lower_bound(nums.begin() + i + 1, nums.end(), nums[i] + k);
+//        if (it == nums.end()) {
+//            return res;
+//        } else if (*it == nums[i] + k) {
+//            ++res;
+//        }
+//    }
+//
+//    return res;
+//}
+//int findPairs(vector<int> &nums, int k) {
+//    if (nums.size() < 2) {
+//        return 0;
+//    }
+//
+//    unordered_map<int, int> num2cnt;
+//    for (int num : nums) {
+//        ++num2cnt[num];
+//    }
+//
+//    int res = 0;
+//    for (const auto &kv : num2cnt) {
+//        int num = kv.first;
+//        int cnt = kv.second;
+//
+//        int target = num + k;
+//        if (num2cnt.count(target)) {
+//            if (k > 0 || k == 0 && num2cnt[target] > 1) {
+//                ++res;
+//            }
+//        }
+//    }
+//
+//    return res;
+//}
+
+/*
+538. 把二叉搜索树转换为累加树
+给出二叉 搜索 树的根节点，该树的节点值各不相同，请你将其转换为累加树（Greater Sum Tree），使每个节点 node 的新值等于原树中大于或等于 node.val 的值之和。
+提醒一下，二叉搜索树满足下列约束条件：
+节点的左子树仅包含键 小于 节点键的节点。
+节点的右子树仅包含键 大于 节点键的节点。
+左右子树也必须是二叉搜索树。
+注意：本题和 1038: https://leetcode-cn.com/problems/binary-search-tree-to-greater-sum-tree/ 相同
+
+示例 1：
+输入：[4,1,6,0,2,5,7,null,null,null,3,null,null,null,8]
+输出：[30,36,21,36,35,26,15,null,null,null,33,null,null,null,8]
+
+示例 2：
+输入：root = [0,null,1]
+输出：[1,null,1]
+
+示例 3：
+输入：root = [1,0,2]
+输出：[3,3,2]
+
+示例 4：
+输入：root = [3,2,4,1]
+输出：[7,9,4,10]
+
+提示：
+树中的节点数介于 0 和 104 之间。
+每个节点的值介于 -104 和 104 之间。
+树中的所有值 互不相同 。
+给定的树为二叉搜索树。
+*/
+//TreeNode *pre = nullptr;
+//void convertBSTRecursively(TreeNode *p) {
+//    if (p == nullptr) {
+//        return;
+//    }
+//
+//    convertBSTRecursively(p->right);
+//    if (pre != nullptr) {
+//        p->val += pre->val;
+//    }
+//    pre = p;
+//    convertBSTRecursively(p->left);
+//}
+//TreeNode *convertBST(TreeNode *root) {
+//    if (root == nullptr) {
+//        return nullptr;
+//    }
+//
+//    convertBSTRecursively(root);
+//
+//    return root;
+//}
+
 int main(int argc, char **argv) {
+    //vector<int> nums = {3, 1, 4, 1, 5};
+    //cout << findPairs(nums, 2) << "\n";
+    //nums = {1, 2, 3, 4, 5};
+    //cout << findPairs(nums, 1) << "\n";
+    //nums = {1, 3, 1, 5, 4};
+    //cout << findPairs(nums, 0) << "\n";
+    //nums = {1,2,4,4,3,3,0,9,2,3};
+    //cout << findPairs(nums, 3) << "\n";
+    //nums = {-1,-2,-3};
+    //cout << findPairs(nums, 1) << "\n";
+
+    //vector<char> chars = {'a','a','b','b','c','c','c'};
+    //cout << compress(chars) << "\n";
+    //printContainer(chars);
+    //chars = {'a'};
+    //cout << compress(chars) << "\n";
+    //printContainer(chars);
+    //chars = {'a','b','b','b','b','b','b','b','b','b','b','b','b'};
+    //cout << compress(chars) << "\n";
+    //printContainer(chars);    
+    //chars = {'a','b','c'};
+    //cout << compress(chars) << "\n";
+    //printContainer(chars);
+
+    //assert(removeDuplicateLetters("cbacdcbc") == "acdb");
+    //assert(removeDuplicateLetters("bcabc") == "abc");
+
+
     //std::cout << "sizeof(std::string): " << sizeof(std::string) << '\n';
     //std::cout << "sizeof(std::pmr::string): " << sizeof(std::pmr::string) << '\n';
 
